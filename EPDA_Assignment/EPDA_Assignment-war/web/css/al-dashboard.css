@@ -1,0 +1,125 @@
+/* Reset & Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    color: #fff;
+    height: 100vh;
+    overflow: hidden;
+
+    /* Background image (see note below about the file location) */
+    background: url("../img/studybeta.jpg") no-repeat center center fixed;
+    background-size: cover;
+    position: relative;
+}
+
+/* Top Menu */
+nav.menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    background: transparent;
+}
+
+nav.menu .logo {
+    font-size: 2em;
+    font-weight: bold;
+    cursor: pointer;
+    color: #fff;
+    text-decoration: none;
+    transition: transform 0.3s, text-shadow 0.3s;
+    display: inline-block;
+}
+
+nav.menu .logo:hover {
+    transform: translateY(-5px);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+nav.menu .nav-links {
+    display: flex;
+    gap: 30px;
+}
+
+nav.menu .nav-links a {
+    text-decoration: none;
+    font-size: 1.2em;
+    color: #fff;
+    transition: transform 0.3s, text-shadow 0.3s;
+}
+
+nav.menu .nav-links a:hover {
+    transform: translateY(-5px);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Centered Main Content */
+.center-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+    padding: 30px;
+}
+
+.center-content h1 {
+    font-size: 3.5em;
+    margin-bottom: 10px;
+}
+
+.center-content p {
+    font-size: 1.15em;
+    max-width: 850px;
+    line-height: 1.7;
+    margin: 0 auto;
+}
+
+/* Button */
+.btn-container {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+}
+
+/* Make <a> look like your neon button */
+.btn {
+    display: inline-block;
+    padding: 15px 30px;
+    font-size: 1.2em;
+    font-weight: bold;
+    border: 2px solid #a500ff;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+
+    background: #fff;
+    color: #a500ff;
+
+    text-shadow: 0 0 5px rgba(165, 0, 255, 0.5);
+    box-shadow: 0 0 10px rgba(165, 0, 255, 0.5);
+
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    background: #a500ff;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(165, 0, 255, 0.3), 0 0 15px rgba(165, 0, 255, 0.3);
+    text-shadow: 0 0 5px rgba(165, 0, 255, 0.3);
+}

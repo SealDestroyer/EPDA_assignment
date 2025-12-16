@@ -4,23 +4,46 @@
         response.sendRedirect("login.jsp");
         return;
     }
+    model.MyUsers u = (model.MyUsers) session.getAttribute("user");
 %>
 
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Academic Leader Dashboard</title>
-</head>
-<body>
-    <h2>Academic Leader Dashboard</h2>
-    <p>Welcome, <%= ((model.MyUsers)session.getAttribute("user")).getUserID() %></p>
+    <head>
+        <meta charset="UTF-8">
+        <title>Academic Leader Dashboard</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <hr>
+        <!-- Your dashboard CSS -->
+        <link rel="stylesheet" href="css/al-dashboard.css">
+    </head>
 
-    <ul>
-        <li><a href="ALeditProfile.jsp">Edit Profile</a></li>
-        <li><a href="ALmoduleList.jsp">Manage Modules</a></li>
-        <li><a href="Logout">Logout</a></li>
-    </ul>
-</body>
+    <body>
+
+        <!-- Top Menu (same style like your homepage) -->
+        <nav class="menu">
+            <a class="logo" href="ALdashboard.jsp">DashBoard</a>
+
+            <div class="nav-links">
+                <a href="ALeditProfile.jsp">Profile</a>
+                <a href="ALmoduleList.jsp">Modules</a>
+                <a href="Logout">Logout</a>
+            </div>
+        </nav>
+
+        <!-- Center Content -->
+        <div class="center-content">
+            <h1>Welcome <%= u.getFullName()%>!</h1>
+
+            <p>
+                Create new modules now !
+            </p>
+
+            <div class="btn-container">
+                <!-- change this link to your actual create module page if different -->
+                <a class="btn" href="ALmoduleCreate.jsp">Create</a>
+            </div>
+        </div>
+
+    </body>
 </html>
