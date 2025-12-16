@@ -1,11 +1,4 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%
-    if (session.getAttribute("user") == null) {
-        response.sendRedirect("login.jsp");
-        return;
-    }
-    model.MyUsers u = (model.MyUsers) session.getAttribute("user");
-%>
 
 <!DOCTYPE html>
 <html>
@@ -20,27 +13,12 @@
 
     <body>
 
-        <!-- Top Menu (same style like your homepage) -->
-        <nav class="menu">
-            <a class="logo" href="ALdashboard.jsp">DashBoard</a>
-
-            <div class="nav-links">
-                <a href="ALeditProfile.jsp">Profile</a>
-                <a href="ALmoduleList.jsp">Modules</a>
-                <a href="Logout">Logout</a>
-            </div>
-        </nav>
+        <!-- Reusable Navbar -->
+        <jsp:include page="ALnavbar.jsp" />
 
         <!-- Center Content -->
         <div class="center-content">
-<!--            <h1>Welcome <%= u.getFullName()%>!</h1>
-
-            <p>
-                Create new modules now !
-            </p>-->
-
             <div class="btn-container">
-                <!-- change this link to your actual create module page if different -->
                 <a class="btn" href="ALmoduleCreate.jsp">Create New Module</a>
             </div>
         </div>
