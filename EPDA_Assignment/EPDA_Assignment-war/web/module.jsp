@@ -7,10 +7,9 @@
         <meta charset="UTF-8">
         <title>Module Management</title>
 
-        <!-- reuse navbar style -->
         <link rel="stylesheet" href="css/al-dashboard.css">
-        <!-- module css later -->
-        <!-- <link rel="stylesheet" href="css/al-module.css"> -->
+        <link rel="stylesheet" href="css/al-module.css">
+
     </head>
 
     <body>
@@ -23,7 +22,7 @@
 
             <!-- SEARCH BAR (TOP MIDDLE) -->
             <div class="search-bar-container">
-                <form action="ModuleController" method="GET" class="search-form">
+                <form action="Module" method="GET" class="search-form">
                     <input type="hidden" name="action" value="search"/>
 
                     <div class="search-box">
@@ -37,15 +36,22 @@
 
             <!-- ADD BUTTON (TOP LEFT ABOVE TABLE) -->
             <div class="table-top-bar">
-                <form action="ModuleController" method="GET">
+                <form action="Module" method="GET">
                     <input type="hidden" name="action" value="goAdd"/>
                     <button type="submit">+ Add New Module</button>
                 </form>
             </div>
 
+            <c:if test="${not empty errorMsg}">
+                <div style="color:red; text-align:center; margin-bottom:10px;">
+                    ${errorMsg}
+                </div>
+            </c:if>
+
             <!-- MODULE TABLE -->
             <div class="table-container">
-                <table border="1" width="100%" cellpadding="8" cellspacing="0">
+                
+                <table class="module-table" border="1" width="100%" cellpadding="8" cellspacing="0">
                     <thead>
                         <tr>
                             <th>Module ID</th>
@@ -76,22 +82,23 @@
                                 <td>${m.createdBy}</td>
                                 <td>${m.assignedLecturerID}</td>
 
-                                <td>
-                                    <form action="ModuleController" method="GET" style="display:inline;">
+                                <td class="actions-cell">
+                                    <form action="Module" method="GET" style="display:inline;">
                                         <input type="hidden" name="action" value="edit"/>
                                         <input type="hidden" name="moduleID" value="${m.moduleID}"/>
-                                        <button type="submit">Modify</button>
+                                        <button type="submit" class="modify-btn">Modify</button>
                                     </form>
 
-                                    <form action="ModuleController" method="POST" style="display:inline;">
+                                    <form action="Module" method="POST" style="display:inline;">
                                         <input type="hidden" name="action" value="delete"/>
                                         <input type="hidden" name="moduleID" value="${m.moduleID}"/>
-                                        <button type="submit"
+                                        <button type="submit" class="delete-btn"
                                                 onclick="return confirm('Delete this module?');">
                                             Delete
                                         </button>
                                     </form>
                                 </td>
+
                             </tr>
                         </c:forEach>
                     </tbody>

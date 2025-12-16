@@ -1,0 +1,194 @@
+/* ===== MODULE PAGE LAYOUT ===== */
+
+.page-container {
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+/* ===== SEARCH BAR ===== */
+
+.search-bar-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 18px;
+}
+
+.search-box {
+    background: rgba(255, 255, 255, 0.85);
+    padding: 8px 12px;
+    border-radius: 6px;
+    display: flex;
+    gap: 10px;
+}
+
+.search-box input {
+    border: none;
+    outline: none;
+    padding: 8px;
+    width: 280px;
+    font-size: 1em;
+    background: transparent;
+    color: #333;
+}
+
+.search-box button {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background: #5a3e2b;
+    color: #fff;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.search-box button:hover {
+    background: #3f2b1d;
+    transform: translateY(-2px);
+}
+
+.search-box button:active {
+    transform: scale(0.97);
+}
+
+/* ===== ADD BUTTON ===== */
+
+.table-top-bar {
+    margin-bottom: 12px;
+}
+
+.table-top-bar button {
+    padding: 10px 18px;
+    font-size: 1em;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 2px solid #c8b7a6;
+    background: #f3ede7;
+    color: #5a3e2b;
+    transition: all 0.3s ease;
+}
+
+.table-top-bar button:hover {
+    background: #5a3e2b;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.table-top-bar button:active {
+    transform: scale(0.97);
+}
+
+/* ===== TABLE CONTAINER ===== */
+/* The container does NOT scroll vertically.
+   Only the tbody scrolls (scroll bar inside data rows). */
+
+.table-container {
+    background: rgba(245, 245, 245, 0.92);
+    border-radius: 10px;
+    padding: 20px;
+
+    overflow-x: auto;     /* horizontal scroll if needed */
+    overflow-y: hidden;   /* IMPORTANT: no vertical scroll here */
+}
+
+/* ===== TABLE: HEADER FIXED, BODY SCROLLABLE ===== */
+
+table.module-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #333;
+}
+
+/* Keep header and body rows aligned */
+table.module-table thead,
+table.module-table tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+/* Header */
+table.module-table thead th {
+    background: #5a3e2b;
+    color: #fff;
+    padding: 12px;
+    text-align: left;
+}
+
+/* ✅ Scrollbar inside data rows */
+table.module-table tbody {
+    display: block;
+    max-height: 520px;   /* adjust this number if you want taller/shorter */
+    overflow-y: auto;
+}
+
+/* Body cells */
+table.module-table tbody td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Row hover */
+table.module-table tbody tr:hover {
+    background: rgba(90, 62, 43, 0.08);
+}
+
+/* ===== ACTION BUTTONS ===== */
+
+td form button {
+    padding: 8px 16px;
+    font-size: 0.95em;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+
+    border: 2px solid transparent;
+    background: transparent;
+    transition: all 0.3s ease;
+    margin-right: 6px;
+}
+
+/* Modify (muted green) */
+td form button.modify-btn {
+    border-color: #8fae92;
+    color: #4f6f55;
+    background: #eef4ef;
+}
+
+td form button.modify-btn:hover {
+    background: #4f6f55;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+/* Delete (muted red) */
+td form button.delete-btn {
+    border-color: #c08a8a;
+    color: #7a3f3f;
+    background: #f6eeee;
+}
+
+td form button.delete-btn:hover {
+    background: #7a3f3f;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+td form button:active {
+    transform: scale(0.97);
+}
+
+/* Actions column: keep buttons side-by-side */
+td.actions-cell {
+    white-space: nowrap;
+}
+
+td.actions-cell form {
+    display: inline-block !important;
+    margin: 0;
+}
+
+td.actions-cell form button {
+    margin-right: 8px;
+}
