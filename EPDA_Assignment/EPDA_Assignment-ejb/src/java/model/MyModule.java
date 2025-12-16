@@ -3,8 +3,16 @@ package model;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 @Entity
+@NamedQueries({
+    @NamedQuery(
+            name = "MyModule.findAll",
+            query = "SELECT m FROM MyModule m ORDER BY m.moduleID"
+    )
+})
 public class MyModule implements Serializable {
 
     private static final long serialVersionUID = 1L;

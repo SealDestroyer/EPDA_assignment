@@ -12,7 +12,7 @@
 
     <div class="nav-links">
         <a href="ALeditProfile.jsp">Profile</a>
-        <a href="ALmoduleList.jsp">Modules</a>
+        <a href="${pageContext.request.contextPath}/Module?action=list">Modules</a>
         <a href="Logout">Logout</a>
     </div>
 </nav>

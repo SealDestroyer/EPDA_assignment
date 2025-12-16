@@ -8,24 +8,33 @@
 body {
     font-family: Arial, sans-serif;
     color: #fff;
-    height: 100vh;
-    overflow: hidden;
 
-    /* Background image (see note below about the file location) */
+    /* Allow pages (tables/forms) to scroll */
+    min-height: 100vh;
+    overflow-y: auto;
+
+    /* Background image */
     background: url("../img/ALdashbord.jpg") no-repeat center center fixed;
     background-size: cover;
     position: relative;
+
+    /* Reserve space so content won't go under navbar */
+    padding-top: 90px;
 }
 
-/* Top Menu */
+/* Top Menu (GLOBAL: works for every page) */
 nav.menu {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 20px 40px;
-    position: absolute;
+
+    position: fixed;
     top: 0;
+    left: 0;
     width: 100%;
+    z-index: 999;
+
     background: transparent;
 }
 
@@ -61,18 +70,16 @@ nav.menu .nav-links a:hover {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-/* Centered Main Content */
+/* Centered Main Content (DASHBOARD ONLY)
+   This will still work nicely on ALdashboard.jsp */
 .center-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-
+    min-height: calc(100vh - 90px); /* minus navbar space */
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
 
+    text-align: center;
     width: 100%;
     padding: 30px;
 }
@@ -80,8 +87,8 @@ nav.menu .nav-links a:hover {
 .center-content h1 {
     font-size: 2.5em;
     margin-bottom: 10px;
-    font-style: italic;      
-    font-weight: 500;        
+    font-style: italic;
+    font-weight: 500;
     opacity: 0.9;
 }
 
@@ -90,9 +97,9 @@ nav.menu .nav-links a:hover {
     max-width: 850px;
     line-height: 1.7;
     margin: 0 auto;
-    font-style: italic;      
-    font-weight: 300;        
-    opacity: 0.9;   
+    font-style: italic;
+    font-weight: 300;
+    opacity: 0.9;
 }
 
 /* Button */
@@ -102,13 +109,12 @@ nav.menu .nav-links a:hover {
     justify-content: center;
 }
 
-/* Make <a> look like your neon button */
+/* Make <a> look like your dashboard button */
 .btn {
     display: inline-block;
     padding: 15px 30px;
     font-size: 1.2em;
     font-weight: bold;
-    border: 2px solid #a500ff;
     border-radius: 5px;
     cursor: pointer;
     text-decoration: none;
@@ -124,8 +130,8 @@ nav.menu .nav-links a:hover {
 }
 
 .btn:hover {
-    transform: scale(1.05);        /* SAME effect you liked */
-    background: #5a3e2b;           /* dark brown */
+    transform: scale(1.05);
+    background: #5a3e2b;
     color: #fff;
 
     box-shadow:
