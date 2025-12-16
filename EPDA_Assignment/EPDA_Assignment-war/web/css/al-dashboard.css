@@ -12,7 +12,7 @@ body {
     overflow: hidden;
 
     /* Background image (see note below about the file location) */
-    background: url("../img/studybeta.jpg") no-repeat center center fixed;
+    background: url("../img/ALdashbord.jpg") no-repeat center center fixed;
     background-size: cover;
     position: relative;
 }
@@ -78,15 +78,21 @@ nav.menu .nav-links a:hover {
 }
 
 .center-content h1 {
-    font-size: 3.5em;
+    font-size: 2.5em;
     margin-bottom: 10px;
+    font-style: italic;      
+    font-weight: 500;        
+    opacity: 0.9;
 }
 
 .center-content p {
-    font-size: 1.15em;
+    font-size: 1.2em;
     max-width: 850px;
     line-height: 1.7;
     margin: 0 auto;
+    font-style: italic;      
+    font-weight: 300;        
+    opacity: 0.9;   
 }
 
 /* Button */
@@ -107,19 +113,24 @@ nav.menu .nav-links a:hover {
     cursor: pointer;
     text-decoration: none;
 
-    background: #fff;
-    color: #a500ff;
+    background: #f3ede7;           /* light beige */
+    color: #5a3e2b;                /* dark brown text */
+    border: 2px solid #c8b7a6;
 
-    text-shadow: 0 0 5px rgba(165, 0, 255, 0.5);
-    box-shadow: 0 0 10px rgba(165, 0, 255, 0.5);
+    text-shadow: 0 0 3px rgba(90, 62, 43, 0.25);
+    box-shadow: 0 0 8px rgba(90, 62, 43, 0.25);
 
     transition: all 0.3s ease;
 }
 
 .btn:hover {
-    transform: scale(1.05);
-    background: #a500ff;
+    transform: scale(1.05);        /* SAME effect you liked */
+    background: #5a3e2b;           /* dark brown */
     color: #fff;
-    box-shadow: 0 0 10px rgba(165, 0, 255, 0.3), 0 0 15px rgba(165, 0, 255, 0.3);
-    text-shadow: 0 0 5px rgba(165, 0, 255, 0.3);
+
+    box-shadow:
+        0 0 10px rgba(90, 62, 43, 0.35),
+        0 0 15px rgba(90, 62, 43, 0.35);
+
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
 }

@@ -33,15 +33,15 @@
 
         <!-- Center Content -->
         <div class="center-content">
-            <h1>Welcome <%= u.getFullName()%>!</h1>
+<!--            <h1>Welcome <%= u.getFullName()%>!</h1>
 
             <p>
                 Create new modules now !
-            </p>
+            </p>-->
 
             <div class="btn-container">
                 <!-- change this link to your actual create module page if different -->
-                <a class="btn" href="ALmoduleCreate.jsp">Create</a>
+                <a class="btn" href="ALmoduleCreate.jsp">Create New Module</a>
             </div>
         </div>
 
