@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -15,6 +16,8 @@ import model.MyUsers;
 import model.MyUsersFacade;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 @WebServlet(name = "Module", urlPatterns = {"/Module"})
 public class Module extends HttpServlet {
@@ -45,6 +48,20 @@ public class Module extends HttpServlet {
             if ("list".equals(action)) {
 
                 List<MyModule> moduleList = myModuleFacade.getAllModules();
+
+                // Build userNameMap (userID -> fullName) for createdBy + lecturer
+                Set<String> ids = new HashSet<>();
+                for (MyModule m : moduleList) {
+                    if (m.getCreatedBy() != null && !m.getCreatedBy().trim().isEmpty()) {
+                        ids.add(m.getCreatedBy().trim());
+                    }
+                    if (m.getAssignedLecturerID() != null && !m.getAssignedLecturerID().trim().isEmpty()) {
+                        ids.add(m.getAssignedLecturerID().trim());
+                    }
+                }
+                Map<String, String> userNameMap = myUsersFacade.findUserNameMapByIds(new ArrayList<>(ids));
+                request.setAttribute("userNameMap", userNameMap);
+
                 request.setAttribute("moduleList", moduleList);
                 request.getRequestDispatcher("module.jsp").forward(request, response);
                 return;
@@ -63,14 +80,27 @@ public class Module extends HttpServlet {
 
                 List<MyModule> moduleList = myModuleFacade.searchModules(keyword);
 
-                // optional msg if no result
                 if (moduleList.isEmpty()) {
                     request.setAttribute("errorMsg", "No modules found for: " + keyword);
                 }
 
+                // Build userNameMap (userID -> fullName)
+                Set<String> ids = new HashSet<>();
+                for (MyModule m : moduleList) {
+                    if (m.getCreatedBy() != null && !m.getCreatedBy().trim().isEmpty()) {
+                        ids.add(m.getCreatedBy().trim());
+                    }
+                    if (m.getAssignedLecturerID() != null && !m.getAssignedLecturerID().trim().isEmpty()) {
+                        ids.add(m.getAssignedLecturerID().trim());
+                    }
+                }
+                Map<String, String> userNameMap = myUsersFacade.findUserNameMapByIds(new ArrayList<>(ids));
+                request.setAttribute("userNameMap", userNameMap);
+
                 request.setAttribute("moduleList", moduleList);
                 request.getRequestDispatcher("module.jsp").forward(request, response);
                 return;
+
             }
 
             // ===== GO ADD PAGE =====
@@ -164,10 +194,14 @@ public class Module extends HttpServlet {
                 }
 
                 // PASS -> create module
-                String moduleID = "M" + System.currentTimeMillis();
-                MyModule m = new MyModule(moduleID, moduleName, moduleCode, description, createdByID, assignedLecturerID);
-                myModuleFacade.create(m);
+                MyModule m = new MyModule();
+                m.setModuleName(moduleName);
+                m.setModuleCode(moduleCode);
+                m.setDescription(description);
+                m.setCreatedBy(createdByID);
+                m.setAssignedLecturerID(assignedLecturerID);
 
+                myModuleFacade.create(m);
                 response.sendRedirect("Module?action=list");
                 return;
             }

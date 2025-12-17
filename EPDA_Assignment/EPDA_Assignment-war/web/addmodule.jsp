@@ -19,11 +19,6 @@
                 <h2 class="add-title">New Module</h2>
                 <p class="add-subtitle">Enter module details below.</p>
 
-                <!-- OPTIONAL: Top message (doesn't move container if you use absolute CSS) -->
-                <c:if test="${not empty errors}">
-                    <div class="form-alert">Please fix the highlighted fields.</div>
-                </c:if>
-
                 <form action="Module" method="POST" novalidate>
                     <input type="hidden" name="action" value="add" />
 
@@ -85,6 +80,7 @@
                             class="input-field <c:if test='${not empty errors.assignedLecturerID}'>input-error</c:if>"
                                 id="assignedLecturerID"
                                 name="assignedLecturerID"
+                                required
                                 >
                                 <option value="" disabled hidden <c:if test="${empty assignedLecturerIDVal}">selected</c:if>>
                                     Select Lecturer
@@ -99,6 +95,7 @@
                         <label class="input-label" for="assignedLecturerID">Assigned Lecturer</label>
                         <div class="field-error"><c:out value="${errors.assignedLecturerID}" /></div>
                     </div>
+
                     <div class="form-buttons">
                         <button class="btn" type="submit">Add</button>
                         <a class="btn btn-secondary" href="${pageContext.request.contextPath}/Module?action=list">Cancel</a>

@@ -1,6 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -27,7 +28,7 @@
 
                     <div class="search-box">
                         <input type="text" name="keyword"
-                               placeholder="Search by Module ID / Code / Name"
+                               placeholder="Search by  Module Code / Name"
                                value="${param.keyword != null ? param.keyword : ''}"/>
 
                         <button type="submit" class="search-btn">Search</button>
@@ -85,8 +86,9 @@
                                 <td>${m.moduleName}</td>
                                 <td>${m.moduleCode}</td>
                                 <td>${m.description}</td>
-                                <td>${m.createdBy}</td>
-                                <td>${m.assignedLecturerID}</td>
+                                <td>${userNameMap[m.createdBy]} (${m.createdBy})</td>
+                                <td>${userNameMap[m.assignedLecturerID]} (${m.assignedLecturerID})</td>
+
 
                                 <td class="actions-cell">
                                     <form action="Module" method="GET" style="display:inline;">

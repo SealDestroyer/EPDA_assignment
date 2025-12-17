@@ -2,6 +2,8 @@ package model;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -9,22 +11,19 @@ import javax.persistence.NamedQuery;
 @Entity
 @NamedQueries({
     @NamedQuery(
-            name = "MyModule.findAll",
-            query = "SELECT m FROM MyModule m ORDER BY m.moduleID"
-    )
-    ,
+        name = "MyModule.findAll",
+        query = "SELECT m FROM MyModule m ORDER BY m.moduleID"
+    ),
     @NamedQuery(
-            name = "MyModule.search",
-            query = "SELECT m FROM MyModule m "
-            + "WHERE LOWER(m.moduleID) LIKE :kw "
-            + "   OR LOWER(m.moduleCode) LIKE :kw "
-            + "   OR LOWER(m.moduleName) LIKE :kw "
-            + "ORDER BY m.moduleID"
-    )
-    ,
+        name = "MyModule.search",
+        query = "SELECT m FROM MyModule m "
+              + "WHERE LOWER(m.moduleCode) LIKE :kw "
+              + "   OR LOWER(m.moduleName) LIKE :kw "
+              + "ORDER BY m.moduleID"
+    ),
     @NamedQuery(
-            name = "MyModule.findByModuleCode",
-            query = "SELECT m FROM MyModule m WHERE LOWER(m.moduleCode) = :code"
+        name = "MyModule.findByModuleCode",
+        query = "SELECT m FROM MyModule m WHERE LOWER(m.moduleCode) = :code"
     )
 })
 public class MyModule implements Serializable {
@@ -32,21 +31,22 @@ public class MyModule implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    private String moduleID;             // PK
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer moduleID; // PK (DB auto increment)
 
     private String moduleName;
     private String moduleCode;
     private String description;
 
     private String createdBy;            // FK → AcademicLeader(UserID)
-    private String assignedLecturerID;   // FK → Lecturer(UserID), nullable
+    private String assignedLecturerID;   // FK → Lecturer(UserID)
 
     public MyModule() {
     }
 
-    public MyModule(String moduleID, String moduleName, String moduleCode,
-            String description, String createdBy, String assignedLecturerID) {
-        this.moduleID = moduleID;
+    // constructor without moduleID (DB generates it)
+    public MyModule(String moduleName, String moduleCode, String description,
+                    String createdBy, String assignedLecturerID) {
         this.moduleName = moduleName;
         this.moduleCode = moduleCode;
         this.description = description;
@@ -54,11 +54,11 @@ public class MyModule implements Serializable {
         this.assignedLecturerID = assignedLecturerID;
     }
 
-    public String getModuleID() {
+    public Integer getModuleID() {
         return moduleID;
     }
 
-    public void setModuleID(String moduleID) {
+    public void setModuleID(Integer moduleID) {
         this.moduleID = moduleID;
     }
 

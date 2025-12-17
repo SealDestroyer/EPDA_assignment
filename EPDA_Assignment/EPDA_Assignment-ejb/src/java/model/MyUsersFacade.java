@@ -5,7 +5,9 @@
  */
 package model;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -35,4 +37,21 @@ public class MyUsersFacade extends AbstractFacade<MyUsers> {
         return q.getResultList();
     }
 
+    public Map<String, String> findUserNameMapByIds(List<String> ids) {
+        Map<String, String> map = new HashMap<>();
+
+        if (ids == null || ids.isEmpty()) {
+            return map;
+        }
+
+        Query q = em.createNamedQuery("MyUsers.findByUserIds");
+        q.setParameter("ids", ids);
+
+        List<MyUsers> users = q.getResultList();
+        for (MyUsers u : users) {
+            map.put(u.getUserID(), u.getFullName());
+        }
+
+        return map;
+    }
 }
