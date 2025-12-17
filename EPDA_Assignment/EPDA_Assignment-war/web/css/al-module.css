@@ -1,4 +1,7 @@
 /* ===== MODULE PAGE LAYOUT ===== */
+body {
+    overflow-y: auto;   /* ✅ allow page scroll */
+}
 
 .page-container {
     padding: 40px;
@@ -6,7 +9,6 @@
 }
 
 /* ===== SEARCH BAR ===== */
-
 .search-bar-container {
     display: flex;
     justify-content: center;
@@ -52,7 +54,6 @@
 }
 
 /* ===== ADD BUTTON ===== */
-
 .table-top-bar {
     margin-bottom: 12px;
 }
@@ -80,31 +81,21 @@
 }
 
 /* ===== TABLE CONTAINER ===== */
-/* The container does NOT scroll vertically.
-   Only the tbody scrolls (scroll bar inside data rows). */
-
+/* ✅ Table grows naturally. No inner scrolling box. */
 .table-container {
     background: rgba(245, 245, 245, 0.92);
     border-radius: 10px;
     padding: 20px;
 
-    overflow-x: auto;     /* horizontal scroll if needed */
-    overflow-y: hidden;   /* IMPORTANT: no vertical scroll here */
+    overflow-x: auto;   /* horizontal scroll if needed */
+    overflow-y: visible;
 }
 
-/* ===== TABLE: HEADER FIXED, BODY SCROLLABLE ===== */
-
+/* ===== TABLE ===== */
 table.module-table {
     width: 100%;
     border-collapse: collapse;
     color: #333;
-}
-
-/* Keep header and body rows aligned */
-table.module-table thead,
-table.module-table tbody tr {
-    display: table;
-    width: 100%;
     table-layout: fixed;
 }
 
@@ -114,13 +105,6 @@ table.module-table thead th {
     color: #fff;
     padding: 12px;
     text-align: left;
-}
-
-/* ✅ Scrollbar inside data rows */
-table.module-table tbody {
-    display: block;
-    max-height: 520px;   /* adjust this number if you want taller/shorter */
-    overflow-y: auto;
 }
 
 /* Body cells */
@@ -135,7 +119,6 @@ table.module-table tbody tr:hover {
 }
 
 /* ===== ACTION BUTTONS ===== */
-
 td form button {
     padding: 8px 16px;
     font-size: 0.95em;

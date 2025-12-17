@@ -16,3 +16,17 @@
         <a href="Logout">Logout</a>
     </div>
 </nav>
+        
+<script>
+    window.addEventListener("scroll", function () {
+        const nav = document.querySelector("nav.menu");
+        if (!nav)
+            return;
+
+        if (window.scrollY > 20) {
+            nav.classList.add("scrolled");
+        } else {
+            nav.classList.remove("scrolled");
+        }
+    });
+</script>

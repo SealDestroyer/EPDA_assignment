@@ -70,6 +70,14 @@ nav.menu .nav-links a:hover {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
+/* Navbar background appears when scrolling */
+nav.menu.scrolled {
+    background: rgba(90, 62, 43, 0.92);   /* same brown theme */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(4px);           /* optional, modern touch */
+}
+
+
 /* Centered Main Content (DASHBOARD ONLY)
    This will still work nicely on ALdashboard.jsp */
 .center-content {
