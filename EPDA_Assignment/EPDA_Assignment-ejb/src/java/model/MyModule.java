@@ -21,6 +21,11 @@ import javax.persistence.NamedQuery;
             + "   OR LOWER(m.moduleName) LIKE :kw "
             + "ORDER BY m.moduleID"
     )
+    ,
+    @NamedQuery(
+            name = "MyModule.findByModuleCode",
+            query = "SELECT m FROM MyModule m WHERE LOWER(m.moduleCode) = :code"
+    )
 })
 public class MyModule implements Serializable {
 

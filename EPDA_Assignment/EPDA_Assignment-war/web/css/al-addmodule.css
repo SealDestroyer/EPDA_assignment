@@ -117,6 +117,22 @@ select.input-field:valid + .input-label {
     color: #d2a679;
 }
 
+/* make the selected text visible */
+select.input-field {
+    color: #fff;                 /* text color */
+}
+
+/* placeholder option (hidden) doesn't matter, but keep safe */
+select.input-field:required:invalid {
+    color: rgba(255,255,255,0.7); /* placeholder-looking color */
+}
+
+/* best-effort: works in some browsers */
+select.input-field option {
+    background-color: #000;
+    color: #fff;
+}
+
 /* brown glow on focus */
 .input-field:focus {
     border-bottom: 2px solid #5a3e2b;
@@ -174,3 +190,4 @@ select.input-field:valid + .input-label {
 .btn-secondary:hover {
     background: rgba(90, 62, 43, 0.18);
 }
+

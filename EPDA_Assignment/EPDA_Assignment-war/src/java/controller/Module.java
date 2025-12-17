@@ -13,6 +13,8 @@ import model.MyModule;
 import model.MyModuleFacade;
 import model.MyUsers;
 import model.MyUsersFacade;
+import java.util.Map;
+import java.util.HashMap;
 
 @WebServlet(name = "Module", urlPatterns = {"/Module"})
 public class Module extends HttpServlet {
@@ -88,21 +90,81 @@ public class Module extends HttpServlet {
                 request.getRequestDispatcher("addmodule.jsp").forward(request, response);
                 return;
             }
-            
+
             // ===== ADD MODULE =====
             if ("add".equals(action)) {
 
                 MyUsers loginUser = (MyUsers) session.getAttribute("user");
-                String createdByID = loginUser.getUserID(); // save FK in MyModule.createdBy
+                String createdByID = loginUser.getUserID();
 
                 String moduleName = request.getParameter("moduleName");
                 String moduleCode = request.getParameter("moduleCode");
                 String description = request.getParameter("description");
                 String assignedLecturerID = request.getParameter("assignedLecturerID");
 
-                // temp auto id (we will improve later to M001/M002)
-                String moduleID = "M" + System.currentTimeMillis();
+                moduleName = (moduleName == null) ? "" : moduleName.trim();
+                moduleCode = (moduleCode == null) ? "" : moduleCode.trim();
+                description = (description == null) ? "" : description.trim();
+                assignedLecturerID = (assignedLecturerID == null) ? "" : assignedLecturerID.trim();
 
+                Map<String, String> errors = new HashMap<>();
+
+                // Module Name
+                if (moduleName.isEmpty()) {
+                    errors.put("moduleName", "Module Name cannot be empty.");
+                } else if (moduleName.length() < 2) {
+                    errors.put("moduleName", "Module Name must be at least 2 characters.");
+                } else if (moduleName.length() > 50) {
+                    errors.put("moduleName", "Module Name must not exceed 50 characters.");
+                }
+
+                // Module Code
+                if (moduleCode.isEmpty()) {
+                    errors.put("moduleCode", "Module Code cannot be empty.");
+                } else if (moduleCode.length() < 2) {
+                    errors.put("moduleCode", "Module Code must be at least 2 characters.");
+                } else if (moduleCode.length() > 10) {
+                    errors.put("moduleCode", "Module Code must not exceed 10 characters.");
+                } else if (myModuleFacade.existsModuleCode(moduleCode)) {
+                    errors.put("moduleCode", "Module Code already exists.");
+                }
+
+                // Description
+                if (description.isEmpty()) {
+                    errors.put("description", "Description cannot be empty.");
+                } else if (description.length() > 100) {
+                    errors.put("description", "Description must not exceed 100 characters.");
+                }
+
+                // Lecturer
+                if (assignedLecturerID.isEmpty()) {
+                    errors.put("assignedLecturerID", "Please select a lecturer.");
+                }
+
+                // if got errors -> return back to addmodule.jsp
+                if (!errors.isEmpty()) {
+
+                    request.setAttribute("errors", errors);
+
+                    // keep old values
+                    request.setAttribute("moduleNameVal", moduleName);
+                    request.setAttribute("moduleCodeVal", moduleCode);
+                    request.setAttribute("descriptionVal", description);
+                    request.setAttribute("assignedLecturerIDVal", assignedLecturerID);
+
+                    // reload page data
+                    request.setAttribute("createdByName", loginUser.getFullName());
+                    request.setAttribute("createdByID", createdByID);
+
+                    List<MyUsers> lecturerList = myUsersFacade.findLecturers();
+                    request.setAttribute("lecturerList", lecturerList);
+
+                    request.getRequestDispatcher("addmodule.jsp").forward(request, response);
+                    return;
+                }
+
+                // PASS -> create module
+                String moduleID = "M" + System.currentTimeMillis();
                 MyModule m = new MyModule(moduleID, moduleName, moduleCode, description, createdByID, assignedLecturerID);
                 myModuleFacade.create(m);
 
