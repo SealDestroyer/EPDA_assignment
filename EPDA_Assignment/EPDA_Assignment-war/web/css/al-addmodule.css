@@ -31,7 +31,9 @@ body {
     animation: glowBoxBrown 1.6s infinite alternate;
     margin-top: -30px;
     margin-bottom: 10px;
+    position: relative;
 }
+
 
 @keyframes glowBoxBrown {
     from { box-shadow: 0 0 18px rgba(90, 62, 43, 0.75); }
@@ -62,8 +64,7 @@ body {
     border-bottom: 2px solid #fff;
     background: transparent;
     font-size: 16px;
-    padding: 10px 10px 10px 5px;
-    outline: none;
+    padding: 10px 10px 10px 5px; 
     color: #fff;
     box-sizing: border-box;
 }
@@ -191,3 +192,93 @@ select.input-field option {
     background: rgba(90, 62, 43, 0.18);
 }
 
+.field-error {
+    position: absolute;
+    right: 8px;
+    top: calc(100% + 4px);   /* below the line */
+    font-size: 0.95em;
+    color: #ff4d4d;
+    text-align: right;
+    max-width: 80%;
+    white-space: nowrap;     /* keep it one clean line */
+    overflow: hidden;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    pointer-events: none;
+}
+
+.field-error:empty {
+    display: none;
+}
+
+
+
+/* Show only when it has text (when JSTL prints error message) */
+.field-error:not(:empty) {
+    opacity: 1;
+    visibility: visible;
+}
+
+.input-error {
+    border-bottom: 2px solid #ff6b6b !important;
+    box-shadow: 0 8px 14px -12px rgba(255, 107, 107, 0.9);
+}
+
+.form-alert {
+    position: absolute;
+    top: 95px;               /* adjust if needed */
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-weight: bold;
+    color: #fff;
+    background: transparent; /* keep your look */
+    padding: 0;
+    margin: 0;
+    pointer-events: none;    /* so user can still click inputs */
+}
+
+/* ===== FIX WHITE BOX IN TEXTAREA ===== */
+textarea.input-field {
+    background: transparent !important;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    resize: none;                 /* remove resize UI */
+}
+
+/* remove browser focus ring */
+textarea.input-field:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+/* remove inner chrome styling */
+textarea {
+    -webkit-appearance: none;
+    appearance: none;
+}
+/* remove default browser focus outline/box (white rectangle) */
+.input-field:focus,
+select.input-field:focus,
+textarea.input-field:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* for some browsers that draw focus ring */
+.input-field:focus-visible,
+select.input-field:focus-visible,
+textarea.input-field:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+}
+/* remove chrome autofill background */
+input.input-field:-webkit-autofill,
+input.input-field:-webkit-autofill:hover,
+input.input-field:-webkit-autofill:focus {
+    -webkit-text-fill-color: #fff;
+    transition: background-color 9999s ease-out 0s;
+    box-shadow: 0 0 0px 1000px transparent inset !important;
+}

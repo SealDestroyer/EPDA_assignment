@@ -19,9 +19,8 @@
         <!-- Center Content -->
         <div class="center-content">
             <div class="btn-container">
-                <a class="btn" href="ALmoduleCreate.jsp">Create New Module</a>
+                <a class="btn" href="${pageContext.request.contextPath}/Module?action=goAdd">Create New Module</a>
             </div>
         </div>
-
     </body>
 </html>
