@@ -38,6 +38,13 @@ public class Module extends HttpServlet {
             return;
         }
 
+        // ===== AL ONLY VALIDATION =====
+        MyUsers loginUser = (MyUsers) session.getAttribute("user");
+        if (!isAcademicLeader(loginUser)) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
         try {
             String action = request.getParameter("action");
             if (action == null || action.trim().isEmpty()) {
@@ -106,9 +113,6 @@ public class Module extends HttpServlet {
             // ===== GO ADD PAGE =====
             if ("goAdd".equals(action)) {
 
-                // get logged in Academic Leader from session
-                MyUsers loginUser = (MyUsers) session.getAttribute("user");
-
                 // show full name on UI
                 request.setAttribute("createdByName", loginUser.getFullName());
                 request.setAttribute("createdByID", loginUser.getUserID()); // optional if needed
@@ -124,7 +128,6 @@ public class Module extends HttpServlet {
             // ===== ADD MODULE =====
             if ("add".equals(action)) {
 
-                MyUsers loginUser = (MyUsers) session.getAttribute("user");
                 String createdByID = loginUser.getUserID();
 
                 String moduleName = request.getParameter("moduleName");
@@ -206,6 +209,172 @@ public class Module extends HttpServlet {
                 return;
             }
 
+            // ===== GO UPDATE PAGE (EDIT) =====
+            if ("edit".equals(action)) {
+
+                String moduleIDStr = request.getParameter("moduleID");
+                if (moduleIDStr == null || moduleIDStr.trim().isEmpty()) {
+                    response.sendRedirect("Module?action=list");
+                    return;
+                }
+
+                Integer moduleID = Integer.parseInt(moduleIDStr);
+
+                // get module row
+                MyModule m = myModuleFacade.find(moduleID);
+                if (m == null) {
+                    response.sendRedirect("Module?action=list");
+                    return;
+                }
+
+                // lecturer dropdown list
+                List<MyUsers> lecturerList = myUsersFacade.findLecturers();
+                request.setAttribute("lecturerList", lecturerList);
+
+                // prefill values (same naming style you used in addmodule.jsp)
+                request.setAttribute("moduleIDVal", m.getModuleID());
+                request.setAttribute("moduleNameVal", m.getModuleName());
+                request.setAttribute("moduleCodeVal", m.getModuleCode());
+                request.setAttribute("descriptionVal", m.getDescription());
+                request.setAttribute("assignedLecturerIDVal", m.getAssignedLecturerID());
+
+                // Created By display name (based on createdBy userID stored in module row)
+                String createdById = m.getCreatedBy();
+                String createdByName = createdById; // fallback if user not found
+                if (createdById != null && !createdById.trim().isEmpty()) {
+                    MyUsers creator = myUsersFacade.find(createdById);
+                    if (creator != null) {
+                        createdByName = creator.getFullName();
+                    }
+                }
+                request.setAttribute("createdByName", createdByName);
+
+                request.getRequestDispatcher("updatemodule.jsp").forward(request, response);
+                return;
+            }
+
+            // ===== UPDATE MODULE =====
+            if ("update".equals(action)) {
+
+                String moduleIDStr = request.getParameter("moduleID");
+                if (moduleIDStr == null || moduleIDStr.trim().isEmpty()) {
+                    response.sendRedirect("Module?action=list");
+                    return;
+                }
+                Integer moduleID = Integer.parseInt(moduleIDStr);
+
+                MyModule m = myModuleFacade.find(moduleID);
+                if (m == null) {
+                    response.sendRedirect("Module?action=list");
+                    return;
+                }
+
+                String moduleName = request.getParameter("moduleName");
+                String moduleCode = request.getParameter("moduleCode");
+                String description = request.getParameter("description");
+                String assignedLecturerID = request.getParameter("assignedLecturerID");
+
+                moduleName = (moduleName == null) ? "" : moduleName.trim();
+                moduleCode = (moduleCode == null) ? "" : moduleCode.trim();
+                description = (description == null) ? "" : description.trim();
+                assignedLecturerID = (assignedLecturerID == null) ? "" : assignedLecturerID.trim();
+
+                Map<String, String> errors = new HashMap<>();
+
+                // Module Name
+                if (moduleName.isEmpty()) {
+                    errors.put("moduleName", "Module Name cannot be empty.");
+                } else if (moduleName.length() < 2) {
+                    errors.put("moduleName", "Module Name must be at least 2 characters.");
+                } else if (moduleName.length() > 50) {
+                    errors.put("moduleName", "Module Name must not exceed 50 characters.");
+                }
+
+                // Module Code (same validation BUT uniqueness must ignore this same moduleID)
+                if (moduleCode.isEmpty()) {
+                    errors.put("moduleCode", "Module Code cannot be empty.");
+                } else if (moduleCode.length() < 2) {
+                    errors.put("moduleCode", "Module Code must be at least 2 characters.");
+                } else if (moduleCode.length() > 10) {
+                    errors.put("moduleCode", "Module Code must not exceed 10 characters.");
+                } else if (myModuleFacade.existsModuleCodeExceptId(moduleCode, moduleID)) {
+                    errors.put("moduleCode", "Module Code already exists.");
+                }
+
+                // Description
+                if (description.isEmpty()) {
+                    errors.put("description", "Description cannot be empty.");
+                } else if (description.length() > 100) {
+                    errors.put("description", "Description must not exceed 100 characters.");
+                }
+
+                // Lecturer
+                if (assignedLecturerID.isEmpty()) {
+                    errors.put("assignedLecturerID", "Please select a lecturer.");
+                }
+
+                // if got errors -> return back to updatemodule.jsp
+                if (!errors.isEmpty()) {
+
+                    request.setAttribute("errors", errors);
+
+                    // keep old values
+                    request.setAttribute("moduleIDVal", moduleID);
+                    request.setAttribute("moduleNameVal", moduleName);
+                    request.setAttribute("moduleCodeVal", moduleCode);
+                    request.setAttribute("descriptionVal", description);
+                    request.setAttribute("assignedLecturerIDVal", assignedLecturerID);
+
+                    // reload dropdown
+                    List<MyUsers> lecturerList = myUsersFacade.findLecturers();
+                    request.setAttribute("lecturerList", lecturerList);
+
+                    // created by name from module row
+                    String createdById = m.getCreatedBy();
+                    String createdByName = createdById;
+                    if (createdById != null && !createdById.trim().isEmpty()) {
+                        MyUsers creator = myUsersFacade.find(createdById);
+                        if (creator != null) {
+                            createdByName = creator.getFullName();
+                        }
+                    }
+                    request.setAttribute("createdByName", createdByName);
+
+                    request.getRequestDispatcher("updatemodule.jsp").forward(request, response);
+                    return;
+                }
+
+                // PASS -> update entity
+                m.setModuleName(moduleName);
+                m.setModuleCode(moduleCode);
+                m.setDescription(description);
+                m.setAssignedLecturerID(assignedLecturerID);
+
+                myModuleFacade.edit(m);
+                response.sendRedirect("Module?action=list");
+                return;
+            }
+
+            // ===== DELETE MODULE =====
+            if ("delete".equals(action)) {
+
+                String moduleIDStr = request.getParameter("moduleID");
+                if (moduleIDStr == null || moduleIDStr.trim().isEmpty()) {
+                    response.sendRedirect("Module?action=list");
+                    return;
+                }
+
+                Integer moduleID = Integer.parseInt(moduleIDStr);
+
+                MyModule m = myModuleFacade.find(moduleID);
+                if (m != null) {
+                    myModuleFacade.remove(m);
+                }
+
+                response.sendRedirect("Module?action=list");
+                return;
+            }
+
             // fallback
             response.sendRedirect("Module?action=list");
 
@@ -226,6 +395,12 @@ public class Module extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+    }
+
+    private boolean isAcademicLeader(MyUsers user) {
+        return user != null
+                && user.getUserID() != null
+                && user.getUserID().toUpperCase().startsWith("AL");
     }
 
     @Override

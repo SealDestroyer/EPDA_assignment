@@ -239,21 +239,6 @@ select.input-field option {
     pointer-events: none;    /* so user can still click inputs */
 }
 
-/* ===== FIX WHITE BOX IN TEXTAREA ===== */
-textarea.input-field {
-    background: transparent !important;
-    border: none;
-    outline: none;
-    box-shadow: none;
-    resize: none;                 /* remove resize UI */
-}
-
-/* remove browser focus ring */
-textarea.input-field:focus {
-    outline: none;
-    box-shadow: none;
-}
-
 /* remove inner chrome styling */
 textarea {
     -webkit-appearance: none;
