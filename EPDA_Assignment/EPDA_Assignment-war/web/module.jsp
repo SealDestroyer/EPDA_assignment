@@ -89,7 +89,6 @@
                                 <td>${userNameMap[m.createdBy]} (${m.createdBy})</td>
                                 <td>${userNameMap[m.assignedLecturerID]} (${m.assignedLecturerID})</td>
 
-
                                 <td class="actions-cell">
                                     <form action="Module" method="GET" style="display:inline;">
                                         <input type="hidden" name="action" value="edit"/>
@@ -97,14 +96,18 @@
                                         <button type="submit" class="modify-btn">Modify</button>
                                     </form>
 
-                                    <form action="Module" method="POST" style="display:inline;">
+                                    <form action="Module" method="POST" class="delete-form" style="display:inline;">
                                         <input type="hidden" name="action" value="delete"/>
                                         <input type="hidden" name="moduleID" value="${m.moduleID}"/>
-                                        <button type="submit" class="delete-btn"
-                                                onclick="return confirm('Delete this module?');">
+
+                                        <button type="button"
+                                                class="delete-btn open-delete-modal"
+                                                data-moduleid="${m.moduleID}"
+                                                data-modulename="${m.moduleName}">
                                             Delete
                                         </button>
                                     </form>
+
                                 </td>
 
                             </tr>
@@ -114,5 +117,76 @@
             </div>
 
         </div>
+        <!-- DELETE CONFIRM MODAL -->
+        <div id="deleteModal" class="modal-overlay" style="display:none;">
+            <div class="modal-box">
+                <h3 class="modal-title">Confirm Delete</h3>
+
+                <p class="modal-text">Do you wish to delete the following module?</p>
+
+                <div class="modal-info">
+                    <div><strong>Module ID:</strong> <span id="dmModuleID"></span></div>
+                    <div><strong>Module Name:</strong> <span id="dmModuleName"></span></div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" id="confirmDeleteBtn" class="modal-btn modal-btn-danger">Delete</button>
+                    <button type="button" id="cancelDeleteBtn" class="modal-btn modal-btn-cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+        <script>
+            (function () {
+                const modal = document.getElementById("deleteModal");
+                const dmModuleID = document.getElementById("dmModuleID");
+                const dmModuleName = document.getElementById("dmModuleName");
+                const confirmBtn = document.getElementById("confirmDeleteBtn");
+                const cancelBtn = document.getElementById("cancelDeleteBtn");
+
+                let selectedForm = null;
+
+                // open modal
+                document.querySelectorAll(".open-delete-modal").forEach(btn => {
+                    btn.addEventListener("click", function () {
+                        const moduleId = this.dataset.moduleid;
+                        const moduleName = this.dataset.modulename;
+
+                        dmModuleID.textContent = moduleId;
+                        dmModuleName.textContent = moduleName;
+
+                        selectedForm = this.closest("form");
+                        modal.style.display = "flex";
+                    });
+                });
+
+                // confirm delete -> submit the correct form
+                confirmBtn.addEventListener("click", function () {
+                    if (selectedForm) {
+                        selectedForm.submit();
+                    }
+                });
+
+                // cancel -> close modal
+                function closeModal() {
+                    modal.style.display = "none";
+                    selectedForm = null;
+                }
+
+                cancelBtn.addEventListener("click", closeModal);
+
+                // click outside box closes modal
+                modal.addEventListener("click", function (e) {
+                    if (e.target === modal)
+                        closeModal();
+                });
+
+                // ESC closes modal
+                document.addEventListener("keydown", function (e) {
+                    if (e.key === "Escape" && modal.style.display !== "none") {
+                        closeModal();
+                    }
+                });
+            })();
+        </script>
     </body>
 </html>

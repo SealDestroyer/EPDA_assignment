@@ -63,4 +63,23 @@ public class MyModuleFacade extends AbstractFacade<MyModule> {
         return !list.isEmpty();
     }
 
+    public boolean existsModuleCodeExceptId(String moduleCode, Integer moduleID) {
+        if (moduleCode == null || moduleID == null) {
+            return false;
+        }
+
+        String code = moduleCode.trim().toLowerCase();
+        if (code.isEmpty()) {
+            return false;
+        }
+
+        List<MyModule> list = em.createNamedQuery("MyModule.findByModuleCodeExceptId", MyModule.class)
+                .setParameter("code", code)
+                .setParameter("id", moduleID)
+                .setMaxResults(1)
+                .getResultList();
+
+        return !list.isEmpty();
+    }
+
 }

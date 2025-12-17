@@ -11,19 +11,28 @@ import javax.persistence.NamedQuery;
 @Entity
 @NamedQueries({
     @NamedQuery(
-        name = "MyModule.findAll",
-        query = "SELECT m FROM MyModule m ORDER BY m.moduleID"
-    ),
+            name = "MyModule.findAll",
+            query = "SELECT m FROM MyModule m ORDER BY m.moduleID"
+    )
+    ,
     @NamedQuery(
-        name = "MyModule.search",
-        query = "SELECT m FROM MyModule m "
-              + "WHERE LOWER(m.moduleCode) LIKE :kw "
-              + "   OR LOWER(m.moduleName) LIKE :kw "
-              + "ORDER BY m.moduleID"
-    ),
+            name = "MyModule.search",
+            query = "SELECT m FROM MyModule m "
+            + "WHERE LOWER(m.moduleCode) LIKE :kw "
+            + "   OR LOWER(m.moduleName) LIKE :kw "
+            + "ORDER BY m.moduleID"
+    )
+    ,
     @NamedQuery(
-        name = "MyModule.findByModuleCode",
-        query = "SELECT m FROM MyModule m WHERE LOWER(m.moduleCode) = :code"
+            name = "MyModule.findByModuleCode",
+            query = "SELECT m FROM MyModule m WHERE LOWER(m.moduleCode) = :code"
+    )
+    ,
+    @NamedQuery(
+            name = "MyModule.findByModuleCodeExceptId",
+            query = "SELECT m FROM MyModule m "
+            + "WHERE LOWER(m.moduleCode) = :code "
+            + "AND m.moduleID <> :id"
     )
 })
 public class MyModule implements Serializable {
@@ -46,7 +55,7 @@ public class MyModule implements Serializable {
 
     // constructor without moduleID (DB generates it)
     public MyModule(String moduleName, String moduleCode, String description,
-                    String createdBy, String assignedLecturerID) {
+            String createdBy, String assignedLecturerID) {
         this.moduleName = moduleName;
         this.moduleCode = moduleCode;
         this.description = description;
