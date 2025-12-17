@@ -1,0 +1,176 @@
+/* ===== PAGE BACKGROUND (keep yours from al-dashboard.css if already set) ===== */
+/* If your global body already has background, you can REMOVE this. */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #fff;
+    overflow-x: hidden;
+}
+
+/* ===== CENTER WRAPPER ===== */
+.add-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding-top: 80px; /* space for navbar */
+    box-sizing: border-box;
+}
+
+/* ===== MAIN BOX ===== */
+.add-box {
+    background-color: rgba(0, 0, 0, 0.75);
+    border: 2px solid #5a3e2b;              /* brown */
+    box-shadow: 0 0 25px rgba(90, 62, 43, 0.95);
+    border-radius: 20px;
+    padding: 20px 30px 40px 30px;
+    width: 90%;
+    max-width: 460px;
+    text-align: center;
+    animation: glowBoxBrown 1.6s infinite alternate;
+    margin-top: -30px;
+    margin-bottom: 10px;
+}
+
+@keyframes glowBoxBrown {
+    from { box-shadow: 0 0 18px rgba(90, 62, 43, 0.75); }
+    to   { box-shadow: 0 0 32px rgba(90, 62, 43, 1); }
+}
+
+.add-title {
+    margin: 0 0 6px;
+    font-size: 1.9em;
+    color: #fff;
+}
+
+.add-subtitle {
+    margin: 0 0 24px;
+    opacity: 0.85;
+}
+
+/* ===== FLOATING INPUT ===== */
+.form-group {
+    position: relative;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.input-field {
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid #fff;
+    background: transparent;
+    font-size: 16px;
+    padding: 10px 10px 10px 5px;
+    outline: none;
+    color: #fff;
+    box-sizing: border-box;
+}
+
+.textarea-field {
+    min-height: 90px;
+    resize: vertical;
+}
+
+.input-field::placeholder {
+    color: transparent;
+}
+
+.input-label {
+    position: absolute;
+    top: 10px;
+    left: 5px;
+    font-size: 16px;
+    color: #ccc;
+    transition: 0.3s ease;
+    pointer-events: none;
+}
+
+/* ===== SELECT DROPDOWN (click to open, doesn't expand box) ===== */
+select.input-field {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    padding-right: 34px; /* space for arrow */
+}
+
+/* dropdown arrow only for select-group */
+.select-group::after {
+    content: "▾";
+    position: absolute;
+    right: 10px;
+    top: 12px;
+    font-size: 14px;
+    color: #d2a679;
+    pointer-events: none;
+}
+
+/* move label up on focus OR has value (input/textarea) */
+.input-field:focus + .input-label,
+.input-field:not(:placeholder-shown) + .input-label,
+select.input-field:focus + .input-label,
+select.input-field:valid + .input-label {
+    top: -10px;
+    font-size: 12px;
+    color: #d2a679;
+}
+
+/* brown glow on focus */
+.input-field:focus {
+    border-bottom: 2px solid #5a3e2b;
+    box-shadow: 0 8px 14px -12px rgba(90, 62, 43, 0.9);
+}
+
+/* disabled look for ModuleID */
+.input-field:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* ===== BUTTONS ===== */
+.form-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 28px;
+}
+
+.btn {
+    padding: 12px 0;
+    width: 130px;
+    background-color: #5a3e2b;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    color: #fff;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 12px rgba(90, 62, 43, 0.9);
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn:hover {
+    background-color: #3f2b1d;
+    transform: translateY(-2px);
+    box-shadow: 0 0 16px rgba(90, 62, 43, 1);
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+/* secondary (Cancel) */
+.btn-secondary {
+    background: transparent;
+    border: 2px solid #5a3e2b;
+    box-shadow: none;
+}
+
+.btn-secondary:hover {
+    background: rgba(90, 62, 43, 0.18);
+}

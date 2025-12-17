@@ -5,9 +5,11 @@
  */
 package model;
 
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -27,5 +29,10 @@ public class MyUsersFacade extends AbstractFacade<MyUsers> {
     public MyUsersFacade() {
         super(MyUsers.class);
     }
-    
+
+    public List<MyUsers> findLecturers() {
+        Query q = em.createNamedQuery("MyUsers.findLecturers");
+        return q.getResultList();
+    }
+
 }
