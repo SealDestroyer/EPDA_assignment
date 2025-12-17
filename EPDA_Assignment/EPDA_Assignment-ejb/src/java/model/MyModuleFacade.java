@@ -44,4 +44,23 @@ public class MyModuleFacade extends AbstractFacade<MyModule> {
 
         return q.getResultList();
     }
+
+    public boolean existsModuleCode(String moduleCode) {
+        if (moduleCode == null) {
+            return false;
+        }
+
+        String code = moduleCode.trim().toLowerCase();
+        if (code.isEmpty()) {
+            return false;
+        }
+
+        List<MyModule> list = em.createNamedQuery("MyModule.findByModuleCode", MyModule.class)
+                .setParameter("code", code)
+                .setMaxResults(1)
+                .getResultList();
+
+        return !list.isEmpty();
+    }
+
 }
