@@ -11,9 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import model.MyModule;
 import model.MyModuleFacade;
+import model.MyUsers;
+import model.MyUsersFacade;
 
 @WebServlet(name = "Module", urlPatterns = {"/Module"})
 public class Module extends HttpServlet {
+
+    @EJB
+    private MyUsersFacade myUsersFacade;
 
     @EJB
     private MyModuleFacade myModuleFacade;
@@ -63,6 +68,45 @@ public class Module extends HttpServlet {
 
                 request.setAttribute("moduleList", moduleList);
                 request.getRequestDispatcher("module.jsp").forward(request, response);
+                return;
+            }
+
+            // ===== GO ADD PAGE =====
+            if ("goAdd".equals(action)) {
+
+                // get logged in Academic Leader from session
+                MyUsers loginUser = (MyUsers) session.getAttribute("user");
+
+                // show full name on UI
+                request.setAttribute("createdByName", loginUser.getFullName());
+                request.setAttribute("createdByID", loginUser.getUserID()); // optional if needed
+
+                // lecturer dropdown list
+                List<MyUsers> lecturerList = myUsersFacade.findLecturers();
+                request.setAttribute("lecturerList", lecturerList);
+
+                request.getRequestDispatcher("addmodule.jsp").forward(request, response);
+                return;
+            }
+            
+            // ===== ADD MODULE =====
+            if ("add".equals(action)) {
+
+                MyUsers loginUser = (MyUsers) session.getAttribute("user");
+                String createdByID = loginUser.getUserID(); // save FK in MyModule.createdBy
+
+                String moduleName = request.getParameter("moduleName");
+                String moduleCode = request.getParameter("moduleCode");
+                String description = request.getParameter("description");
+                String assignedLecturerID = request.getParameter("assignedLecturerID");
+
+                // temp auto id (we will improve later to M001/M002)
+                String moduleID = "M" + System.currentTimeMillis();
+
+                MyModule m = new MyModule(moduleID, moduleName, moduleCode, description, createdByID, assignedLecturerID);
+                myModuleFacade.create(m);
+
+                response.sendRedirect("Module?action=list");
                 return;
             }
 

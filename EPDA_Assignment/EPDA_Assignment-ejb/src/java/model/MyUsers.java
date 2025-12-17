@@ -3,8 +3,17 @@ package model;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 @Entity
+@NamedQueries({
+    @NamedQuery(
+            name = "MyUsers.findLecturers",
+            query = "SELECT u FROM MyUsers u WHERE u.userID LIKE 'L%' ORDER BY u.userID"
+    )
+})
+
 public class MyUsers implements Serializable {
 
     private static final long serialVersionUID = 1L;
