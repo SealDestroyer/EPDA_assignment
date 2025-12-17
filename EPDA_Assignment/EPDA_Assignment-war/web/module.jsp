@@ -29,28 +29,34 @@
                         <input type="text" name="keyword"
                                placeholder="Search by Module ID / Code / Name"
                                value="${param.keyword != null ? param.keyword : ''}"/>
-                        <button type="submit">Search</button>
+
+                        <button type="submit" class="search-btn">Search</button>
                     </div>
+
                 </form>
             </div>
 
-            <!-- ADD BUTTON (TOP LEFT ABOVE TABLE) -->
             <div class="table-top-bar">
-                <form action="Module" method="GET">
+                <form action="Module" method="GET" class="top-btn-form">
                     <input type="hidden" name="action" value="goAdd"/>
                     <button type="submit">+ Add New Module</button>
+                </form>
+
+                <form action="Module" method="GET" class="top-btn-form">
+                    <input type="hidden" name="action" value="list"/>
+                    <button type="submit">Reset</button>
                 </form>
             </div>
 
             <c:if test="${not empty errorMsg}">
-                <div style="color:red; text-align:center; margin-bottom:10px;">
+                <div class="alert-msg">
                     ${errorMsg}
                 </div>
             </c:if>
 
             <!-- MODULE TABLE -->
             <div class="table-container">
-                
+
                 <table class="module-table" border="1" width="100%" cellpadding="8" cellspacing="0">
                     <thead>
                         <tr>

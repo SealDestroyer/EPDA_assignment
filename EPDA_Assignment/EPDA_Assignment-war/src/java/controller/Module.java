@@ -29,21 +29,40 @@ public class Module extends HttpServlet {
         }
 
         try {
-            // default action = list modules
             String action = request.getParameter("action");
             if (action == null || action.trim().isEmpty()) {
                 action = "list";
             }
 
+            // ===== LIST =====
             if ("list".equals(action)) {
 
-                // ===== LOAD ALL MODULES =====
                 List<MyModule> moduleList = myModuleFacade.getAllModules();
-                // getAllModules() uses NamedQuery MyModule.findAll
+                request.setAttribute("moduleList", moduleList);
+                request.getRequestDispatcher("module.jsp").forward(request, response);
+                return;
+            }
+
+            // ===== SEARCH =====
+            if ("search".equals(action)) {
+
+                String keyword = request.getParameter("keyword");
+
+                // if empty keyword -> show all modules (more user-friendly)
+                if (keyword == null || keyword.trim().isEmpty()) {
+                    response.sendRedirect("Module?action=list");
+                    return;
+                }
+
+                List<MyModule> moduleList = myModuleFacade.searchModules(keyword);
+
+                // optional msg if no result
+                if (moduleList.isEmpty()) {
+                    request.setAttribute("errorMsg", "No modules found for: " + keyword);
+                }
 
                 request.setAttribute("moduleList", moduleList);
-                request.getRequestDispatcher("module.jsp")
-                        .forward(request, response);
+                request.getRequestDispatcher("module.jsp").forward(request, response);
                 return;
             }
 
@@ -51,11 +70,9 @@ public class Module extends HttpServlet {
             response.sendRedirect("Module?action=list");
 
         } catch (Exception e) {
-            // ===== ERROR HANDLING =====
             request.setAttribute("moduleList", java.util.Collections.emptyList());
             request.setAttribute("errorMsg", "Unable to load modules.");
-            request.getRequestDispatcher("module.jsp")
-                    .forward(request, response);
+            request.getRequestDispatcher("module.jsp").forward(request, response);
         }
     }
 

@@ -35,4 +35,13 @@ public class MyModuleFacade extends AbstractFacade<MyModule> {
         return q.getResultList(); // returns empty list if no records (good!)
     }
 
+    public List<MyModule> searchModules(String keyword) {
+
+        String kw = "%" + keyword.toLowerCase().trim() + "%";
+
+        Query q = em.createNamedQuery("MyModule.search");
+        q.setParameter("kw", kw);
+
+        return q.getResultList();
+    }
 }
