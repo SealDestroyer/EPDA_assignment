@@ -1,5 +1,6 @@
 package controller;
 
+import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Util.escape;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +50,54 @@ public class Module extends HttpServlet {
             String action = request.getParameter("action");
             if (action == null || action.trim().isEmpty()) {
                 action = "list";
+            }
+
+            // ===== LIST JSON (AJAX REAL-TIME) =====
+            if ("listJson".equals(action)) {
+
+                List<MyModule> moduleList = myModuleFacade.getAllModules();
+
+                // Build userNameMap (same logic as list)
+                Set<String> ids = new HashSet<>();
+                for (MyModule m : moduleList) {
+                    if (m.getCreatedBy() != null && !m.getCreatedBy().trim().isEmpty()) {
+                        ids.add(m.getCreatedBy().trim());
+                    }
+                    if (m.getAssignedLecturerID() != null && !m.getAssignedLecturerID().trim().isEmpty()) {
+                        ids.add(m.getAssignedLecturerID().trim());
+                    }
+                }
+                Map<String, String> userNameMap
+                        = myUsersFacade.findUserNameMapByIds(new ArrayList<>(ids));
+
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+
+                StringBuilder json = new StringBuilder("[");
+                for (int i = 0; i < moduleList.size(); i++) {
+                    MyModule m = moduleList.get(i);
+
+                    json.append("{")
+                            .append("\"moduleID\":").append(m.getModuleID()).append(",")
+                            .append("\"moduleName\":\"").append(escape(m.getModuleName())).append("\",")
+                            .append("\"moduleCode\":\"").append(escape(m.getModuleCode())).append("\",")
+                            .append("\"description\":\"").append(escape(m.getDescription())).append("\",")
+                            .append("\"createdBy\":\"")
+                            .append(escape(userNameMap.get(m.getCreatedBy())))
+                            .append(" (").append(m.getCreatedBy()).append(")\",")
+                            .append("\"lecturer\":\"")
+                            .append(escape(userNameMap.get(m.getAssignedLecturerID())))
+                            .append(" (").append(m.getAssignedLecturerID()).append(")\"")
+                            .append("}");
+
+                    if (i < moduleList.size() - 1) {
+                        json.append(",");
+                    }
+                }
+                json.append("]");
+
+                response.getWriter().write(json.toString());
+                return;
             }
 
             // ===== LIST =====
@@ -401,6 +450,16 @@ public class Module extends HttpServlet {
         return user != null
                 && user.getUserID() != null
                 && user.getUserID().toUpperCase().startsWith("AL");
+    }
+
+    private String escape(String s) {
+        if (s == null) {
+            return "";
+        }
+        return s.replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\n", "")
+                .replace("\r", "");
     }
 
     @Override
