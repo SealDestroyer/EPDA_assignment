@@ -71,7 +71,7 @@
                         </tr>
                     </thead>
 
-                    <tbody>
+                    <tbody id="moduleTableBody">
                         <c:if test="${empty moduleList}">
                             <tr>
                                 <td colspan="7" style="text-align:center;">
@@ -137,6 +137,8 @@
         </div>
         <script>
             (function () {
+
+                // ====== DELETE MODAL + EVENT DELEGATION ======
                 const modal = document.getElementById("deleteModal");
                 const dmModuleID = document.getElementById("dmModuleID");
                 const dmModuleName = document.getElementById("dmModuleName");
@@ -144,48 +146,123 @@
                 const cancelBtn = document.getElementById("cancelDeleteBtn");
 
                 let selectedForm = null;
+                let pauseAutoRefresh = false;
 
-                // open modal
-                document.querySelectorAll(".open-delete-modal").forEach(btn => {
-                    btn.addEventListener("click", function () {
-                        const moduleId = this.dataset.moduleid;
-                        const moduleName = this.dataset.modulename;
-
-                        dmModuleID.textContent = moduleId;
-                        dmModuleName.textContent = moduleName;
-
-                        selectedForm = this.closest("form");
-                        modal.style.display = "flex";
-                    });
-                });
-
-                // confirm delete -> submit the correct form
-                confirmBtn.addEventListener("click", function () {
-                    if (selectedForm) {
-                        selectedForm.submit();
-                    }
-                });
-
-                // cancel -> close modal
                 function closeModal() {
                     modal.style.display = "none";
                     selectedForm = null;
+                    pauseAutoRefresh = false;
                 }
+
+                // Open modal (works even after AJAX replaces tbody)
+                document.addEventListener("click", function (e) {
+                    const btn = e.target.closest(".open-delete-modal");
+                    if (!btn)
+                        return;
+
+                    dmModuleID.textContent = btn.dataset.moduleid;
+                    dmModuleName.textContent = btn.dataset.modulename;
+
+                    selectedForm = btn.closest("form");
+                    pauseAutoRefresh = true;     // pause refresh while confirming
+                    modal.style.display = "flex";
+                });
+
+                // Confirm delete
+                confirmBtn.addEventListener("click", function () {
+                    if (selectedForm) {
+                        selectedForm.submit();
+                        closeModal();
+                    }
+                });
 
                 cancelBtn.addEventListener("click", closeModal);
 
-                // click outside box closes modal
                 modal.addEventListener("click", function (e) {
                     if (e.target === modal)
                         closeModal();
                 });
 
-                // ESC closes modal
                 document.addEventListener("keydown", function (e) {
-                    if (e.key === "Escape" && modal.style.display !== "none") {
+                    if (e.key === "Escape" && modal.style.display !== "none")
                         closeModal();
-                    }
                 });
+
+                // ====== AJAX AUTO REFRESH ======
+                function escapeHtml(s) {
+                    s = (s == null) ? "" : String(s);
+                    return s.replace(/&/g, "&amp;")
+                            .replace(/</g, "&lt;")
+                            .replace(/>/g, "&gt;")
+                            .replace(/"/g, "&quot;")
+                            .replace(/'/g, "&#39;");
+                }
+
+                function escapeAttr(s) {
+                    return escapeHtml(s);
+                }
+
+                function refreshModuleTable() {
+                    if (pauseAutoRefresh)
+                        return;
+
+                    fetch("Module?action=listJson", {cache: "no-store"})
+                            .then(res => res.json())
+                            .then(data => {
+                                const tbody = document.getElementById("moduleTableBody");
+                                if (!tbody)
+                                    return;
+
+                                if (!data || data.length === 0) {
+                                    tbody.innerHTML =
+                                            "<tr><td colspan='7' style='text-align:center;'>No modules found.</td></tr>";
+                                    return;
+                                }
+
+                                tbody.innerHTML = data.map(m =>
+                                    "<tr>" +
+                                            "<td>" + m.moduleID + "</td>" +
+                                            "<td>" + escapeHtml(m.moduleName) + "</td>" +
+                                            "<td>" + escapeHtml(m.moduleCode) + "</td>" +
+                                            "<td>" + escapeHtml(m.description) + "</td>" +
+                                            "<td>" + escapeHtml(m.createdBy) + "</td>" +
+                                            "<td>" + escapeHtml(m.lecturer) + "</td>" +
+                                            "<td class='actions-cell'>" +
+                                            "<form action='Module' method='GET' style='display:inline;'>" +
+                                            "<input type='hidden' name='action' value='edit'/>" +
+                                            "<input type='hidden' name='moduleID' value='" + m.moduleID + "'/>" +
+                                            "<button type='submit' class='modify-btn'>Modify</button>" +
+                                            "</form>" +
+                                            "<form action='Module' method='POST' class='delete-form' style='display:inline;'>" +
+                                            "<input type='hidden' name='action' value='delete'/>" +
+                                            "<input type='hidden' name='moduleID' value='" + m.moduleID + "'/>" +
+                                            "<button type='button' class='delete-btn open-delete-modal' " +
+                                            "data-moduleid='" + m.moduleID + "' " +
+                                            "data-modulename='" + escapeAttr(m.moduleName) + "'>" +
+                                            "Delete" +
+                                            "</button>" +
+                                            "</form>" +
+                                            "</td>" +
+                                            "</tr>"
+                                ).join("");
+                            })
+                            .catch(() => {
+                            });
+                }
+
+                // ✅ IMPORTANT: Do not auto-refresh when user is viewing search results
+                const params = new URLSearchParams(window.location.search);
+                const action = params.get("action");
+                const isSearchMode = (action === "search");
+
+                // Interval: 1.5 seconds is OK
+                const intervalMs = 2000;
+
+                if (!isSearchMode) {
+                    refreshModuleTable();                 // run once
+                    setInterval(refreshModuleTable, intervalMs);
+                }
+
             })();
         </script>
     </body>
