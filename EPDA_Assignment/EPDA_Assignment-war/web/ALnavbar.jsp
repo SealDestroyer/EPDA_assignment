@@ -11,7 +11,7 @@
     <a class="logo" href="ALdashboard.jsp">Dashboard</a>
 
     <div class="nav-links">
-        <a href="ALeditProfile.jsp">Profile</a>
+        <a href="${pageContext.request.contextPath}/ALProfile?action=edit">Profile</a>
         <a href="${pageContext.request.contextPath}/Module?action=list">Modules</a>
         <a href="Logout">Logout</a>
     </div>
