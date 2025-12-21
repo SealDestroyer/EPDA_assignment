@@ -11,8 +11,8 @@
     <a class="logo" href="Ldashboard.jsp">Dashboard</a>
 
     <div class="nav-links">
+        <a href="${pageContext.request.contextPath}/LModule?action=list">Modules</a>
         <a href="${pageContext.request.contextPath}/LProfile?action=edit">Profile</a>
-        <a href="${pageContext.request.contextPath}/Assessment?action=list">Assessments</a>
         <a href="Logout">Logout</a>
     </div>
 </nav>
