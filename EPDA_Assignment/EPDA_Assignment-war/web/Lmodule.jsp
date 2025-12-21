@@ -43,11 +43,13 @@
             </div>
 
             <!-- ERROR MESSAGE (OPTIONAL) -->
-            <c:if test="${not empty errorMsg}">
-                <div class="alert-msg">
-                    ${errorMsg}
-                </div>
-            </c:if>
+            <div id="errorBox">
+                <c:if test="${not empty errorMsg}">
+                    <div class="alert-msg">
+                        ${errorMsg}
+                    </div>
+                </c:if>
+            </div>
 
             <!-- MODULE TABLE -->
             <div class="table-container">
@@ -117,14 +119,23 @@
                             .then(res => res.json())
                             .then(data => {
                                 const tbody = document.getElementById("moduleTableBody");
+                                const errorBox = document.getElementById("errorBox");
                                 if (!tbody)
                                     return;
 
                                 if (!data || data.length === 0) {
                                     tbody.innerHTML =
                                             "<tr><td colspan='6' style='text-align:center;'>No modules found.</td></tr>";
+
+                                    if (errorBox) {
+                                        errorBox.innerHTML = "<div class='alert-msg'>No modules have been assigned to you.</div>";
+                                    }
                                     return;
                                 }
+
+                                // ✅ got modules -> clear message
+                                if (errorBox)
+                                    errorBox.innerHTML = "";
 
                                 tbody.innerHTML = data.map(m =>
                                     "<tr>" +
@@ -146,7 +157,7 @@
                             });
                 }
 
-                // ✅ IMPORTANT: Do not auto-refresh when user is viewing search results
+                // IMPORTANT: Do not auto-refresh when user is viewing search results
                 const params = new URLSearchParams(window.location.search);
                 const action = params.get("action");
                 const isSearchMode = (action === "search");
