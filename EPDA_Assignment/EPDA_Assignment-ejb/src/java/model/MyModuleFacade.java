@@ -82,4 +82,28 @@ public class MyModuleFacade extends AbstractFacade<MyModule> {
         return !list.isEmpty();
     }
 
+    public List<MyModule> findByAssignedLecturer(String lecturerID) {
+        if (lecturerID == null || lecturerID.trim().isEmpty()) {
+            return java.util.Collections.emptyList();
+        }
+
+        return em.createNamedQuery("MyModule.findByLecturer", MyModule.class)
+                .setParameter("lecturerID", lecturerID)
+                .getResultList();
+    }
+
+    public List<MyModule> searchModulesByLecturer(String keyword, String lecturerID) {
+
+        if (lecturerID == null || lecturerID.trim().isEmpty()) {
+            return java.util.Collections.emptyList();
+        }
+
+        String kw = "%" + keyword.toLowerCase().trim() + "%";
+
+        return em.createNamedQuery("MyModule.searchByLecturer", MyModule.class)
+                .setParameter("lecturerID", lecturerID)
+                .setParameter("kw", kw)
+                .getResultList();
+    }
+
 }
