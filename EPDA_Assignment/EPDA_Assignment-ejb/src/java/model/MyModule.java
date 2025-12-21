@@ -34,6 +34,22 @@ import javax.persistence.NamedQuery;
             + "WHERE LOWER(m.moduleCode) = :code "
             + "AND m.moduleID <> :id"
     )
+    ,
+    @NamedQuery(
+            name = "MyModule.findByLecturer",
+            query = "SELECT m FROM MyModule m "
+            + "WHERE m.assignedLecturerID = :lecturerID "
+            + "ORDER BY m.moduleID"
+    )
+    ,
+    @NamedQuery(
+            name = "MyModule.searchByLecturer",
+            query = "SELECT m FROM MyModule m "
+            + "WHERE m.assignedLecturerID = :lecturerID "
+            + "AND (LOWER(m.moduleCode) LIKE :kw "
+            + "     OR LOWER(m.moduleName) LIKE :kw) "
+            + "ORDER BY m.moduleID"
+    )
 })
 public class MyModule implements Serializable {
 
