@@ -38,19 +38,19 @@
             <!-- TOP BAR -->
             <div class="table-top-bar">
 
-                <form action="Assessment" method="GET" class="top-btn-form">
+                <form action="${pageContext.request.contextPath}/Assessment" method="GET" class="top-btn-form">
                     <input type="hidden" name="action" value="goAdd"/>
-                    <input type="hidden" name="moduleID" value="${moduleID}"/>
+                    <input type="hidden" name="moduleID" value="<c:out value='${moduleID}'/>"/>
 
                     <button type="submit" id="addAssessmentBtn"
                             <c:if test="${totalWeightage >= 100}">disabled</c:if>>
-                        + Add Assessment
-                    </button>
-                </form>
+                                + Add Assessment
+                            </button>
+                    </form>
 
-                <form action="Assessment" method="GET" class="top-btn-form">
-                    <input type="hidden" name="action" value="list"/>
-                    <input type="hidden" name="moduleID" value="${moduleID}"/>
+                    <form action="Assessment" method="GET" class="top-btn-form">
+                        <input type="hidden" name="action" value="list"/>
+                        <input type="hidden" name="moduleID" value="${moduleID}"/>
                     <button type="submit">Reset</button>
                 </form>
 
@@ -130,8 +130,18 @@
         <script>
             (function () {
 
-                const ctx = "<%= request.getContextPath() %>";
-                const moduleID = "${moduleID}";
+                const ctx = "<%= request.getContextPath()%>";
+
+                const moduleID = "<c:out value='${moduleID}'/>";
+
+                let pauseAutoRefresh = false;
+
+                const addBtn = document.getElementById("addAssessmentBtn");
+                if (addBtn) {
+                    addBtn.addEventListener("click", function () {
+                        pauseAutoRefresh = true;
+                    });
+                }
 
                 function escapeHtml(s) {
                     s = (s == null) ? "" : String(s);
@@ -148,27 +158,52 @@
                     if (data && data.length) {
                         data.forEach(a => {
                             const w = parseInt(a.weightage, 10);
-                            if (!isNaN(w)) sum += w;
+                            if (!isNaN(w))
+                                sum += w;
                         });
                     }
 
                     const badge = document.getElementById("weightageBadge");
-                    if (badge) badge.textContent = "Total Weightage: " + sum + " / 100";
+                    if (badge)
+                        badge.textContent = "Total Weightage: " + sum + " / 100";
 
-                    const addBtn = document.getElementById("addAssessmentBtn");
-                    if (addBtn) addBtn.disabled = (sum >= 100);
+                    const btn = document.getElementById("addAssessmentBtn");
+                    if (btn)
+                        btn.disabled = (sum >= 100);
                 }
 
                 function refreshAssessmentTable() {
 
-                    fetch(ctx + "/Assessment?action=listJson&moduleID=" + moduleID, {cache: "no-store"})
-                            .then(res => res.json())
+                    // ✅ do nothing if paused
+                    if (pauseAutoRefresh)
+                        return;
+
+                    // ✅ if moduleID missing, stop
+                    if (!moduleID)
+                        return;
+
+                    fetch(ctx + "/Assessment?action=listJson&moduleID=" + encodeURIComponent(moduleID), {
+                        cache: "no-store",
+                        headers: {"Accept": "application/json"}
+                    })
+                            .then(res => {
+                                // ✅ If servlet redirected to login/Lmodule, it returns HTML not JSON
+                                const ct = res.headers.get("content-type") || "";
+                                if (!ct.includes("application/json")) {
+                                    return null;
+                                }
+                                return res.json();
+                            })
                             .then(data => {
+
+                                if (data === null)
+                                    return; // not JSON, ignore
 
                                 const tbody = document.getElementById("assessmentTableBody");
                                 const errorBox = document.getElementById("errorBox");
 
-                                if (!tbody) return;
+                                if (!tbody)
+                                    return;
 
                                 // always update badge + button even if empty
                                 updateWeightageUI(data);
@@ -179,35 +214,37 @@
                                     return;
                                 }
 
-                                if (errorBox) errorBox.innerHTML = "";
+                                if (errorBox)
+                                    errorBox.innerHTML = "";
 
                                 tbody.innerHTML = data.map(a =>
                                     "<tr>" +
-                                        "<td>" + a.assessmentID + "</td>" +
-                                        "<td>" + escapeHtml(a.assessmentName) + "</td>" +
-                                        "<td>" + a.weightage + "</td>" +
-                                        "<td>" + escapeHtml(a.createdBy) + "</td>" +
-                                        "<td class='actions-cell'>" +
+                                            "<td>" + a.assessmentID + "</td>" +
+                                            "<td>" + escapeHtml(a.assessmentName) + "</td>" +
+                                            "<td>" + a.weightage + "</td>" +
+                                            "<td>" + escapeHtml(a.createdBy) + "</td>" +
+                                            "<td class='actions-cell'>" +
                                             "<form action='" + ctx + "/Assessment' method='GET' style='display:inline;'>" +
-                                                "<input type='hidden' name='action' value='edit'/>" +
-                                                "<input type='hidden' name='assessmentID' value='" + a.assessmentID + "'/>" +
-                                                "<input type='hidden' name='moduleID' value='" + moduleID + "'/>" +
-                                                "<button type='submit' class='modify-btn'>Modify</button>" +
+                                            "<input type='hidden' name='action' value='edit'/>" +
+                                            "<input type='hidden' name='assessmentID' value='" + a.assessmentID + "'/>" +
+                                            "<input type='hidden' name='moduleID' value='" + escapeHtml(moduleID) + "'/>" +
+                                            "<button type='submit' class='modify-btn'>Modify</button>" +
                                             "</form>" +
                                             "<form action='" + ctx + "/Assessment' method='POST' style='display:inline;'>" +
-                                                "<input type='hidden' name='action' value='delete'/>" +
-                                                "<input type='hidden' name='assessmentID' value='" + a.assessmentID + "'/>" +
-                                                "<input type='hidden' name='moduleID' value='" + moduleID + "'/>" +
-                                                "<button type='submit' class='delete-btn' " +
-                                                    "onclick=\"return confirm('Delete this assessment?');\">" +
-                                                    "Delete" +
-                                                "</button>" +
+                                            "<input type='hidden' name='action' value='delete'/>" +
+                                            "<input type='hidden' name='assessmentID' value='" + a.assessmentID + "'/>" +
+                                            "<input type='hidden' name='moduleID' value='" + escapeHtml(moduleID) + "'/>" +
+                                            "<button type='submit' class='delete-btn' " +
+                                            "onclick=\"return confirm('Delete this assessment?');\">" +
+                                            "Delete" +
+                                            "</button>" +
                                             "</form>" +
-                                        "</td>" +
-                                    "</tr>"
+                                            "</td>" +
+                                            "</tr>"
                                 ).join("");
                             })
                             .catch(() => {
+                                // silent fail
                             });
                 }
 

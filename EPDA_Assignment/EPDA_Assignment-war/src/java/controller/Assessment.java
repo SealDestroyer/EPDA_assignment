@@ -66,6 +66,10 @@ public class Assessment extends HttpServlet {
                 return;
             }
 
+            System.out.println("DEBUG action=" + action + ", moduleIDStr=[" + moduleIDStr + "]");
+            System.out.println("DEBUG loginLecturer=[" + loginUser.getUserID() + "]");
+            System.out.println("DEBUG dbAssigned=[" + moduleRow.getAssignedLecturerID() + "]");
+
             // must be assigned to the logged-in lecturer
             String lecturerID = loginUser.getUserID();
             if (moduleRow.getAssignedLecturerID() == null
@@ -166,7 +170,7 @@ public class Assessment extends HttpServlet {
                 request.setAttribute("createdByName", loginUser.getFullName());
                 request.setAttribute("createdByID", loginUser.getUserID());
 
-                request.getRequestDispatcher("addassessment.jsp").forward(request, response);
+                request.getRequestDispatcher("addAssessment.jsp").forward(request, response);
                 return;
             }
 
@@ -230,7 +234,7 @@ public class Assessment extends HttpServlet {
                     request.setAttribute("createdByName", loginUser.getFullName());
                     request.setAttribute("createdByID", loginUser.getUserID());
 
-                    request.getRequestDispatcher("addassessment.jsp").forward(request, response);
+                    request.getRequestDispatcher("addAssessment.jsp").forward(request, response);
                     return;
                 }
 
