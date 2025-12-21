@@ -103,6 +103,9 @@
         <script>
             (function () {
 
+                // ===== CONTEXT PATH (IMPORTANT) =====
+                const ctx = "<%= request.getContextPath()%>";
+
                 // ====== AJAX AUTO REFRESH (LECTURER) ======
                 function escapeHtml(s) {
                     s = (s == null) ? "" : String(s);
@@ -115,25 +118,32 @@
 
                 function refreshModuleTable() {
 
-                    fetch("LModule?action=listJson", {cache: "no-store"})
+                    fetch(ctx + "/LModule?action=listJson", {cache: "no-store"})
                             .then(res => res.json())
                             .then(data => {
+
                                 const tbody = document.getElementById("moduleTableBody");
                                 const errorBox = document.getElementById("errorBox");
+
                                 if (!tbody)
                                     return;
 
+                                // ===== NO DATA =====
                                 if (!data || data.length === 0) {
+
                                     tbody.innerHTML =
-                                            "<tr><td colspan='6' style='text-align:center;'>No modules found.</td></tr>";
+                                            "<tr>" +
+                                            "<td colspan='6' style='text-align:center;'>No modules found.</td>" +
+                                            "</tr>";
 
                                     if (errorBox) {
-                                        errorBox.innerHTML = "<div class='alert-msg'>No modules have been assigned to you.</div>";
+                                        errorBox.innerHTML =
+                                                "<div class='alert-msg'>No modules have been assigned to you.</div>";
                                     }
                                     return;
                                 }
 
-                                // ✅ got modules -> clear message
+                                // ===== DATA FOUND =====
                                 if (errorBox)
                                     errorBox.innerHTML = "";
 
@@ -141,7 +151,7 @@
                                     "<tr>" +
                                             "<td>" + m.moduleID + "</td>" +
                                             "<td>" +
-                                            "<a href='Assessment?action=list&moduleID=" + m.moduleID + "' " +
+                                            "<a href='" + ctx + "/Assessment?action=list&moduleID=" + m.moduleID + "' " +
                                             "style='color: inherit; text-decoration: underline;'>" +
                                             escapeHtml(m.moduleName) +
                                             "</a>" +
@@ -154,10 +164,11 @@
                                 ).join("");
                             })
                             .catch(() => {
+                                // silent fail (same behavior as your original)
                             });
                 }
 
-                // IMPORTANT: Do not auto-refresh when user is viewing search results
+                // ===== SEARCH MODE CHECK =====
                 const params = new URLSearchParams(window.location.search);
                 const action = params.get("action");
                 const isSearchMode = (action === "search");
@@ -165,7 +176,7 @@
                 const intervalMs = 2000;
 
                 if (!isSearchMode) {
-                    refreshModuleTable();                 // run once
+                    refreshModuleTable();                 // run once immediately
                     setInterval(refreshModuleTable, intervalMs);
                 }
 
