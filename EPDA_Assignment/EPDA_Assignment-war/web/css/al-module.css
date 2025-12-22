@@ -311,3 +311,57 @@ td.actions-cell form button {
     cursor: not-allowed;
     transform: none !important;
 }
+
+/* Student Assessment page ONLY */
+
+/* Add = green */
+td form button.sa-add-btn {
+    border-color: #8fae92;
+    color: #4f6f55;
+    background: #eef4ef;
+}
+td form button.sa-add-btn:hover {
+    background: #4f6f55;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+/* Update = yellow */
+td form button.sa-update-btn {
+    border-color: #d1b35a;
+    color: #7a5b00;
+    background: #fff7da;
+}
+td form button.sa-update-btn:hover {
+    background: #c79a1d;
+    color: #fff;
+    transform: translateY(-2px);
+}
+.assessment-link {
+    color: #5a3e2b;        
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.assessment-link:hover {
+    color: #3f2b1d;
+    text-decoration: underline;
+}
+
+.assessment-link{
+    display: inline-block;
+    overflow-wrap: anywhere;
+    white-space: normal;
+}
+
+table.module-table th,
+table.module-table td {
+    overflow-wrap: anywhere;  
+}
+
+/* Keep action buttons aligned */
+table.module-table th:last-child,
+table.module-table td:last-child {
+    white-space: nowrap;
+}
+

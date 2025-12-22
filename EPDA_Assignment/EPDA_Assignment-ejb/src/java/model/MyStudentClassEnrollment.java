@@ -9,6 +9,29 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 @Entity
+@NamedQueries({
+    @NamedQuery(
+            name = "MyStudentClassEnrollment.findGradingListByAssessment",
+            query
+            = "SELECT u.userID, u.fullName, "
+            + "       sa.studentAssessmentID, "
+            + "       sa.mark, sa.dateAssessed, sa.feedbackText, sa.grade, "
+            + "       sa.assessedBy, lec.fullName "
+            + "FROM MyStudentClassEnrollment e "
+            + "JOIN MyUsers u ON u.userID = e.studentID "
+            + "JOIN MyStudentClass c ON c.classID = e.classID "
+            + "LEFT JOIN MyStudentAssessment sa "
+            + "   ON sa.studentID = e.studentID "
+            + "  AND sa.assessmentID = :assessmentID "
+            + "LEFT JOIN MyUsers lec ON lec.userID = sa.assessedBy "
+            + "WHERE c.moduleID = ("
+            + "   SELECT a.moduleID FROM MyAssessmentType a "
+            + "   WHERE a.assessmentID = :assessmentID"
+            + ") "
+            + "ORDER BY u.userID"
+    )
+})
+
 public class MyStudentClassEnrollment implements Serializable {
 
     private static final long serialVersionUID = 1L;

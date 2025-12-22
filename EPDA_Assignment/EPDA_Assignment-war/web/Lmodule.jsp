@@ -81,10 +81,11 @@
                                 <td>${m.moduleID}</td>
 
                                 <td>
-                                    <a href="${pageContext.request.contextPath}/Assessment?action=list&moduleID=${m.moduleID}"
-                                       style="color: inherit; text-decoration: underline;">
+                                    <a class="assessment-link"
+                                       href="${pageContext.request.contextPath}/Assessment?action=list&moduleID=${m.moduleID}">
                                         ${m.moduleName}
                                     </a>
+
                                 </td>
 
                                 <td>${m.moduleCode}</td>
@@ -151,10 +152,9 @@
                                     "<tr>" +
                                             "<td>" + m.moduleID + "</td>" +
                                             "<td>" +
-                                            "<a href='" + ctx + "/Assessment?action=list&moduleID=" + m.moduleID + "' " +
-                                            "style='color: inherit; text-decoration: underline;'>" +
+                                            "<a class='assessment-link' href='" + ctx + "/Assessment?action=list&moduleID=" + m.moduleID + "'>" +
                                             escapeHtml(m.moduleName) +
-                                            "</a>" +
+                                            "</a>"+
                                             "</td>" +
                                             "<td>" + escapeHtml(m.moduleCode) + "</td>" +
                                             "<td>" + escapeHtml(m.description) + "</td>" +

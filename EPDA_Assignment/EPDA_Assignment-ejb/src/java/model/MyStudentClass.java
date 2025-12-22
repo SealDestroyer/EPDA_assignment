@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
+@Table(name="MYSTUDENTCLASS")
 public class MyStudentClass implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -20,19 +21,28 @@ public class MyStudentClass implements Serializable {
     private String createdBy;
     private String className;
     private String semester;
-    private String year;
+    private String academicYear;
 
     public MyStudentClass() {
     }
 
-    public MyStudentClass(Integer moduleID, String createdBy,
-            String className, String semester, String year) {
-        this.moduleID = moduleID;
-        this.createdBy = createdBy;
-        this.className = className;
-        this.semester = semester;
-        this.year = year;
+public MyStudentClass(Integer moduleID, String createdBy,
+        String className, String semester, String academicYear) {
+    this.moduleID = moduleID;
+    this.createdBy = createdBy;
+    this.className = className;
+    this.semester = semester;
+    this.academicYear = academicYear;
+}
+
+    public String getAcademicYear() {
+        return academicYear;
     }
+
+    public void setAcademicYear(String academicYear) {
+        this.academicYear = academicYear;
+    }
+
 
     public Integer getClassID() {
         return classID;
@@ -72,14 +82,6 @@ public class MyStudentClass implements Serializable {
 
     public void setSemester(String semester) {
         this.semester = semester;
-    }
-
-    public String getYear() {
-        return year;
-    }
-
-    public void setYear(String year) {
-        this.year = year;
     }
 
     @Override

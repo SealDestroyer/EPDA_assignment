@@ -16,11 +16,15 @@ import model.MyAssessmentType;
 import model.MyAssessmentTypeFacade;
 import model.MyModule;
 import model.MyModuleFacade;
+import model.MyStudentClassEnrollmentFacade;
 import model.MyUsers;
 import model.MyUsersFacade;
 
 @WebServlet(name = "Assessment", urlPatterns = {"/Assessment"})
 public class Assessment extends HttpServlet {
+
+    @EJB
+    private MyStudentClassEnrollmentFacade myStudentClassEnrollmentFacade;
 
     @EJB
     private MyUsersFacade myUsersFacade;
@@ -67,6 +71,38 @@ public class Assessment extends HttpServlet {
             MyModule moduleRow = myModuleFacade.find(moduleID);
             if (moduleRow == null) {
                 response.sendRedirect("Lmodule.jsp");
+                return;
+            }
+
+            // ===== LOAD STUDENT LIST FOR SELECTED ASSESSMENT =====
+            if ("studentList".equals(action)) {
+
+                // 1) get assessmentID
+                String assessmentIDStr = request.getParameter("assessmentID");
+                if (assessmentIDStr == null || assessmentIDStr.trim().isEmpty()) {
+                    response.sendRedirect("Assessment?action=list&moduleID=" + moduleID);
+                    return;
+                }
+
+                Integer assessmentID = Integer.parseInt(assessmentIDStr);
+
+                // 2) security: assessment must belong to this module
+                MyAssessmentType a = myAssessmentTypeFacade.find(assessmentID);
+                if (a == null || a.getModuleID() == null || !a.getModuleID().equals(moduleID)) {
+                    response.sendRedirect("Assessment?action=list&moduleID=" + moduleID);
+                    return;
+                }
+
+                // 3) run your student list query (from MyStudentClassEnrollmentFacade)
+                List<Object[]> studentList = myStudentClassEnrollmentFacade.findGradingListByAssessment(assessmentID);
+
+                // 4) send data to JSP
+                request.setAttribute("moduleID", moduleID);
+                request.setAttribute("assessmentID", assessmentID);
+                request.setAttribute("assessmentName", a.getAssessmentName());
+                request.setAttribute("studentList", studentList);
+
+                request.getRequestDispatcher("StudentAssessmentList.jsp").forward(request, response);
                 return;
             }
 
