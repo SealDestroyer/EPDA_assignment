@@ -9,6 +9,15 @@
 
         <link rel="stylesheet" href="css/al-dashboard.css">
         <link rel="stylesheet" href="css/al-module.css">
+        <style>
+            /* Make Actions column compact */
+            table.module-table th:last-child,
+            table.module-table td:last-child {
+                width: 200px;        /* adjust if needed */
+                text-align: left;
+            }
+        </style>
+
     </head>
 
     <body>
@@ -96,7 +105,12 @@
                         <c:forEach items="${assessmentList}" var="a">
                             <tr>
                                 <td>${a.assessmentID}</td>
-                                <td>${a.assessmentName}</td>
+                                <td>
+                                    <a class="assessment-link"
+                                       href="${pageContext.request.contextPath}/Assessment?action=studentList&moduleID=${moduleID}&assessmentID=${a.assessmentID}">
+                                        <c:out value="${a.assessmentName}"/>
+                                    </a>
+                                </td>
                                 <td>${a.weightage}</td>
                                 <td>${a.createdBy}</td>
 
@@ -313,7 +327,13 @@
                                 tbody.innerHTML = data.map(a =>
                                     "<tr>" +
                                             "<td>" + a.assessmentID + "</td>" +
-                                            "<td>" + escapeHtml(a.assessmentName) + "</td>" +
+                                            "<td>" +
+                                            "<a class='assessment-link' href='" + ctx + "/Assessment?action=studentList" +
+                                            "&moduleID=" + encodeURIComponent(moduleID) +
+                                            "&assessmentID=" + encodeURIComponent(a.assessmentID) + "'>" +
+                                            escapeHtml(a.assessmentName) +
+                                            "</a>" +
+                                            "</td>" +
                                             "<td>" + a.weightage + "</td>" +
                                             "<td>" + escapeHtml(a.createdBy) + "</td>" +
                                             "<td class='actions-cell'>" +
