@@ -17,9 +17,13 @@ import model.MyAssessmentTypeFacade;
 import model.MyModule;
 import model.MyModuleFacade;
 import model.MyUsers;
+import model.MyUsersFacade;
 
 @WebServlet(name = "Assessment", urlPatterns = {"/Assessment"})
 public class Assessment extends HttpServlet {
+
+    @EJB
+    private MyUsersFacade myUsersFacade;
 
     @EJB
     private MyAssessmentTypeFacade myAssessmentTypeFacade;
@@ -53,7 +57,7 @@ public class Assessment extends HttpServlet {
             // moduleID is REQUIRED for assessment page
             String moduleIDStr = request.getParameter("moduleID");
             if (moduleIDStr == null || moduleIDStr.trim().isEmpty()) {
-                response.sendRedirect("Lmodule.jsp"); // or lecturer dashboard
+                response.sendRedirect("Lmodule.jsp");
                 return;
             }
 
@@ -65,10 +69,6 @@ public class Assessment extends HttpServlet {
                 response.sendRedirect("Lmodule.jsp");
                 return;
             }
-
-            System.out.println("DEBUG action=" + action + ", moduleIDStr=[" + moduleIDStr + "]");
-            System.out.println("DEBUG loginLecturer=[" + loginUser.getUserID() + "]");
-            System.out.println("DEBUG dbAssigned=[" + moduleRow.getAssignedLecturerID() + "]");
 
             // must be assigned to the logged-in lecturer
             String lecturerID = loginUser.getUserID();
@@ -116,7 +116,6 @@ public class Assessment extends HttpServlet {
                 request.setAttribute("moduleID", moduleID);
                 request.setAttribute("assessmentList", list);
 
-                // show total weightage info (useful UI)
                 int total = myAssessmentTypeFacade.sumWeightageByModule(moduleID);
                 request.setAttribute("totalWeightage", total);
 
@@ -135,7 +134,6 @@ public class Assessment extends HttpServlet {
 
                 keyword = keyword.trim().toLowerCase();
 
-                // simple filter (no new NamedQuery needed)
                 List<MyAssessmentType> all = myAssessmentTypeFacade.findByModule(moduleID);
                 List<MyAssessmentType> filtered = new ArrayList<>();
                 for (MyAssessmentType a : all) {
@@ -166,7 +164,6 @@ public class Assessment extends HttpServlet {
                 request.setAttribute("moduleRow", moduleRow);
                 request.setAttribute("moduleID", moduleID);
 
-                // creator display
                 request.setAttribute("createdByName", loginUser.getFullName());
                 request.setAttribute("createdByID", loginUser.getUserID());
 
@@ -213,12 +210,12 @@ public class Assessment extends HttpServlet {
                     }
                 }
 
-                // weightage total rule (<= 100)
+                // total rule (<= 100)
                 if (weightage != null) {
                     int currentTotal = myAssessmentTypeFacade.sumWeightageByModule(moduleID);
                     if (currentTotal + weightage > 100) {
-                        errors.put("weightage", "Total weightage cannot exceed 100. Current total: "
-                                + currentTotal + ".");
+                        errors.put("weightage",
+                                "Total weightage cannot exceed 100. Current total: " + currentTotal + ".");
                     }
                 }
 
@@ -274,7 +271,19 @@ public class Assessment extends HttpServlet {
                 request.setAttribute("assessmentNameVal", a.getAssessmentName());
                 request.setAttribute("weightageVal", a.getWeightage());
 
-                request.getRequestDispatcher("updateassessment.jsp").forward(request, response);
+                // ✅ Created By full name (like Module servlet)
+                String createdById = a.getCreatedBy();
+                String createdByName = createdById; // fallback
+                if (createdById != null && !createdById.trim().isEmpty()) {
+                    MyUsers creator = myUsersFacade.find(createdById);
+                    if (creator != null) {
+                        createdByName = creator.getFullName();
+                    }
+                }
+                request.setAttribute("createdByID", createdById);
+                request.setAttribute("createdByName", createdByName);
+
+                request.getRequestDispatcher("modifyAssessment.jsp").forward(request, response);
                 return;
             }
 
@@ -311,7 +320,6 @@ public class Assessment extends HttpServlet {
                 } else if (assessmentName.length() > 50) {
                     errors.put("assessmentName", "Assessment Name must not exceed 50 characters.");
                 } else {
-                    // only block duplicate if name changed
                     String oldName = (a.getAssessmentName() == null) ? "" : a.getAssessmentName().trim();
                     if (!oldName.equalsIgnoreCase(assessmentName)
                             && myAssessmentTypeFacade.existsNameInModule(moduleID, assessmentName)) {
@@ -340,8 +348,8 @@ public class Assessment extends HttpServlet {
                 if (weightage != null) {
                     int totalExcept = myAssessmentTypeFacade.sumWeightageByModuleExcept(moduleID, assessmentID);
                     if (totalExcept + weightage > 100) {
-                        errors.put("weightage", "Total weightage cannot exceed 100. Current total (excluding this): "
-                                + totalExcept + ".");
+                        errors.put("weightage",
+                                "Total weightage cannot exceed 100. Current total (excluding this): " + totalExcept + ".");
                     }
                 }
 
@@ -356,7 +364,19 @@ public class Assessment extends HttpServlet {
                     request.setAttribute("assessmentNameVal", assessmentName);
                     request.setAttribute("weightageVal", weightageStr);
 
-                    request.getRequestDispatcher("updateassessment.jsp").forward(request, response);
+                    // ✅ keep Created By showing even on validation error
+                    String createdById = a.getCreatedBy();
+                    String createdByName = createdById;
+                    if (createdById != null && !createdById.trim().isEmpty()) {
+                        MyUsers creator = myUsersFacade.find(createdById);
+                        if (creator != null) {
+                            createdByName = creator.getFullName();
+                        }
+                    }
+                    request.setAttribute("createdByID", createdById);
+                    request.setAttribute("createdByName", createdByName);
+
+                    request.getRequestDispatcher("modifyAssessment.jsp").forward(request, response);
                     return;
                 }
 
