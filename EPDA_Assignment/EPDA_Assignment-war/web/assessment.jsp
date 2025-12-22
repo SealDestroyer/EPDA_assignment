@@ -101,22 +101,27 @@
                                 <td>${a.createdBy}</td>
 
                                 <td class="actions-cell">
-                                    <form action="Assessment" method="GET" style="display:inline;">
+                                    <form action="${pageContext.request.contextPath}/Assessment" method="GET" style="display:inline;">
                                         <input type="hidden" name="action" value="edit"/>
                                         <input type="hidden" name="assessmentID" value="${a.assessmentID}"/>
                                         <input type="hidden" name="moduleID" value="${moduleID}"/>
                                         <button type="submit" class="modify-btn">Modify</button>
                                     </form>
 
-                                    <form action="Assessment" method="POST" style="display:inline;">
+                                    <form action="${pageContext.request.contextPath}/Assessment" method="POST" class="delete-form" style="display:inline;">
                                         <input type="hidden" name="action" value="delete"/>
                                         <input type="hidden" name="assessmentID" value="${a.assessmentID}"/>
                                         <input type="hidden" name="moduleID" value="${moduleID}"/>
-                                        <button type="submit" class="delete-btn"
-                                                onclick="return confirm('Delete this assessment?');">
+
+                                        <button type="button"
+                                                class="delete-btn open-delete-modal"
+                                                data-assessmentid="${a.assessmentID}"
+                                                data-assessmentname="${a.assessmentName}"
+                                                data-weightage="${a.weightage}">
                                             Delete
                                         </button>
                                     </form>
+
                                 </td>
                             </tr>
                         </c:forEach>
@@ -126,16 +131,36 @@
 
         </div>
 
+        <!-- DELETE CONFIRM MODAL -->
+        <div id="deleteModal" class="modal-overlay" style="display:none;">
+            <div class="modal-box">
+                <h3 class="modal-title">Confirm Delete</h3>
+
+                <p class="modal-text">Do you wish to delete the following assessment?</p>
+
+                <div class="modal-info">
+                    <div><strong>Assessment ID:</strong> <span id="dmAssessmentID"></span></div>
+                    <div><strong>Assessment Name:</strong> <span id="dmAssessmentName"></span></div>
+                    <div><strong>Weightage (%):</strong> <span id="dmWeightage"></span></div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" id="confirmDeleteBtn" class="modal-btn modal-btn-danger">Delete</button>
+                    <button type="button" id="cancelDeleteBtn" class="modal-btn modal-btn-cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+
         <!-- ===== REAL-TIME AUTO REFRESH ===== -->
         <script>
             (function () {
 
                 const ctx = "<%= request.getContextPath()%>";
-
                 const moduleID = "<c:out value='${moduleID}'/>";
 
                 let pauseAutoRefresh = false;
 
+                // ====== PAUSE ON ADD CLICK ======
                 const addBtn = document.getElementById("addAssessmentBtn");
                 if (addBtn) {
                     addBtn.addEventListener("click", function () {
@@ -143,6 +168,80 @@
                     });
                 }
 
+                // ====== DELETE MODAL + EVENT DELEGATION ======
+                const modal = document.getElementById("deleteModal");
+                const dmAssessmentID = document.getElementById("dmAssessmentID");
+                const dmAssessmentName = document.getElementById("dmAssessmentName");
+                const dmWeightage = document.getElementById("dmWeightage");
+                const confirmBtn = document.getElementById("confirmDeleteBtn");
+                const cancelBtn = document.getElementById("cancelDeleteBtn");
+
+                let selectedForm = null;
+
+                function closeModal() {
+                    if (modal)
+                        modal.style.display = "none";
+                    selectedForm = null;
+                    pauseAutoRefresh = false;
+                }
+
+                // Open modal (works for both JSP rows + AJAX rows)
+                document.addEventListener("click", function (e) {
+                    const btn = e.target.closest(".open-delete-modal");
+                    if (!btn)
+                        return;
+
+                    if (dmAssessmentID)
+                        dmAssessmentID.textContent = btn.dataset.assessmentid || "";
+                    if (dmAssessmentName)
+                        dmAssessmentName.textContent = btn.dataset.assessmentname || "";
+                    if (dmWeightage)
+                        dmWeightage.textContent = btn.dataset.weightage || "";
+
+                    selectedForm = btn.closest("form");
+                    pauseAutoRefresh = true;
+
+                    if (modal)
+                        modal.style.display = "flex";
+                });
+
+                // Confirm delete
+                if (confirmBtn) {
+                    confirmBtn.addEventListener("click", function () {
+                        if (selectedForm) {
+                            selectedForm.submit();
+                        }
+                        closeModal();
+                    });
+                }
+
+                // Cancel delete
+                if (cancelBtn)
+                    cancelBtn.addEventListener("click", closeModal);
+
+                // Click outside modal -> close
+                if (modal) {
+                    modal.addEventListener("click", function (e) {
+                        if (e.target === modal)
+                            closeModal();
+                    });
+                }
+
+                // ESC -> close
+                document.addEventListener("keydown", function (e) {
+                    if (e.key === "Escape" && modal && modal.style.display !== "none") {
+                        closeModal();
+                    }
+                });
+
+                // ====== PAUSE ON MODIFY CLICK (optional but good) ======
+                document.addEventListener("click", function (e) {
+                    if (e.target.closest(".modify-btn")) {
+                        pauseAutoRefresh = true;
+                    }
+                });
+
+                // ====== HELPERS ======
                 function escapeHtml(s) {
                     s = (s == null) ? "" : String(s);
                     return s.replace(/&/g, "&amp;")
@@ -172,13 +271,11 @@
                         btn.disabled = (sum >= 100);
                 }
 
+                // ====== AJAX AUTO REFRESH ======
                 function refreshAssessmentTable() {
 
-                    // ✅ do nothing if paused
                     if (pauseAutoRefresh)
                         return;
-
-                    // ✅ if moduleID missing, stop
                     if (!moduleID)
                         return;
 
@@ -187,25 +284,21 @@
                         headers: {"Accept": "application/json"}
                     })
                             .then(res => {
-                                // ✅ If servlet redirected to login/Lmodule, it returns HTML not JSON
                                 const ct = res.headers.get("content-type") || "";
-                                if (!ct.includes("application/json")) {
+                                if (!ct.includes("application/json"))
                                     return null;
-                                }
                                 return res.json();
                             })
                             .then(data => {
 
                                 if (data === null)
-                                    return; // not JSON, ignore
+                                    return;
 
                                 const tbody = document.getElementById("assessmentTableBody");
                                 const errorBox = document.getElementById("errorBox");
-
                                 if (!tbody)
                                     return;
 
-                                // always update badge + button even if empty
                                 updateWeightageUI(data);
 
                                 if (!data || data.length === 0) {
@@ -224,18 +317,22 @@
                                             "<td>" + a.weightage + "</td>" +
                                             "<td>" + escapeHtml(a.createdBy) + "</td>" +
                                             "<td class='actions-cell'>" +
+                                            // Modify
                                             "<form action='" + ctx + "/Assessment' method='GET' style='display:inline;'>" +
                                             "<input type='hidden' name='action' value='edit'/>" +
                                             "<input type='hidden' name='assessmentID' value='" + a.assessmentID + "'/>" +
                                             "<input type='hidden' name='moduleID' value='" + escapeHtml(moduleID) + "'/>" +
                                             "<button type='submit' class='modify-btn'>Modify</button>" +
                                             "</form>" +
-                                            "<form action='" + ctx + "/Assessment' method='POST' style='display:inline;'>" +
+                                            // Delete (Modal)
+                                            "<form action='" + ctx + "/Assessment' method='POST' class='delete-form' style='display:inline;'>" +
                                             "<input type='hidden' name='action' value='delete'/>" +
                                             "<input type='hidden' name='assessmentID' value='" + a.assessmentID + "'/>" +
                                             "<input type='hidden' name='moduleID' value='" + escapeHtml(moduleID) + "'/>" +
-                                            "<button type='submit' class='delete-btn' " +
-                                            "onclick=\"return confirm('Delete this assessment?');\">" +
+                                            "<button type='button' class='delete-btn open-delete-modal' " +
+                                            "data-assessmentid='" + a.assessmentID + "' " +
+                                            "data-assessmentname='" + escapeHtml(a.assessmentName) + "' " +
+                                            "data-weightage='" + a.weightage + "'>" +
                                             "Delete" +
                                             "</button>" +
                                             "</form>" +
@@ -260,6 +357,5 @@
 
             })();
         </script>
-
     </body>
 </html>
