@@ -5,25 +5,27 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
-public class MyClasss implements Serializable {
+public class MyStudentClass implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer classID;
+
     private Integer moduleID;
     private String createdBy;
     private String className;
     private String semester;
     private String year;
 
-    public MyClasss() {
+    public MyStudentClass() {
     }
 
-    public MyClasss(Integer moduleID, String createdBy,
+    public MyStudentClass(Integer moduleID, String createdBy,
             String className, String semester, String year) {
         this.moduleID = moduleID;
         this.createdBy = createdBy;
@@ -82,26 +84,20 @@ public class MyClasss implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (classID != null ? classID.hashCode() : 0);
-        return hash;
+        return (classID != null ? classID.hashCode() : 0);
     }
 
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof MyClasss)) {
+        if (!(object instanceof MyStudentClass)) {
             return false;
         }
-        MyClasss other = (MyClasss) object;
-        if ((this.classID == null && other.classID != null)
-                || (this.classID != null && !this.classID.equals(other.classID))) {
-            return false;
-        }
-        return true;
+        MyStudentClass other = (MyStudentClass) object;
+        return this.classID != null && this.classID.equals(other.classID);
     }
 
     @Override
     public String toString() {
-        return "model.MyClass[ classID=" + classID + " ]";
+        return "model.MyStudentClass[classID=" + classID + "]";
     }
 }
