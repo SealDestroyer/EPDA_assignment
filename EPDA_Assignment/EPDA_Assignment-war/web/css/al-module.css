@@ -365,3 +365,13 @@ table.module-table td:last-child {
     white-space: nowrap;
 }
 
+.table-top-bar {
+    justify-content: space-between;
+}
+
+.table-top-bar-left,
+.table-top-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}

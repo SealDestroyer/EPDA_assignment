@@ -27,7 +27,9 @@
                 backdrop-filter: blur(6px);
                 -webkit-backdrop-filter: blur(6px);
             }
-
+            .back-btn-right {
+                margin-left: auto;
+            }
         </style>
     </head>
 
@@ -66,6 +68,13 @@
                 <div class="assessment-badge">
                     <c:out value="${assessmentName}"/>
                 </div>
+
+                <form class="back-btn-right" action="${pageContext.request.contextPath}/Assessment" method="GET">
+                    <input type="hidden" name="action" value="list"/>
+                    <input type="hidden" name="moduleID" value="${moduleID}"/>
+                    <button type="submit">Back</button>
+                </form>
+
             </div>
 
             <!-- ERROR -->
