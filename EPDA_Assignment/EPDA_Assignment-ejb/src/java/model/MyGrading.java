@@ -9,6 +9,13 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 @Entity
+@NamedQueries({
+    @NamedQuery(
+            name = "MyGrading.findByPercentage",
+            query = "SELECT g FROM MyGrading g "
+            + "WHERE :percentage BETWEEN g.minPercentage AND g.maxPercentage"
+    )
+})
 public class MyGrading implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -27,5 +27,17 @@ public class MyGradingFacade extends AbstractFacade<MyGrading> {
     public MyGradingFacade() {
         super(MyGrading.class);
     }
-    
+
+    public MyGrading findByPercentage(int percentage) {
+        try {
+            return em.createNamedQuery(
+                    "MyGrading.findByPercentage",
+                    MyGrading.class
+            ).setParameter("percentage", percentage)
+                    .setMaxResults(1)
+                    .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }
