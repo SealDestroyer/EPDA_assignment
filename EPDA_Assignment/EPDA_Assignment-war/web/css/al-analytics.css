@@ -1,0 +1,160 @@
+/* ================================
+   AL ANALYTICS (matches Add Module vibe)
+   File: css/al-analytics.css
+   ================================ */
+
+/* ===== CENTER WRAPPER ===== */
+.analytics-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 90px 40px 40px; /* top space for navbar */
+    box-sizing: border-box;
+}
+
+/* ===== MAIN BOX (glass + brown glow) ===== */
+.analytics-box {
+    width: 100%;
+    max-width: 980px;                 /* wide for chart */
+    background-color: rgba(0, 0, 0, 0.75);
+    border: 2px solid #5a3e2b;
+    border-radius: 20px;
+    padding: 22px 30px 30px;
+    box-shadow: 0 0 25px rgba(90, 62, 43, 0.95);
+    animation: analyticsGlowBoxBrown 1.6s infinite alternate;
+}
+
+/* same glow style as Add Module */
+@keyframes analyticsGlowBoxBrown {
+    from { box-shadow: 0 0 18px rgba(90, 62, 43, 0.75); }
+    to   { box-shadow: 0 0 32px rgba(90, 62, 43, 1); }
+}
+
+/* ===== TITLES ===== */
+.analytics-title {
+    margin: 0 0 6px;
+    font-size: 1.9em;
+    color: #fff;
+    text-align: center;
+}
+
+.analytics-subtitle {
+    margin: 0 0 18px;
+    opacity: 0.85;
+    text-align: center;
+}
+
+/* ===== ROW / FIELDS ===== */
+.analytics-row {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 12px;
+}
+
+.analytics-field {
+    flex: 1;
+    position: relative; /* for arrow */
+}
+
+/* label above select */
+.analytics-label {
+    display: block;
+    font-size: 0.95em;
+    margin: 0 0 6px;
+    color: #d2a679; /* gold accent */
+    opacity: 0.95;
+}
+
+/* ===== SELECT STYLE (underline, transparent) ===== */
+.analytics-select {
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid #fff;
+    background: transparent;
+    color: #fff;
+    font-size: 16px;
+    padding: 10px 34px 10px 5px; /* right space for arrow */
+    box-sizing: border-box;
+    cursor: pointer;
+
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+/* dropdown arrow (brown/gold) */
+.analytics-select-wrap::after {
+    content: "▾";
+    position: absolute;
+    right: 10px;
+    top: 34px;              /* aligns with select line */
+    font-size: 14px;
+    color: #d2a679;
+    pointer-events: none;
+}
+
+/* focus underline glow (brown) */
+.analytics-select:focus {
+    border-bottom: 2px solid #5a3e2b;
+    box-shadow: 0 8px 14px -12px rgba(90, 62, 43, 0.9);
+    outline: none;
+}
+
+/* disabled look */
+.analytics-select:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* dropdown options (best-effort; browser dependent) */
+.analytics-select option {
+    background-color: #000;
+    color: #fff;
+}
+
+/* ===== STATUS MESSAGE ===== */
+.analytics-msg {
+    margin-top: 6px;
+    font-size: 0.98em;
+    color: rgba(255,255,255,0.88);
+    text-align: left;
+}
+
+/* ===== CHART PANEL ===== */
+.analytics-chart {
+    margin-top: 16px;
+    border-radius: 14px;
+    padding: 14px;
+    min-height: 460px;
+
+    /* inner panel look */
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(210, 166, 121, 0.35);
+    box-shadow: 0 0 16px rgba(90, 62, 43, 0.35);
+}
+
+/* optional: empty chart hint (if you later put text inside #chart) */
+.analytics-chart:empty::before {
+    content: "No data yet. Select a lecturer and module to display the chart.";
+    display: block;
+    padding: 18px 10px;
+    color: rgba(255,255,255,0.75);
+    font-size: 0.98em;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 700px) {
+    .analytics-container {
+        padding: 90px 18px 30px;
+    }
+
+    .analytics-row {
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .analytics-select-wrap::after {
+        top: 34px; /* still fine on mobile */
+    }
+}

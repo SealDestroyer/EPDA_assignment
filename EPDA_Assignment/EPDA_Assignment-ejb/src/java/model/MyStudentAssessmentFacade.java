@@ -5,6 +5,7 @@
  */
 package model;
 
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,5 +28,22 @@ public class MyStudentAssessmentFacade extends AbstractFacade<MyStudentAssessmen
     public MyStudentAssessmentFacade() {
         super(MyStudentAssessment.class);
     }
-    
+
+    public List<Object[]> avgMarkByAssessmentName(Integer moduleID) {
+        if (moduleID == null) {
+            return java.util.Collections.emptyList();
+        }
+
+        return em.createQuery(
+                "SELECT a.assessmentName, AVG(sa.mark) "
+                + "FROM MyAssessmentType a "
+                + "LEFT JOIN MyStudentAssessment sa ON sa.assessmentID = a.assessmentID "
+                + "WHERE a.moduleID = :moduleID "
+                + "GROUP BY a.assessmentName "
+                + "ORDER BY a.assessmentName",
+                Object[].class
+        ).setParameter("moduleID", moduleID)
+                .getResultList();
+    }
+
 }

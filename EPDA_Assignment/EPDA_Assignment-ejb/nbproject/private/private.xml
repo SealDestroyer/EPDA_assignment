@@ -7,18 +7,24 @@
             <file>file:/C:/EPDA/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-ejb/src/java/model/MyModule.java</file>
             <file>file:/C:/EPDA/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-ejb/src/java/model/MyStudentAssessment.java</file>
             <file>file:/C:/EPDA/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-ejb/src/java/model/MyAssessmentTypeFacade.java</file>
+            <file>file:/C:/EPDA/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-ejb/src/java/model/MyStudentFacade.java</file>
+            <file>file:/C:/EPDA/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-ejb/src/java/model/MyStudentClassFacade.java</file>
             <file>file:/C:/EPDA/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-ejb/src/java/model/MyGrading.java</file>
             <file>file:/C:/EPDA/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-ejb/src/java/model/MyModuleFacade.java</file>
+            <file>file:/C:/EPDA/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-ejb/src/java/model/MyStudentAssessmentFacade.java</file>
             <file>file:/C:/EPDA/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-ejb/src/java/model/MyStudent.java</file>
             <file>file:/C:/EPDA/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-ejb/src/java/model/MyStudentClassEnrollment.java</file>
             <file>file:/C:/EPDA/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-ejb/src/java/model/MyStudentClass.java</file>
+            <file>file:/C:/EPDA/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-ejb/src/conf/persistence.xml</file>
             <file>file:/C:/EPDA/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-ejb/src/java/model/MyUsers.java</file>
             <file>file:/C:/EPDA/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-ejb/src/java/model/MyAcademicLeader.java</file>
             <file>file:/C:/EPDA/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-ejb/src/java/model/MyUsersFacade.java</file>
             <file>file:/C:/EPDA/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-ejb/src/java/model/MyLecturerFacade.java</file>
             <file>file:/C:/EPDA/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-ejb/src/java/model/MyAssessmentType.java</file>
+            <file>file:/C:/EPDA/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-ejb/src/java/model/MyGradingFacade.java</file>
             <file>file:/C:/EPDA/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-ejb/src/java/model/MyAcademicLeaderFacade.java</file>
             <file>file:/C:/EPDA/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-ejb/src/java/model/MyLecturer.java</file>
+            <file>file:/C:/EPDA/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-ejb/src/java/model/MyStudentClassEnrollmentFacade.java</file>
         </group>
     </open-files>
 </project-private>
