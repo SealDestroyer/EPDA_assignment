@@ -22,8 +22,6 @@ import model.MyStudentAssessmentFacade;
 import model.MyUsers;
 import model.MyUsersFacade;
 
-
-
 @WebServlet(name = "StudentAssessment", urlPatterns = {"/StudentAssessment"})
 public class StudentAssessment extends HttpServlet {
 
@@ -126,7 +124,7 @@ public class StudentAssessment extends HttpServlet {
                 request.setAttribute("dateAssessedVal", sa.getDateAssessed());
 
                 request.setAttribute("lecturerDisplay",
-                        sa.getAssessedBy() + " - " + loginUser.getFullName());
+                        lecturerID + " - " + loginUser.getFullName());
 
                 request.getRequestDispatcher("modifyStudentMark.jsp").forward(request, response);
                 return;
@@ -343,7 +341,7 @@ public class StudentAssessment extends HttpServlet {
                 }
 
                 Map<String, String> errors = new HashMap<>();
-                
+
                 // Feedback
                 if (feedbackText.isEmpty()) {
                     errors.put("feedbackText", "Feedback cannot be empty.");
@@ -401,6 +399,7 @@ public class StudentAssessment extends HttpServlet {
                 sa.setMark(mark);
                 sa.setGrade(gradeLetter);
                 sa.setFeedbackText(feedbackText);
+                sa.setAssessedBy(lecturerID);
                 sa.setDateAssessed(LocalDate.now().toString());
 
                 myStudentAssessmentFacade.edit(sa);
