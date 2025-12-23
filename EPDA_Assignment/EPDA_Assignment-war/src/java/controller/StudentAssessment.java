@@ -22,6 +22,8 @@ import model.MyStudentAssessmentFacade;
 import model.MyUsers;
 import model.MyUsersFacade;
 
+
+
 @WebServlet(name = "StudentAssessment", urlPatterns = {"/StudentAssessment"})
 public class StudentAssessment extends HttpServlet {
 
@@ -341,6 +343,7 @@ public class StudentAssessment extends HttpServlet {
                 }
 
                 Map<String, String> errors = new HashMap<>();
+                
                 // Feedback
                 if (feedbackText.isEmpty()) {
                     errors.put("feedbackText", "Feedback cannot be empty.");
