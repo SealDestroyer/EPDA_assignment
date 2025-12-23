@@ -55,7 +55,7 @@
 
                 let selectedModuleID = "";
                 let chartTimer = null;
-                let modulesTimer = null; // ✅ NEW: always refresh dropdown list
+                let modulesTimer = null; //always refresh dropdown list
 
                 // ===== UI helpers =====
                 function clearChart() {
@@ -68,7 +68,7 @@
                     moduleSelect.value = ""; // back to placeholder
                     clearChart();
 
-                    // ✅ stop chart polling only
+                    // stop chart polling only
                     if (chartTimer)
                         clearInterval(chartTimer);
                     chartTimer = null;
@@ -79,7 +79,6 @@
                     fetch(BASE + "/LAnalytics?action=modules", {cache: "no-store"})
                             .then(r => r.json())
                             .then(list => {
-
                                 // rebuild dropdown
                                 moduleSelect.innerHTML =
                                         '<option value="" disabled selected>Select Module</option>';
@@ -87,7 +86,7 @@
                                 // no modules at all
                                 if (!list || list.length === 0) {
                                     moduleSelect.disabled = true;
-                                    resetSelection(); // ✅ clears chart + stops chartTimer
+                                    resetSelection(); // clears chart + stops chartTimer
                                     return;
                                 }
 
@@ -202,7 +201,7 @@
                 clearChart();
                 loadModules(false);
 
-                // ✅ NEW: always refresh dropdown list every 2s (even when 0 modules)
+                // always refresh dropdown list every 2s (even when 0 modules)
                 if (modulesTimer)
                     clearInterval(modulesTimer);
                 modulesTimer = setInterval(() => loadModules(true), 2000);
