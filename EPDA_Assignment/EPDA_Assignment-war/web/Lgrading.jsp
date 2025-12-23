@@ -119,12 +119,12 @@
                                 ).join("");
                             })
                             .catch(() => {
-                                // silent fail
+                
                             });
                 }
 
                 const intervalMs = 2000;
-                refreshGradingTable();                 // run once immediately
+                refreshGradingTable();                 
                 setInterval(refreshGradingTable, intervalMs);
 
             })();
