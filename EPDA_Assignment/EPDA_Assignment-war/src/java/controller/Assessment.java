@@ -73,7 +73,7 @@ public class Assessment extends HttpServlet {
                 response.sendRedirect("Lmodule.jsp");
                 return;
             }
-            
+
             // must be assigned to the logged-in lecturer
             String lecturerID = loginUser.getUserID();
             if (moduleRow.getAssignedLecturerID() == null
@@ -145,26 +145,41 @@ public class Assessment extends HttpServlet {
 
                 List<MyAssessmentType> list = myAssessmentTypeFacade.findByModule(moduleID);
 
+                // ✅ Build nameMap (createdBy -> fullName)
+                List<String> ids = new ArrayList<>();
+                for (MyAssessmentType a : list) {
+                    if (a.getCreatedBy() != null && !a.getCreatedBy().trim().isEmpty()) {
+                        ids.add(a.getCreatedBy().trim());
+                    }
+                }
+                Map<String, String> nameMap = myUsersFacade.findUserNameMapByIds(ids);
+
                 response.setContentType("application/json");
                 response.setCharacterEncoding("UTF-8");
 
                 StringBuilder json = new StringBuilder("[");
+
                 for (int i = 0; i < list.size(); i++) {
                     MyAssessmentType a = list.get(i);
+
+                    String createdById = a.getCreatedBy();
+                    String createdByText
+                            = (nameMap.get(createdById) == null ? "" : nameMap.get(createdById))
+                            + " (" + createdById + ")";
 
                     json.append("{")
                             .append("\"assessmentID\":").append(a.getAssessmentID()).append(",")
                             .append("\"assessmentName\":\"").append(escape(a.getAssessmentName())).append("\",")
                             .append("\"weightage\":").append(a.getWeightage() == null ? 0 : a.getWeightage()).append(",")
-                            .append("\"createdBy\":\"").append(escape(a.getCreatedBy())).append("\"")
+                            .append("\"createdBy\":\"").append(escape(createdByText)).append("\"")
                             .append("}");
 
                     if (i < list.size() - 1) {
                         json.append(",");
                     }
                 }
-                json.append("]");
 
+                json.append("]");
                 response.getWriter().write(json.toString());
                 return;
             }
@@ -173,6 +188,17 @@ public class Assessment extends HttpServlet {
             if ("list".equals(action)) {
 
                 List<MyAssessmentType> list = myAssessmentTypeFacade.findByModule(moduleID);
+
+                // ✅ ADD THIS
+                List<String> ids = new ArrayList<>();
+                for (MyAssessmentType a : list) {
+                    if (a.getCreatedBy() != null && !a.getCreatedBy().trim().isEmpty()) {
+                        ids.add(a.getCreatedBy().trim());
+                    }
+                }
+                Map<String, String> createdByNameMap
+                        = myUsersFacade.findUserNameMapByIds(ids);
+                request.setAttribute("createdByNameMap", createdByNameMap);
 
                 request.setAttribute("moduleRow", moduleRow);
                 request.setAttribute("moduleID", moduleID);
@@ -198,6 +224,7 @@ public class Assessment extends HttpServlet {
 
                 List<MyAssessmentType> all = myAssessmentTypeFacade.findByModule(moduleID);
                 List<MyAssessmentType> filtered = new ArrayList<>();
+
                 for (MyAssessmentType a : all) {
                     String name = (a.getAssessmentName() == null) ? "" : a.getAssessmentName().toLowerCase();
                     if (name.contains(keyword)) {
@@ -209,6 +236,16 @@ public class Assessment extends HttpServlet {
                     request.setAttribute("errorMsg", "No assessments found for: " + keyword);
                 }
 
+                List<String> ids = new ArrayList<>();
+                for (MyAssessmentType a : filtered) {
+                    if (a.getCreatedBy() != null && !a.getCreatedBy().trim().isEmpty()) {
+                        ids.add(a.getCreatedBy().trim());
+                    }
+                }
+                Map<String, String> createdByNameMap = myUsersFacade.findUserNameMapByIds(ids);
+                request.setAttribute("createdByNameMap", createdByNameMap);
+
+                // existing attributes
                 request.setAttribute("moduleRow", moduleRow);
                 request.setAttribute("moduleID", moduleID);
                 request.setAttribute("assessmentList", filtered);
