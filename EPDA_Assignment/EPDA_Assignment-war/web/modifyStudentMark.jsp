@@ -5,40 +5,34 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Add Mark</title>
+        <title>Modify Student Mark</title>
 
-        <!-- SAME CSS USED IN ADD MODULE / ADD ASSESSMENT -->
         <link rel="stylesheet" href="css/al-dashboard.css">
         <link rel="stylesheet" href="css/al-addmodule.css">
     </head>
 
     <body>
-        <!-- Lecturer navbar -->
         <jsp:include page="Lnavbar.jsp" />
 
         <div class="add-container">
             <div class="add-box">
-                <h2 class="add-title">Add Student Mark</h2>
-                <p class="add-subtitle">Enter the assessment mark and feedback below.</p>
+                <h2 class="add-title">Modify Student Mark</h2>
+                <p class="add-subtitle">Update the assessment mark and feedback below.</p>
 
                 <form action="${pageContext.request.contextPath}/StudentAssessment"
                       method="POST" novalidate>
 
-                    <input type="hidden" name="action" value="add" />
+                    <input type="hidden" name="action" value="update" />
 
-                    <!-- IDs used for backend insert -->
+                    <!-- needed to find record -->
+                    <input type="hidden" name="studentAssessmentID"
+                           value="<c:out value='${studentAssessmentIDVal}'/>" />
+                    
+                    <input type="hidden" name="moduleID" value="<c:out value='${moduleID}'/>" />
+
+                    <!-- needed to redirect back to list -->
                     <input type="hidden" name="assessmentID"
                            value="<c:out value='${assessmentID}'/>" />
-
-                    <input type="hidden" name="studentID"
-                           value="<c:out value='${studentID}'/>" />
-
-                    <!-- Student Assessment ID (auto generated) -->
-                    <div class="form-group">
-                        <input class="input-field" type="text"
-                               value="(Auto Generated)" disabled placeholder=" " />
-                        <label class="input-label">Student Assessment ID</label>
-                    </div>
 
                     <!-- Assessment (display only) -->
                     <div class="form-group">
@@ -71,18 +65,15 @@
                         </div>
                     </div>
 
-                    <!-- Grade (auto generated from grading table) -->
+                    <!-- Grade (auto generated) -->
                     <div class="form-group">
                         <input class="input-field" type="text"
                                value="<c:out value='${gradeVal}'/>"
                                readonly placeholder=" " />
                         <label class="input-label">Grade</label>
-                        <div class="field-error">
-                            <c:out value="${errors.grade}" />
-                        </div>
                     </div>
 
-                    <!-- Date Assessed (auto set by system) -->
+                    <!-- Date Assessed (display only) -->
                     <div class="form-group">
                         <input class="input-field" type="text"
                                value="<c:out value='${dateAssessedVal}'/>"
@@ -112,9 +103,8 @@
                     </div>
 
                     <div class="form-buttons">
-                        <button class="btn" type="submit">Add</button>
+                        <button class="btn" type="submit">Update</button>
 
-                        <!-- go back to student assessment list for that assessment -->
                         <a class="btn btn-secondary"
                            href="${pageContext.request.contextPath}/Assessment?action=studentList&moduleID=<c:out value='${moduleID}'/>&assessmentID=<c:out value='${assessmentID}'/>">
                             Cancel
@@ -127,3 +117,4 @@
 
     </body>
 </html>
+
