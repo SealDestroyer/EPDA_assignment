@@ -13,6 +13,7 @@
     <div class="nav-links">
         <a href="${pageContext.request.contextPath}/ALProfile?action=edit">Profile</a>
         <a href="${pageContext.request.contextPath}/Module?action=list">Modules</a>
+        <a href="${pageContext.request.contextPath}/ALAnalytics">Analytics</a>
         <a href="Logout">Logout</a>
     </div>
 </nav>

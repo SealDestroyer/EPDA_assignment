@@ -106,4 +106,36 @@ public class MyModuleFacade extends AbstractFacade<MyModule> {
                 .getResultList();
     }
 
+    public List<String> findDistinctLecturerIdsByAL(String alID) {
+        if (alID == null || alID.trim().isEmpty()) {
+            return java.util.Collections.emptyList();
+        }
+
+        return em.createQuery(
+                "SELECT DISTINCT m.assignedLecturerID "
+                + "FROM MyModule m "
+                + "WHERE m.createdBy = :alID "
+                + "AND m.assignedLecturerID IS NOT NULL "
+                + "ORDER BY m.assignedLecturerID",
+                String.class
+        ).setParameter("alID", alID.trim())
+                .getResultList();
+    }
+
+    public List<MyModule> findByALAndLecturer(String alID, String lecturerID) {
+        if (alID == null || alID.trim().isEmpty() || lecturerID == null || lecturerID.trim().isEmpty()) {
+            return java.util.Collections.emptyList();
+        }
+
+        return em.createQuery(
+                "SELECT m FROM MyModule m "
+                + "WHERE m.createdBy = :alID "
+                + "AND m.assignedLecturerID = :lecturerID "
+                + "ORDER BY m.moduleID",
+                MyModule.class
+        ).setParameter("alID", alID.trim())
+                .setParameter("lecturerID", lecturerID.trim())
+                .getResultList();
+    }
+
 }
