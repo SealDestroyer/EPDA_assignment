@@ -13,6 +13,7 @@
     <div class="nav-links">
         <a href="${pageContext.request.contextPath}/LModule?action=list">Modules</a>
         <a href="${pageContext.request.contextPath}/LProfile?action=edit">Profile</a>
+        <a href="${pageContext.request.contextPath}/LGrading?action=list">Grading</a>
         <a href="Logout">Logout</a>
     </div>
 </nav>
