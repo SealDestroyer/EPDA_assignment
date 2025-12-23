@@ -73,7 +73,14 @@ public class Assessment extends HttpServlet {
                 response.sendRedirect("Lmodule.jsp");
                 return;
             }
-
+            
+            // must be assigned to the logged-in lecturer
+            String lecturerID = loginUser.getUserID();
+            if (moduleRow.getAssignedLecturerID() == null
+                    || !moduleRow.getAssignedLecturerID().equals(lecturerID)) {
+                response.sendRedirect("Lmodule.jsp");
+                return;
+            }
             // ===== LOAD STUDENT LIST FOR SELECTED ASSESSMENT =====
             if ("studentList".equals(action)) {
 
@@ -130,14 +137,6 @@ public class Assessment extends HttpServlet {
                 request.setAttribute("studentList", studentList);
 
                 request.getRequestDispatcher("StudentAssessmentList.jsp").forward(request, response);
-                return;
-            }
-
-            // must be assigned to the logged-in lecturer
-            String lecturerID = loginUser.getUserID();
-            if (moduleRow.getAssignedLecturerID() == null
-                    || !moduleRow.getAssignedLecturerID().equals(lecturerID)) {
-                response.sendRedirect("Lmodule.jsp");
                 return;
             }
 
