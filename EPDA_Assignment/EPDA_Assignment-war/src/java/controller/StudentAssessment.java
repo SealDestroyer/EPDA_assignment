@@ -38,7 +38,7 @@ public class StudentAssessment extends HttpServlet {
     private MyUsersFacade myUsersFacade;
 
     @EJB
-    private MyModuleFacade myModuleFacade; // ✅ needed for lecturer-module security
+    private MyModuleFacade myModuleFacade;
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -68,6 +68,66 @@ public class StudentAssessment extends HttpServlet {
             Integer assessmentID = null;
             if (assessmentIDStr != null && !assessmentIDStr.trim().isEmpty()) {
                 assessmentID = Integer.parseInt(assessmentIDStr);
+            }
+
+            // ===== GO EDIT PAGE =====
+            if ("edit".equals(action)) {
+
+                String saIDStr = request.getParameter("studentAssessmentID");
+                if (saIDStr == null || saIDStr.trim().isEmpty() || assessmentID == null) {
+                    response.sendRedirect("Lmodule.jsp");
+                    return;
+                }
+
+                Integer studentAssessmentID = Integer.parseInt(saIDStr);
+
+                MyStudentAssessment sa = myStudentAssessmentFacade.find(studentAssessmentID);
+                if (sa == null || !sa.getAssessmentID().equals(assessmentID)) {
+                    response.sendRedirect("Lmodule.jsp");
+                    return;
+                }
+
+                // load assessment
+                MyAssessmentType a = myAssessmentTypeFacade.find(assessmentID);
+                if (a == null || a.getModuleID() == null) {
+                    response.sendRedirect("Lmodule.jsp");
+                    return;
+                }
+
+                Integer moduleID = a.getModuleID();
+                MyModule moduleRow = myModuleFacade.find(moduleID);
+
+                String lecturerID = loginUser.getUserID();
+                if (moduleRow == null
+                        || moduleRow.getAssignedLecturerID() == null
+                        || !moduleRow.getAssignedLecturerID().equals(lecturerID)) {
+                    response.sendRedirect("Lmodule.jsp");
+                    return;
+                }
+
+                // student display
+                MyUsers stu = myUsersFacade.find(sa.getStudentID());
+                String studentDisplay = (stu == null)
+                        ? sa.getStudentID()
+                        : (stu.getUserID() + " - " + stu.getFullName());
+
+                request.setAttribute("moduleID", moduleID);
+                request.setAttribute("assessmentID", assessmentID);
+                request.setAttribute("assessmentName", a.getAssessmentName());
+
+                request.setAttribute("studentAssessmentIDVal", sa.getStudentAssessmentID());
+                request.setAttribute("studentDisplay", studentDisplay);
+
+                request.setAttribute("markVal", sa.getMark());
+                request.setAttribute("gradeVal", sa.getGrade());
+                request.setAttribute("feedbackVal", sa.getFeedbackText());
+                request.setAttribute("dateAssessedVal", sa.getDateAssessed());
+
+                request.setAttribute("lecturerDisplay",
+                        sa.getAssessedBy() + " - " + loginUser.getFullName());
+
+                request.getRequestDispatcher("modifyStudentMark.jsp").forward(request, response);
+                return;
             }
 
             // ===== GO ADD PAGE =====
@@ -108,13 +168,13 @@ public class StudentAssessment extends HttpServlet {
                         : (stu.getUserID() + " - " + stu.getFullName());
 
                 // 4) set attributes for addStudentMark.jsp
+                request.setAttribute("moduleID", moduleID);
                 request.setAttribute("assessmentID", assessmentID);
                 request.setAttribute("assessmentName", a.getAssessmentName());
 
                 request.setAttribute("studentID", studentID);
                 request.setAttribute("studentDisplay", studentDisplay);
 
-                request.setAttribute("lecturerID", lecturerID);
                 request.setAttribute("lecturerDisplay", lecturerID + " - " + loginUser.getFullName());
 
                 // auto generated placeholders
@@ -137,6 +197,13 @@ public class StudentAssessment extends HttpServlet {
                 feedbackText = (feedbackText == null) ? "" : feedbackText.trim();
 
                 Map<String, String> errors = new HashMap<>();
+
+                // Feedback
+                if (feedbackText.isEmpty()) {
+                    errors.put("feedbackText", "Feedback cannot be empty.");
+                } else if (feedbackText.length() > 100) {
+                    errors.put("feedbackText", "Feedback must not exceed 100 characters.");
+                }
 
                 if (assessmentID == null) {
                     errors.put("mark", "Missing assessment.");
@@ -209,7 +276,6 @@ public class StudentAssessment extends HttpServlet {
                     request.setAttribute("studentID", studentID);
                     request.setAttribute("studentDisplay", studentDisplay);
 
-                    request.setAttribute("lecturerID", lecturerID);
                     request.setAttribute("lecturerDisplay", lecturerID + " - " + loginUser.getFullName());
 
                     request.setAttribute("markVal", markStr);
@@ -217,6 +283,7 @@ public class StudentAssessment extends HttpServlet {
 
                     request.setAttribute("gradeVal", "(Auto Generated)");
                     request.setAttribute("dateAssessedVal", "(Auto Generated)");
+                    request.setAttribute("moduleID", moduleID);
 
                     request.getRequestDispatcher("addStudentMark.jsp").forward(request, response);
                     return;
@@ -237,6 +304,107 @@ public class StudentAssessment extends HttpServlet {
                 // back to list page (your list is in Assessment servlet studentList)
                 // If you already have a StudentAssessment?action=list, you can redirect there instead.
                 response.sendRedirect("Assessment?action=studentList&moduleID=" + moduleID + "&assessmentID=" + assessmentID);
+                return;
+            }
+
+            // ===== UPDATE (SAVE MODIFIED MARK) =====
+            if ("update".equals(action)) {
+
+                String saIDStr = request.getParameter("studentAssessmentID");
+                String markStr = request.getParameter("mark");
+                String feedbackText = request.getParameter("feedbackText");
+                feedbackText = (feedbackText == null) ? "" : feedbackText.trim();
+
+                if (saIDStr == null || saIDStr.trim().isEmpty() || assessmentID == null) {
+                    response.sendRedirect("Lmodule.jsp");
+                    return;
+                }
+
+                Integer studentAssessmentID = Integer.parseInt(saIDStr);
+                MyStudentAssessment sa = myStudentAssessmentFacade.find(studentAssessmentID);
+
+                if (sa == null || !sa.getAssessmentID().equals(assessmentID)) {
+                    response.sendRedirect("Lmodule.jsp");
+                    return;
+                }
+
+                MyAssessmentType a = myAssessmentTypeFacade.find(assessmentID);
+                Integer moduleID = a.getModuleID();
+                MyModule moduleRow = myModuleFacade.find(moduleID);
+
+                String lecturerID = loginUser.getUserID();
+                if (moduleRow == null
+                        || moduleRow.getAssignedLecturerID() == null
+                        || !moduleRow.getAssignedLecturerID().equals(lecturerID)) {
+                    response.sendRedirect("Lmodule.jsp");
+                    return;
+                }
+
+                Map<String, String> errors = new HashMap<>();
+                // Feedback
+                if (feedbackText.isEmpty()) {
+                    errors.put("feedbackText", "Feedback cannot be empty.");
+                } else if (feedbackText.length() > 100) {
+                    errors.put("feedbackText", "Feedback must not exceed 100 characters.");
+                }
+
+                Integer mark = null;
+                try {
+                    mark = Integer.parseInt(markStr);
+                    if (mark < 0 || mark > 100) {
+                        errors.put("mark", "Mark must be between 0 and 100.");
+                    }
+                } catch (Exception e) {
+                    errors.put("mark", "Mark must be a valid number.");
+                }
+
+                String gradeLetter = null;
+                if (mark != null) {
+                    MyGrading g = myGradingFacade.findByPercentage(mark);
+                    if (g == null) {
+                        errors.put("mark", "No grading range found.");
+                    } else {
+                        gradeLetter = g.getGradeLetter();
+                    }
+                }
+
+                if (!errors.isEmpty()) {
+
+                    MyUsers stu = myUsersFacade.find(sa.getStudentID());
+                    String studentDisplay = (stu == null)
+                            ? sa.getStudentID()
+                            : (stu.getUserID() + " - " + stu.getFullName());
+
+                    request.setAttribute("errors", errors);
+                    request.setAttribute("moduleID", moduleID);
+                    request.setAttribute("assessmentID", assessmentID);
+                    request.setAttribute("assessmentName", a.getAssessmentName());
+
+                    request.setAttribute("studentAssessmentIDVal", sa.getStudentAssessmentID());
+                    request.setAttribute("studentDisplay", studentDisplay);
+
+                    request.setAttribute("markVal", markStr);
+                    request.setAttribute("gradeVal", (gradeLetter != null ? gradeLetter : sa.getGrade()));
+                    request.setAttribute("feedbackVal", feedbackText);
+                    request.setAttribute("dateAssessedVal", sa.getDateAssessed());
+                    request.setAttribute("lecturerDisplay",
+                            sa.getAssessedBy() + " - " + loginUser.getFullName());
+
+                    request.getRequestDispatcher("modifyStudentMark.jsp").forward(request, response);
+                    return;
+                }
+
+                // update
+                sa.setMark(mark);
+                sa.setGrade(gradeLetter);
+                sa.setFeedbackText(feedbackText);
+                sa.setDateAssessed(LocalDate.now().toString());
+
+                myStudentAssessmentFacade.edit(sa);
+
+                response.sendRedirect(
+                        "Assessment?action=studentList&moduleID=" + moduleID
+                        + "&assessmentID=" + assessmentID);
                 return;
             }
 

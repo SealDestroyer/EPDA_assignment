@@ -94,7 +94,34 @@ public class Assessment extends HttpServlet {
                 }
 
                 // 3) run your student list query (from MyStudentClassEnrollmentFacade)
-                List<Object[]> studentList = myStudentClassEnrollmentFacade.findGradingListByAssessment(assessmentID);
+                List<Object[]> studentList
+                        = myStudentClassEnrollmentFacade.findGradingListByAssessment(assessmentID);
+
+                // ===== SEARCH FILTER (Student ID / Name) =====
+                String keyword = request.getParameter("keyword");
+                if (keyword != null) {
+                    keyword = keyword.trim().toLowerCase();
+                }
+
+                if (keyword != null && !keyword.isEmpty()) {
+
+                    List<Object[]> filtered = new ArrayList<>();
+
+                    for (Object[] s : studentList) {
+                        String studentID = (s[0] == null) ? "" : s[0].toString().toLowerCase();
+                        String studentName = (s[1] == null) ? "" : s[1].toString().toLowerCase();
+
+                        if (studentID.contains(keyword) || studentName.contains(keyword)) {
+                            filtered.add(s);
+                        }
+                    }
+
+                    studentList = filtered;
+
+                    if (studentList.isEmpty()) {
+                        request.setAttribute("errorMsg", "No students found for: " + keyword);
+                    }
+                }
 
                 // 4) send data to JSP
                 request.setAttribute("moduleID", moduleID);
