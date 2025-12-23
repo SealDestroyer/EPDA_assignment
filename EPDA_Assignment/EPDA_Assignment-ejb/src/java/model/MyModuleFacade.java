@@ -138,4 +138,31 @@ public class MyModuleFacade extends AbstractFacade<MyModule> {
                 .getResultList();
     }
 
+    public List<MyModule> findByLecturerID(String lecturerID) {
+        if (lecturerID == null || lecturerID.trim().isEmpty()) {
+            return java.util.Collections.emptyList();
+        }
+
+        return em.createQuery(
+                "SELECT m FROM MyModule m WHERE m.assignedLecturerID = :lecturerID ORDER BY m.moduleCode",
+                MyModule.class
+        ).setParameter("lecturerID", lecturerID.trim())
+                .getResultList();
+    }
+
+    public boolean isModuleOwnedByLecturer(Integer moduleID, String lecturerID) {
+        if (moduleID == null || lecturerID == null || lecturerID.trim().isEmpty()) {
+            return false;
+        }
+
+        Long count = em.createQuery(
+                "SELECT COUNT(m) FROM MyModule m WHERE m.moduleID = :mid AND m.assignedLecturerID = :lid",
+                Long.class
+        ).setParameter("mid", moduleID)
+                .setParameter("lid", lecturerID.trim())
+                .getSingleResult();
+
+        return count != null && count > 0;
+    }
+
 }

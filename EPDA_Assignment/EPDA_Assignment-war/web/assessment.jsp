@@ -112,8 +112,7 @@
                                     </a>
                                 </td>
                                 <td>${a.weightage}</td>
-                                <td>${a.createdBy}</td>
-
+                                <td>${createdByNameMap[a.createdBy]} (${a.createdBy})</td>
                                 <td class="actions-cell">
                                     <form action="${pageContext.request.contextPath}/Assessment" method="GET" style="display:inline;">
                                         <input type="hidden" name="action" value="edit"/>
