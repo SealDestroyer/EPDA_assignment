@@ -50,6 +50,22 @@ import javax.persistence.NamedQuery;
             + "     OR LOWER(m.moduleName) LIKE :kw) "
             + "ORDER BY m.moduleID"
     )
+    ,
+@NamedQuery(
+            name = "MyModule.findByCreatedBy",
+            query = "SELECT m FROM MyModule m "
+            + "WHERE m.createdBy = :createdBy "
+            + "ORDER BY m.moduleID"
+    )
+    ,
+@NamedQuery(
+            name = "MyModule.searchByCreatedBy",
+            query = "SELECT m FROM MyModule m "
+            + "WHERE m.createdBy = :createdBy "
+            + "AND (LOWER(m.moduleCode) LIKE :kw "
+            + "     OR LOWER(m.moduleName) LIKE :kw) "
+            + "ORDER BY m.moduleID"
+    )
 })
 public class MyModule implements Serializable {
 

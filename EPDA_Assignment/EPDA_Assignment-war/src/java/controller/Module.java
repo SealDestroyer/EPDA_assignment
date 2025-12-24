@@ -55,7 +55,8 @@ public class Module extends HttpServlet {
             // ===== LIST JSON (AJAX REAL-TIME) =====
             if ("listJson".equals(action)) {
 
-                List<MyModule> moduleList = myModuleFacade.getAllModules();
+                String alID = loginUser.getUserID();
+                List<MyModule> moduleList = myModuleFacade.findByCreatedBy(alID);
 
                 // Build userNameMap (same logic as list)
                 Set<String> ids = new HashSet<>();
@@ -103,7 +104,8 @@ public class Module extends HttpServlet {
             // ===== LIST =====
             if ("list".equals(action)) {
 
-                List<MyModule> moduleList = myModuleFacade.getAllModules();
+                String alID = loginUser.getUserID();
+                List<MyModule> moduleList = myModuleFacade.findByCreatedBy(alID);
 
                 // Build userNameMap (userID -> fullName) for createdBy + lecturer
                 Set<String> ids = new HashSet<>();
@@ -134,7 +136,8 @@ public class Module extends HttpServlet {
                     return;
                 }
 
-                List<MyModule> moduleList = myModuleFacade.searchModules(keyword);
+                String alID = loginUser.getUserID();
+                List<MyModule> moduleList = myModuleFacade.searchModulesByCreatedBy(keyword, alID);
 
                 if (moduleList.isEmpty()) {
                     request.setAttribute("errorMsg", "No modules found for: " + keyword);
@@ -275,6 +278,11 @@ public class Module extends HttpServlet {
                     response.sendRedirect("Module?action=list");
                     return;
                 }
+                // AL can only edit own modules
+                if (!loginUser.getUserID().equals(m.getCreatedBy())) {
+                    response.sendRedirect("Module?action=list");
+                    return;
+                }
 
                 // lecturer dropdown list
                 List<MyUsers> lecturerList = myUsersFacade.findLecturers();
@@ -314,6 +322,11 @@ public class Module extends HttpServlet {
 
                 MyModule m = myModuleFacade.find(moduleID);
                 if (m == null) {
+                    response.sendRedirect("Module?action=list");
+                    return;
+                }
+                // AL can only update own modules
+                if (!loginUser.getUserID().equals(m.getCreatedBy())) {
                     response.sendRedirect("Module?action=list");
                     return;
                 }
@@ -416,7 +429,7 @@ public class Module extends HttpServlet {
                 Integer moduleID = Integer.parseInt(moduleIDStr);
 
                 MyModule m = myModuleFacade.find(moduleID);
-                if (m != null) {
+                if (m != null && loginUser.getUserID().equals(m.getCreatedBy())) {
                     myModuleFacade.remove(m);
                 }
 

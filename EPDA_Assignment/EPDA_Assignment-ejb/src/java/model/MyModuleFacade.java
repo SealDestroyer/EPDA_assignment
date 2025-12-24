@@ -165,4 +165,27 @@ public class MyModuleFacade extends AbstractFacade<MyModule> {
         return count != null && count > 0;
     }
 
+    public List<MyModule> findByCreatedBy(String createdBy) {
+        if (createdBy == null || createdBy.trim().isEmpty()) {
+            return java.util.Collections.emptyList();
+        }
+
+        return em.createNamedQuery("MyModule.findByCreatedBy", MyModule.class)
+                .setParameter("createdBy", createdBy.trim())
+                .getResultList();
+    }
+
+    public List<MyModule> searchModulesByCreatedBy(String keyword, String createdBy) {
+        if (createdBy == null || createdBy.trim().isEmpty()) {
+            return java.util.Collections.emptyList();
+        }
+
+        String kw = "%" + (keyword == null ? "" : keyword.toLowerCase().trim()) + "%";
+
+        return em.createNamedQuery("MyModule.searchByCreatedBy", MyModule.class)
+                .setParameter("createdBy", createdBy.trim())
+                .setParameter("kw", kw)
+                .getResultList();
+    }
+
 }
