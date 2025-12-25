@@ -36,7 +36,7 @@ public class MyUsers implements Serializable {
 
     public MyUsers() {
     }
-
+    
     public MyUsers(String userID, String fullName, String password, String gender,
             String phone, String icNumber, String email, String address) {
         this.userID = userID;
