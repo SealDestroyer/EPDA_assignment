@@ -13,8 +13,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.MyStudent;
-import model.MyStudentFacade;
+import model.MyLecturer;
+import model.MyLecturerFacade;
 import model.MyUsers;
 import model.MyUsersFacade;
 
@@ -22,11 +22,10 @@ import model.MyUsersFacade;
  *
  * @author bohch
  */
-@WebServlet(name = "registerStudent", urlPatterns = {"/registerStudent"})
-public class registerStudent extends HttpServlet {
-
+@WebServlet(name = "updateLecturer", urlPatterns = {"/updateLecturer"})
+public class updateLecturer extends HttpServlet {
     @EJB
-    private MyStudentFacade myStudentFacade;
+    private MyLecturerFacade myLecturerFacade;
 
     @EJB
     private MyUsersFacade myUsersFacade;
@@ -55,24 +54,33 @@ public class registerStudent extends HttpServlet {
                 String icNumber = request.getParameter("icNumber");
                 String email = request.getParameter("email");
                 String address = request.getParameter("address");
-                String matricNo = request.getParameter("matricNo");
-                String intakeYear = request.getParameter("intakeYear");
-                String currentLevel = request.getParameter("currentLevel");
-                String status = request.getParameter("status");
+                String employmentType = request.getParameter("employmentType");
+                String academicRank = request.getParameter("academicRank");
+                String academicLeaderID = request.getParameter("academicLeaderID");
 
-                //Create New User Record
-                MyUsers user = new MyUsers(userID, fullName, password, gender, phone, icNumber, email, address);
-                myUsersFacade.create(user);
+                //Find and Update User Record
+                MyUsers user = myUsersFacade.find(userID);
+                user.setFullName(fullName);
+                user.setPassword(password);
+                user.setGender(gender);
+                user.setPhone(phone);
+                user.setIcNumber(icNumber);
+                user.setEmail(email);
+                user.setAddress(address);
+                myUsersFacade.edit(user);
 
-                //Create New Student Record
-                MyStudent student = new MyStudent(userID, matricNo, intakeYear, currentLevel, status);
-                myStudentFacade.create(student);
+                //Find and Update Lecturer Record
+                MyLecturer lecturer = myLecturerFacade.find(userID);
+                lecturer.setEmploymentType(employmentType);
+                lecturer.setAcademicRank(academicRank);
+                lecturer.setAcademicLeaderID(academicLeaderID);
+                myLecturerFacade.edit(lecturer);
 
-                request.setAttribute("message", "Register Successfully!");
-                request.getRequestDispatcher("viewStudent.jsp").forward(request, response);
-                out.println("<br><br><br>Register Success!");
+                request.setAttribute("message", "Update Successfully!");
+                request.getRequestDispatcher("viewLecturers.jsp").forward(request, response);
+                out.println("<br><br><br>Update Success!");
             } catch (Exception e) {
-                request.getRequestDispatcher("registerStudent.jsp").forward(request, response);
+                request.getRequestDispatcher("viewLecturers.jsp").forward(request, response);
                 out.println("<br><br><br>Invalid Input!");
             }
 

@@ -13,8 +13,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.MyStudent;
-import model.MyStudentFacade;
+import model.MyLecturer;
+import model.MyLecturerFacade;
+import static model.MyLecturer_.academicLeaderID;
+import static model.MyLecturer_.academicRank;
+import static model.MyLecturer_.employmentType;
 import model.MyUsers;
 import model.MyUsersFacade;
 
@@ -22,11 +25,11 @@ import model.MyUsersFacade;
  *
  * @author bohch
  */
-@WebServlet(name = "registerStudent", urlPatterns = {"/registerStudent"})
-public class registerStudent extends HttpServlet {
+@WebServlet(name = "addLecturer", urlPatterns = {"/addLecturer"})
+public class addLecturer extends HttpServlet {
 
     @EJB
-    private MyStudentFacade myStudentFacade;
+    private MyLecturerFacade myLecturerFacade;
 
     @EJB
     private MyUsersFacade myUsersFacade;
@@ -45,7 +48,6 @@ public class registerStudent extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            // Get parameters from JSP form
             try {
                 String userID = request.getParameter("userID");
                 String fullName = request.getParameter("fullName");
@@ -55,27 +57,25 @@ public class registerStudent extends HttpServlet {
                 String icNumber = request.getParameter("icNumber");
                 String email = request.getParameter("email");
                 String address = request.getParameter("address");
-                String matricNo = request.getParameter("matricNo");
-                String intakeYear = request.getParameter("intakeYear");
-                String currentLevel = request.getParameter("currentLevel");
-                String status = request.getParameter("status");
+                String employmentType = request.getParameter("employmentType");
+                String academicRank = request.getParameter("academicRank");
+                String academicLeaderID = request.getParameter("academicLeaderID");
 
                 //Create New User Record
                 MyUsers user = new MyUsers(userID, fullName, password, gender, phone, icNumber, email, address);
                 myUsersFacade.create(user);
 
-                //Create New Student Record
-                MyStudent student = new MyStudent(userID, matricNo, intakeYear, currentLevel, status);
-                myStudentFacade.create(student);
+                //Create New Lecturer Record
+                MyLecturer lecturer = new MyLecturer(userID, employmentType, academicRank, academicLeaderID);
+                myLecturerFacade.create(lecturer);
 
-                request.setAttribute("message", "Register Successfully!");
-                request.getRequestDispatcher("viewStudent.jsp").forward(request, response);
-                out.println("<br><br><br>Register Success!");
+                //request.setAttribute("message", "Lecturer added successfully!");
+                request.getRequestDispatcher("viewLecturers.jsp").forward(request, response);
+                out.println("<br><br><br>Lecturer Added Successfully!");
             } catch (Exception e) {
-                request.getRequestDispatcher("registerStudent.jsp").forward(request, response);
+                request.getRequestDispatcher("addLecturer.jsp").forward(request, response);
                 out.println("<br><br><br>Invalid Input!");
             }
-
         }
     }
 
