@@ -13,10 +13,12 @@
     </head>
     <body>
         <h1>Hello World!</h1>
-        <a href="viewStudent.jsp">View Students</a>
+        <a href="viewStudent.jsp">Students</a>
         <br><br>
         <a href="viewAcademicLeaders.jsp">Academic Leaders</a>
         <br><br>
         <a href="viewLecturers.jsp">Lecturers</a>
+        <br><br>
+        <a href="viewGrade.jsp">Grading System</a>
     </body>
 </html>
