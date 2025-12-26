@@ -1,6 +1,6 @@
 <%-- 
-    Document   : adminDashboard
-    Created on : Dec 26, 2025, 2:23:27 AM
+    Document   : viewStudent
+    Created on : Dec 26, 2025, 11:21:01 AM
     Author     : bohch
 --%>
 
@@ -9,10 +9,10 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Admin Dashboard</title>
+        <title>JSP Page</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
-        <a href="viewStudent.jsp">View Students</a>
+        <h1>View Students</h1>
+        <jsp:include page="/viewStudent" />
     </body>
 </html>

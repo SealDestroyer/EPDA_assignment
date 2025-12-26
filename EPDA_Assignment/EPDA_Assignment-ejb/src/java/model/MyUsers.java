@@ -22,6 +22,11 @@ import javax.persistence.NamedQuery;
             name = "MyUsers.findAllUsers",
             query = "SELECT u FROM MyUsers u"
     )
+    ,
+    @NamedQuery(
+            name = "MyUsers.findAllStudents",
+            query = "SELECT u FROM MyUsers u WHERE u.userID LIKE 'S%' ORDER BY u.userID"
+    )
 })
 
 public class MyUsers implements Serializable {
@@ -41,7 +46,7 @@ public class MyUsers implements Serializable {
 
     public MyUsers() {
     }
-    
+
     public MyUsers(String userID, String fullName, String password, String gender,
             String phone, String icNumber, String email, String address) {
         this.userID = userID;

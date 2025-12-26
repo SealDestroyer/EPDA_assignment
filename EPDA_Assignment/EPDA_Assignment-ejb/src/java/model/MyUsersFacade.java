@@ -41,6 +41,11 @@ public class MyUsersFacade extends AbstractFacade<MyUsers> {
         Query q = em.createNamedQuery("MyUsers.findAllUsers");
         return q.getResultList();
     }
+    
+    public List<MyUsers> findAllStudents() {
+        Query q = em.createNamedQuery("MyUsers.findAllStudents");
+        return q.getResultList();
+    }
 
     public Map<String, String> findUserNameMapByIds(List<String> ids) {
         Map<String, String> map = new HashMap<>();

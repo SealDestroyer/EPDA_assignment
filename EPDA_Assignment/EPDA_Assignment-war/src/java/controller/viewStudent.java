@@ -45,20 +45,89 @@ public class viewStudent extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            List<MyUsers> usersList = myUsersFacade.findAllUsers();
-            
-            // Display every user from usersList
-            for (MyUsers user : usersList) {
-                out.println("<div>");
-                out.println("User ID: " + user.getUserID() + "<br>");
-                out.println("Full Name: " + user.getFullName() + "<br>");
-                out.println("Gender: " + user.getGender() + "<br>");
-                out.println("Phone: " + user.getPhone() + "<br>");
-                out.println("IC Number: " + user.getIcNumber() + "<br>");
-                out.println("Email: " + user.getEmail() + "<br>");
-                out.println("Address: " + user.getAddress() + "<br>");
-                out.println("</div><hr>");
+
+            // Get search query parameter
+            String searchQuery = request.getParameter("search");
+            if (searchQuery == null) {
+                searchQuery = "";
             }
+            searchQuery = searchQuery.trim().toLowerCase();
+
+            //Retrieve List of Student Records
+            List<MyUsers> usersList = myUsersFacade.findAllStudents();
+            
+            // Add search bar
+            out.println("<div style='margin-bottom: 20px;'>");
+            out.println("<form method='GET' action='viewStudent' style='display: flex; align-items: center; gap: 10px;'>");
+            out.println("<input type='text' name='search' id='searchInput' placeholder='Search by name, matric no, email, or IC...' ");
+            out.println("value='" + (request.getParameter("search") != null ? request.getParameter("search") : "") + "' ");
+            out.println("style='padding: 10px; width: 400px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;' />");
+            out.println("<button type='submit' style='padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;'>Search</button>");
+            out.println("<button type='button' onclick=\"location.href='viewStudent.jsp'\" style='padding: 10px 20px; background-color: #808080; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;'>Clear</button>");
+            out.println("</form>");
+            out.println("</div>");
+            
+            // Display every user from usersList in table form
+            out.println("<table border='1' cellpadding='10' cellspacing='0' style='border-collapse: collapse; width: 100%;'>");
+            out.println("<thead>");
+            out.println("<tr>");
+            out.println("<th>User ID</th>");
+            out.println("<th>Matric No</th>");
+            out.println("<th>Full Name</th>");
+            out.println("<th>IC Number</th>");
+            out.println("<th>Gender</th>");
+            out.println("<th>Email</th>");
+            out.println("<th>Phone</th>");
+            out.println("<th>Address</th>");
+            out.println("<th>Intake Year</th>");
+            out.println("<th>Current Level</th>");
+            out.println("<th>Status</th>");
+            out.println("<th>Action</th>");
+            out.println("</tr>");
+            out.println("</thead>");
+            out.println("<tbody>");
+            
+            for (MyUsers user : usersList) {
+                // Fetch student-specific data
+                model.MyStudent studentData = myStudentFacade.find(user.getUserID());
+                
+                // Apply search filter
+                if (!searchQuery.isEmpty()) {
+                    String matricNo = (studentData != null ? studentData.getMatricNo() : "").toLowerCase();
+                    String fullName = user.getFullName().toLowerCase();
+                    String icNumber = user.getIcNumber().toLowerCase();
+                    String email = user.getEmail().toLowerCase();
+                    
+                    // Skip this record if it doesn't match the search query
+                    if (!matricNo.contains(searchQuery) && 
+                        !fullName.contains(searchQuery) && 
+                        !icNumber.contains(searchQuery) && 
+                        !email.contains(searchQuery)) {
+                        continue;
+                    }
+                }
+                
+                out.println("<tr>");
+                out.println("<td>" + user.getUserID() + "</td>");
+                out.println("<td>" + (studentData != null ? studentData.getMatricNo() : "N/A") + "</td>");
+                out.println("<td>" + user.getFullName() + "</td>");
+                out.println("<td>" + user.getIcNumber() + "</td>");
+                out.println("<td>" + user.getGender() + "</td>");
+                out.println("<td>" + user.getEmail() + "</td>");
+                out.println("<td>" + user.getPhone() + "</td>");
+                out.println("<td>" + user.getAddress() + "</td>");
+                out.println("<td>" + (studentData != null ? studentData.getIntakeYear() : "N/A") + "</td>");
+                out.println("<td>" + (studentData != null ? studentData.getCurrentLevel() : "N/A") + "</td>");
+                out.println("<td>" + (studentData != null ? studentData.getStatus() : "N/A") + "</td>");
+                out.println("<td>");
+                out.println("<button onclick=\"location.href='updateStudent.jsp?id=" + user.getUserID() + "'\" style='margin-right: 5px;'>Edit</button>");
+                out.println("<button onclick=\"if(confirm('Are you sure you want to delete this student?')) location.href='deleteStudent?id=" + user.getUserID() + "'\">Delete</button>");
+                out.println("</td>");
+                out.println("</tr>");
+            }
+            
+            out.println("</tbody>");
+            out.println("</table>");
         }
     }
 

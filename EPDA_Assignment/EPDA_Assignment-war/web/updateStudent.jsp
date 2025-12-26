@@ -5,6 +5,12 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="model.MyUsers"%>
+<%@page import="model.MyStudent"%>
+<%@page import="model.MyUsersFacade"%>
+<%@page import="model.MyStudentFacade"%>
+<%@page import="javax.naming.InitialContext"%>
+<%@page import="javax.naming.NamingException"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -12,64 +18,85 @@
         <title>Update Student</title>
     </head>
     <body>
+        <%
+            // Get the ID parameter
+            String userId = request.getParameter("id");
+            MyUsers user = null;
+            MyStudent student = null;
+            
+            if (userId != null) {
+                try {
+                    // Lookup the EJB facades
+                    InitialContext ic = new InitialContext();
+                    MyUsersFacade myUsersFacade = (MyUsersFacade) ic.lookup("java:global/EPDA_Assignment/EPDA_Assignment-ejb/MyUsersFacade");
+                    MyStudentFacade myStudentFacade = (MyStudentFacade) ic.lookup("java:global/EPDA_Assignment/EPDA_Assignment-ejb/MyStudentFacade");
+                    
+                    // Fetch user and student data from database
+                    user = myUsersFacade.find(userId);
+                    student = myStudentFacade.find(userId);
+                } catch (NamingException e) {
+                    out.println("<p style='color:red;'>Error: Unable to access database. " + e.getMessage() + "</p>");
+                }
+            }
+        %>
         <h1>Update Student Profile</h1>
-        <form action="registerStudent" method="post">
+        <form action="updateStudent" method="post">
             <table border="1">
                 <tr>
                     <td><label for="userID">User ID:</label></td>
-                    <td><input type="text" id="userID" name="userID" required></td>
+                    <td><input type="text" id="userID" name="userID" value="<%= userId != null ? userId : "" %>" readonly required></td>
                 </tr>
                 <tr>
                     <td><label for="fullName">Full Name:</label></td>
-                    <td><input type="text" id="fullName" name="fullName" required></td>
+                    <td><input type="text" id="fullName" name="fullName" value="<%= user != null ? user.getFullName() : "" %>" required></td>
                 </tr>
                 <tr>
                     <td><label for="password">Password:</label></td>
-                    <td><input type="password" id="password" name="password" required></td>
+                    <td><input type="password" id="password" name="password" value="<%= user != null ? user.getPassword() : "" %>" required></td>
                 </tr>
                 <tr>
                     <td><label for="gender">Gender:</label></td>
                     <td>
                         <select id="gender" name="gender" required>
                             <option value="">Select Gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
+                            <option value="Male" <%= (user != null && "Male".equals(user.getGender())) ? "selected" : "" %>>Male</option>
+                            <option value="Female" <%= (user != null && "Female".equals(user.getGender())) ? "selected" : "" %>>Female</option>
                         </select>
                     </td>
                 </tr>
                 <tr>
                     <td><label for="phone">Phone:</label></td>
-                    <td><input type="tel" id="phone" name="phone" required></td>
+                    <td><input type="tel" id="phone" name="phone" value="<%= user != null ? user.getPhone() : "" %>" required></td>
                 </tr>
                 <tr>
                     <td><label for="icNumber">IC Number:</label></td>
-                    <td><input type="text" id="icNumber" name="icNumber" required></td>
+                    <td><input type="text" id="icNumber" name="icNumber" value="<%= user != null ? user.getIcNumber() : "" %>" required></td>
                 </tr>
                 <tr>
                     <td><label for="email">Email:</label></td>
-                    <td><input type="email" id="email" name="email" required></td>
+                    <td><input type="email" id="email" name="email" value="<%= user != null ? user.getEmail() : "" %>" required></td>
                 </tr>
                 <tr>
                     <td><label for="address">Address:</label></td>
-                    <td><textarea id="address" name="address" rows="3" required></textarea></td>
+                    <td><textarea id="address" name="address" rows="3" required><%= user != null ? user.getAddress() : "" %></textarea></td>
                 </tr>
                 <tr>
                     <td><label for="matricNo">Matric Number:</label></td>
-                    <td><input type="text" id="matricNo" name="matricNo" required></td>
+                    <td><input type="text" id="matricNo" name="matricNo" value="<%= student != null ? student.getMatricNo() : "" %>" required></td>
                 </tr>
                 <tr>
                     <td><label for="intakeYear">Intake Year:</label></td>
-                    <td><input type="text" id="intakeYear" name="intakeYear" required></td>
+                    <td><input type="text" id="intakeYear" name="intakeYear" value="<%= student != null ? student.getIntakeYear() : "" %>" required></td>
                 </tr>
                 <tr>
                     <td><label for="currentLevel">Current Level:</label></td>
                     <td>
                         <select id="currentLevel" name="currentLevel" required>
                             <option value="">Select Level</option>
-                            <option value="year1">Year 1</option>
-                            <option value="year2">Year 2</option>
-                            <option value="year3">Year 3</option>
-                            <option value="year4">Year 4</option>
+                            <option value="year1" <%= (student != null && "year1".equals(student.getCurrentLevel())) ? "selected" : "" %>>Year 1</option>
+                            <option value="year2" <%= (student != null && "year2".equals(student.getCurrentLevel())) ? "selected" : "" %>>Year 2</option>
+                            <option value="year3" <%= (student != null && "year3".equals(student.getCurrentLevel())) ? "selected" : "" %>>Year 3</option>
+                            <option value="year4" <%= (student != null && "year4".equals(student.getCurrentLevel())) ? "selected" : "" %>>Year 4</option>
                         </select>
                     </td>
                 </tr>
@@ -77,13 +104,13 @@
                     <td><label for="status">Status:</label></td>
                     <td>
                         <select id="status" name="status" required>
-                            <option value="Active" selected>Active</option>
-                            <option value="Inactive">Inactive</option>
+                            <option value="Active" <%= (student != null && "Active".equals(student.getStatus())) ? "selected" : "" %>>Active</option>
+                            <option value="Inactive" <%= (student != null && "Inactive".equals(student.getStatus())) ? "selected" : "" %>>Inactive</option>
                         </select>
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="2"><input type="submit" value="Register"></td>
+                    <td colspan="2"><input type="submit" value="Update"></td>
                 </tr>
             </table>
         </form>
