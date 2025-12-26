@@ -17,6 +17,11 @@ import javax.persistence.NamedQuery;
             name = "MyUsers.findByUserIds",
             query = "SELECT u FROM MyUsers u WHERE u.userID IN :ids"
     )
+    ,
+        @NamedQuery(
+            name = "MyUsers.findAllUsers",
+            query = "SELECT u FROM MyUsers u"
+    )
 })
 
 public class MyUsers implements Serializable {

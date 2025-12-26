@@ -60,14 +60,14 @@ public class registerStudent extends HttpServlet {
                 String currentLevel = request.getParameter("currentLevel");
                 String status = request.getParameter("status");
 
-                //Create New User
-                // MyUsers user = new MyUsers(userID, fullName, password, gender, phone, icNumber, email, address);
-                //myUsersFacade.create(user);
-                
-                //Create New Student
-                //MyStudent student = new MyStudent(userID, matricNo, intakeYear, currentLevel, status);
-                //myStudentFacade.create(student);
-                
+                //Create New User Record
+                MyUsers user = new MyUsers(userID, fullName, password, gender, phone, icNumber, email, address);
+                myUsersFacade.create(user);
+
+                //Create New Student Record
+                MyStudent student = new MyStudent(userID, matricNo, intakeYear, currentLevel, status);
+                myStudentFacade.create(student);
+
                 request.setAttribute("message", "Register Successfully!");
                 request.getRequestDispatcher("registerStudent.jsp").forward(request, response);
                 out.println("<br><br><br>Register Success!");
