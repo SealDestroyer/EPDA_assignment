@@ -29,6 +29,10 @@ import javax.persistence.NamedQuery;
             + "   WHERE a.assessmentID = :assessmentID"
             + ") "
             + "ORDER BY u.userID"
+    ),
+    @NamedQuery(
+            name = "MyStudentClassEnrollment.findByClassID",
+            query = "SELECT e FROM MyStudentClassEnrollment e WHERE e.classID = :classID"
     )
 })
 

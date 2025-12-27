@@ -17,6 +17,21 @@ import javax.persistence.NamedQuery;
             name = "MyUsers.findByUserIds",
             query = "SELECT u FROM MyUsers u WHERE u.userID IN :ids"
     )
+    ,
+        @NamedQuery(
+            name = "MyUsers.findAllUsers",
+            query = "SELECT u FROM MyUsers u"
+    )
+    ,
+    @NamedQuery(
+            name = "MyUsers.findAllStudents",
+            query = "SELECT u FROM MyUsers u WHERE u.userID LIKE 'S%' ORDER BY u.userID"
+    )
+        ,
+        @NamedQuery(
+            name = "MyUsers.findAcamdemicLeaders",
+            query = "SELECT u FROM MyUsers u WHERE u.userID LIKE 'AL%' ORDER BY u.userID"
+    )
 })
 
 public class MyUsers implements Serializable {
