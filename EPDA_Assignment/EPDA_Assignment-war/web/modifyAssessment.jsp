@@ -6,7 +6,6 @@
     <head>
         <meta charset="UTF-8">
         <title>Modify Assessment</title>
-
         <link rel="stylesheet" href="css/al-dashboard.css">
         <link rel="stylesheet" href="css/al-addmodule.css">
     </head>
@@ -26,7 +25,7 @@
                     <input type="hidden" name="moduleID" value="<c:out value='${moduleID}'/>" />
                     <input type="hidden" name="assessmentID" value="<c:out value='${assessmentIDVal}'/>" />
 
-                    <!-- Module ID (display only) -->
+                    <!-- Module ID -->
                     <div class="form-group">
                         <input class="input-field" type="text"
                                value="<c:out value='${moduleID}'/>"
@@ -63,7 +62,7 @@
                         </div>
                     </div>
 
-                    <!-- Created By (display only) -->
+                    <!-- Created By -->
                     <div class="form-group">
                         <input class="input-field" type="text"
                                value="<c:out value='${createdByName}'/>"

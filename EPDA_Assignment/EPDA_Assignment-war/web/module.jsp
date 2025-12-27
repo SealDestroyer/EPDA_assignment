@@ -7,7 +7,6 @@
     <head>
         <meta charset="UTF-8">
         <title>Module Management</title>
-
         <link rel="stylesheet" href="css/al-dashboard.css">
         <link rel="stylesheet" href="css/al-module.css">
 
@@ -15,13 +14,11 @@
 
     <body>
 
-        <!-- NAVBAR -->
         <jsp:include page="ALnavbar.jsp" />
 
-        <!-- PAGE CONTENT WRAPPER -->
         <div class="page-container">
 
-            <!-- SEARCH BAR (TOP MIDDLE) -->
+            <!-- SEARCH BAR -->
             <div class="search-bar-container">
                 <form action="Module" method="GET" class="search-form">
                     <input type="hidden" name="action" value="search"/>
@@ -164,7 +161,7 @@
                     dmModuleName.textContent = btn.dataset.modulename;
 
                     selectedForm = btn.closest("form");
-                    pauseAutoRefresh = true;     // pause refresh while confirming
+                    pauseAutoRefresh = true;    
                     modal.style.display = "flex";
                 });
 
@@ -250,16 +247,13 @@
                             });
                 }
 
-                // ✅ IMPORTANT: Do not auto-refresh when user is viewing search results
                 const params = new URLSearchParams(window.location.search);
                 const action = params.get("action");
                 const isSearchMode = (action === "search");
-
-                // Interval: 1.5 seconds is OK
                 const intervalMs = 2000;
 
                 if (!isSearchMode) {
-                    refreshModuleTable();                 // run once
+                    refreshModuleTable();         
                     setInterval(refreshModuleTable, intervalMs);
                 }
 

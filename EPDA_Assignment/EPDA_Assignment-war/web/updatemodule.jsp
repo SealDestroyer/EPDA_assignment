@@ -6,7 +6,6 @@
     <head>
         <meta charset="UTF-8">
         <title>Modify Module</title>
-
         <link rel="stylesheet" href="css/al-dashboard.css">
         <link rel="stylesheet" href="css/al-addmodule.css">
     </head>
@@ -22,7 +21,6 @@
                 <form action="Module" method="POST" novalidate>
                     <input type="hidden" name="action" value="update" />
 
-                    <!-- IMPORTANT: keep moduleID hidden for updating the correct row -->
                     <input type="hidden" name="moduleID" value="${moduleIDVal}" />
 
                     <!-- Module Name -->
@@ -65,7 +63,7 @@
                         <div class="field-error"><c:out value="${errors.description}" /></div>
                     </div>
 
-                    <!-- Created By (readonly, same) -->
+                    <!-- Created By -->
                     <div class="form-group">
                         <input class="input-field" type="text" id="createdBy" value="${createdByName}" readonly placeholder=" " />
                         <label class="input-label" for="createdBy">Created By</label>

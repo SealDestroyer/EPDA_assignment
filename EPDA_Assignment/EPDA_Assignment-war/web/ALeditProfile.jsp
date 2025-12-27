@@ -6,8 +6,6 @@
     <head>
         <meta charset="UTF-8">
         <title>Edit Profile</title>
-
-        <!-- SAME CSS AS YOUR MODULE MODIFY PAGE -->
         <link rel="stylesheet" href="css/al-dashboard.css">
         <link rel="stylesheet" href="css/al-addmodule.css">
     </head>
@@ -23,7 +21,6 @@
                 <form action="ALProfile" method="POST" novalidate>
                     <input type="hidden" name="action" value="update" />
 
-                    <!-- Hidden userID (do not show) -->
                     <input type="hidden" name="userID" value="${userIDVal}" />
 
                     <!-- Full Name -->
@@ -40,7 +37,7 @@
                         <div class="field-error"><c:out value="${errors.fullName}" /></div>
                     </div>
 
-                    <!-- Password (optional: only update if user types something) -->
+                    <!-- Password (optional) -->
                     <div class="form-group">
                         <input
                             class="input-field <c:if test='${not empty errors.password}'>input-error</c:if>"
@@ -126,7 +123,7 @@
                         <div class="field-error"><c:out value="${errors.address}" /></div>
                     </div>
 
-                    <!-- Leader Role (readonly display like Created By) -->
+                    <!-- Leader Role -->
                     <div class="form-group">
                         <input class="input-field" type="text" id="leaderRole" value="${leaderRoleVal}" readonly placeholder=" " />
                         <label class="input-label" for="leaderRole">Leader Role</label>

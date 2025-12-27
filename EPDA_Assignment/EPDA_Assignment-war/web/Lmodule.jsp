@@ -6,20 +6,17 @@
     <head>
         <meta charset="UTF-8">
         <title>My Modules</title>
-
         <link rel="stylesheet" href="css/al-dashboard.css">
         <link rel="stylesheet" href="css/al-module.css">
     </head>
 
     <body>
 
-        <!-- NAVBAR -->
         <jsp:include page="Lnavbar.jsp" />
 
-        <!-- PAGE CONTENT WRAPPER -->
         <div class="page-container">
 
-            <!-- SEARCH BAR (TOP MIDDLE) -->
+            <!-- SEARCH BAR -->
             <div class="search-bar-container">
                 <form action="LModule" method="GET" class="search-form">
                     <input type="hidden" name="action" value="search"/>
@@ -34,7 +31,6 @@
                 </form>
             </div>
 
-            <!-- TOP BAR (ONLY RESET for lecturer) -->
             <div class="table-top-bar">
                 <form action="LModule" method="GET" class="top-btn-form">
                     <input type="hidden" name="action" value="list"/>
@@ -42,7 +38,6 @@
                 </form>
             </div>
 
-            <!-- ERROR MESSAGE (OPTIONAL) -->
             <div id="errorBox">
                 <c:if test="${not empty errorMsg}">
                     <div class="alert-msg">
@@ -51,7 +46,6 @@
                 </c:if>
             </div>
 
-            <!-- MODULE TABLE -->
             <div class="table-container">
 
                 <table class="module-table" border="1" width="100%" cellpadding="8" cellspacing="0">
@@ -66,7 +60,6 @@
                         </tr>
                     </thead>
 
-                    <!-- ✅ MUST HAVE ID for JS refresh -->
                     <tbody id="moduleTableBody">
                         <c:if test="${empty moduleList}">
                             <tr>
@@ -104,7 +97,7 @@
         <script>
             (function () {
 
-                // ===== CONTEXT PATH (IMPORTANT) =====
+                // ===== CONTEXT PATH =====
                 const ctx = "<%= request.getContextPath()%>";
 
                 // ====== AJAX AUTO REFRESH (LECTURER) ======
@@ -164,7 +157,6 @@
                                 ).join("");
                             })
                             .catch(() => {
-                                // silent fail (same behavior as your original)
                             });
                 }
 
@@ -176,7 +168,7 @@
                 const intervalMs = 2000;
 
                 if (!isSearchMode) {
-                    refreshModuleTable();                 // run once immediately
+                    refreshModuleTable();               
                     setInterval(refreshModuleTable, intervalMs);
                 }
 

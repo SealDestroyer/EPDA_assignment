@@ -6,14 +6,13 @@
     <head>
         <meta charset="UTF-8">
         <title>Assessment Management</title>
-
         <link rel="stylesheet" href="css/al-dashboard.css">
         <link rel="stylesheet" href="css/al-module.css">
+        
         <style>
-            /* Make Actions column compact */
             table.module-table th:last-child,
             table.module-table td:last-child {
-                width: 200px;        /* adjust if needed */
+                width: 200px;       
                 text-align: left;
             }
         </style>
@@ -22,10 +21,8 @@
 
     <body>
 
-        <!-- NAVBAR (LECTURER) -->
         <jsp:include page="Lnavbar.jsp" />
 
-        <!-- PAGE CONTENT WRAPPER -->
         <div class="page-container">
 
             <!-- SEARCH BAR -->
@@ -63,7 +60,7 @@
                     <button type="submit">Reset</button>
                 </form>
 
-                <!-- TOTAL WEIGHTAGE (RIGHT) -->
+                <!-- TOTAL WEIGHTAGE -->
                 <div class="weightage-badge" id="weightageBadge">
                     Total Weightage: ${totalWeightage} / 100
                 </div>
@@ -92,7 +89,6 @@
                         </tr>
                     </thead>
 
-                    <!-- MUST HAVE ID FOR JS -->
                     <tbody id="assessmentTableBody">
                         <c:if test="${empty assessmentList}">
                             <tr>
@@ -360,7 +356,6 @@
                                 ).join("");
                             })
                             .catch(() => {
-                                // silent fail
                             });
                 }
 

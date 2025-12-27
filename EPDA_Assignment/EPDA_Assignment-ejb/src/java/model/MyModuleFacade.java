@@ -32,7 +32,7 @@ public class MyModuleFacade extends AbstractFacade<MyModule> {
 
     public List<MyModule> getAllModules() {
         Query q = em.createNamedQuery("MyModule.findAll");
-        return q.getResultList(); // returns empty list if no records (good!)
+        return q.getResultList(); // returns empty list if no records
     }
 
     public List<MyModule> searchModules(String keyword) {

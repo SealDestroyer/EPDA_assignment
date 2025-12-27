@@ -6,20 +6,16 @@
     <head>
         <meta charset="UTF-8">
         <title>Grading System</title>
-
         <link rel="stylesheet" href="css/al-dashboard.css">
         <link rel="stylesheet" href="css/al-module.css">
     </head>
 
     <body>
 
-        <!-- NAVBAR -->
         <jsp:include page="Lnavbar.jsp" />
 
-        <!-- PAGE CONTENT WRAPPER -->
         <div class="page-container">
 
-            <!-- ERROR MESSAGE (OPTIONAL) -->
             <div id="errorBox">
                 <c:if test="${not empty errorMsg}">
                     <div class="alert-msg">
@@ -40,7 +36,6 @@
                         </tr>
                     </thead>
 
-                    <!-- ✅ MUST HAVE ID for JS refresh later -->
                     <tbody id="gradingTableBody">
 
                         <c:if test="${empty gradingList}">
