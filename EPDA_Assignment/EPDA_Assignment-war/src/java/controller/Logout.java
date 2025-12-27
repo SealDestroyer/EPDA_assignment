@@ -14,9 +14,9 @@ public class Logout extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        HttpSession session = request.getSession(false); // don't create new session
+        HttpSession session = request.getSession(false); 
         if (session != null) {
-            session.invalidate(); // ✅ clear everything
+            session.invalidate(); 
         }
 
         response.sendRedirect("login.jsp");

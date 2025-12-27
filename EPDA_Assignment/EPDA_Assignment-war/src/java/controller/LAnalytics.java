@@ -46,7 +46,7 @@ public class LAnalytics extends HttpServlet {
 
         String lecturerID = loginUser.getUserID();
 
-        // ===== 1) Get module list (ONLY for this lecturer) =====
+        // =====  module list (ONLY for this lecturer) =====
         if ("modules".equals(action)) {
             List<MyModule> modules = myModuleFacade.findByLecturerID(lecturerID);
 
@@ -69,7 +69,7 @@ public class LAnalytics extends HttpServlet {
             return;
         }
 
-        // ===== 2) Chart data (ONLY if module belongs to this lecturer) =====
+        // ===== Chart data (ONLY if module belongs to this lecturer) =====
         if ("avgChart".equals(action)) {
             String moduleIDStr = request.getParameter("moduleID");
             Integer moduleID;
@@ -81,7 +81,7 @@ public class LAnalytics extends HttpServlet {
                 return;
             }
 
-            // ✅ Security: make sure this lecturer owns this module
+            // make sure this lecturer owns this module
             boolean owned = myModuleFacade.isModuleOwnedByLecturer(moduleID, lecturerID);
             if (!owned) {
                 response.getWriter().write("[]");

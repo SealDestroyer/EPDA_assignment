@@ -57,7 +57,7 @@ public class LecturerModule extends HttpServlet {
 
                 List<MyModule> moduleList = myModuleFacade.findByAssignedLecturer(lecturerId);
 
-                // Build userNameMap (createdBy + lecturer)
+                // created by with full name
                 Set<String> ids = new HashSet<>();
                 for (MyModule m : moduleList) {
                     if (m.getCreatedBy() != null && !m.getCreatedBy().trim().isEmpty()) {
@@ -108,7 +108,7 @@ public class LecturerModule extends HttpServlet {
 
                 List<MyModule> moduleList = myModuleFacade.findByAssignedLecturer(lecturerId);
 
-                // Build userNameMap (createdBy + lecturer)
+                // created by with lectrer full name
                 Map<String, String> userNameMap = buildUserNameMap(moduleList);
                 request.setAttribute("userNameMap", userNameMap);
 
@@ -144,7 +144,6 @@ public class LecturerModule extends HttpServlet {
                 return;
             }
 
-            // fallback
             response.sendRedirect("LModule?action=list");
 
         } catch (Exception e) {
