@@ -5,9 +5,17 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.NamedQueries;
 import javax.persistence.Table;
 
 @Entity
+@NamedQueries({
+    @NamedQuery(name = "MyStudentClass.deleteByClassId", 
+                query = "DELETE FROM MyStudentClass c WHERE c.classID = :classID")
+})
+
+
 @Table(name = "MYSTUDENTCLASS")
 public class MyStudentClass implements Serializable {
 

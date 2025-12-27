@@ -3,8 +3,14 @@ package model;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 @Entity
+@NamedQueries({
+    @NamedQuery(name = "MyAcademicLeader.deleteByUserID", query = "DELETE FROM MyAcademicLeader m WHERE m.userID = :userID")
+})
+
 public class MyAcademicLeader implements Serializable {
 
     private static final long serialVersionUID = 1L;

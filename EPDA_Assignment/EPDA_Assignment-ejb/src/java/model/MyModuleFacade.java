@@ -188,4 +188,10 @@ public class MyModuleFacade extends AbstractFacade<MyModule> {
                 .getResultList();
     }
 
+    public int unassignLecturer(String lecturerID) {
+        Query q = em.createNamedQuery("MyModule.unassignLecturer");
+        q.setParameter("lecturerID", lecturerID.trim());
+        return q.executeUpdate();
+    }
+
 }

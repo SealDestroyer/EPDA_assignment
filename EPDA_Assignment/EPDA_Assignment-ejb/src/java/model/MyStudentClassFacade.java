@@ -28,4 +28,10 @@ public class MyStudentClassFacade extends AbstractFacade<MyStudentClass> {
         super(MyStudentClass.class);
     }
     
+    public void deleteByClassId(Integer classID) {
+        em.createNamedQuery("MyStudentClass.deleteByClassId")
+                .setParameter("classID", classID)
+                .executeUpdate();
+    }
+    
 }

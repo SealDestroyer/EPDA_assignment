@@ -41,5 +41,23 @@ public class MyStudentClassEnrollmentFacade extends AbstractFacade<MyStudentClas
         q.setParameter("classID", classID);
         return q.getResultList();
     }
+    
+    public int deleteByStudentID(String studentID) {
+        Query q = em.createNamedQuery("MyStudentClassEnrollment.deleteByStudentID");
+        q.setParameter("studentID", studentID);
+        return q.executeUpdate();
+    }
+    
+    public int deleteByClassID(Integer classID) {
+        Query q = em.createNamedQuery("MyStudentClassEnrollment.deleteByClassID");
+        q.setParameter("classID", classID);
+        return q.executeUpdate();
+    }
+    
+    public int deleteByEnrollmentID(Integer enrollmentID) {
+        Query q = em.createNamedQuery("MyStudentClassEnrollment.deleteByEnrollmentID");
+        q.setParameter("enrollmentID", enrollmentID);
+        return q.executeUpdate();
+    }
 
 }

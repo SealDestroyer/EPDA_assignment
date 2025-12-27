@@ -33,7 +33,20 @@ import javax.persistence.NamedQuery;
     @NamedQuery(
             name = "MyStudentClassEnrollment.findByClassID",
             query = "SELECT e FROM MyStudentClassEnrollment e WHERE e.classID = :classID"
+    ),
+    @NamedQuery(
+            name = "MyStudentClassEnrollment.deleteByStudentID",
+            query = "DELETE FROM MyStudentClassEnrollment e WHERE e.studentID = :studentID"
+    ),
+    @NamedQuery(
+            name = "MyStudentClassEnrollment.deleteByClassID",
+            query = "DELETE FROM MyStudentClassEnrollment e WHERE e.classID = :classID"
+    ),
+    @NamedQuery(
+            name = "MyStudentClassEnrollment.deleteByEnrollmentID",
+            query = "DELETE FROM MyStudentClassEnrollment e WHERE e.enrollmentID = :enrollmentID"
     )
+
 })
 
 public class MyStudentClassEnrollment implements Serializable {

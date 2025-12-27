@@ -66,6 +66,13 @@ import javax.persistence.NamedQuery;
             + "     OR LOWER(m.moduleName) LIKE :kw) "
             + "ORDER BY m.moduleID"
     )
+    ,
+@NamedQuery(
+            name = "MyModule.unassignLecturer",
+            query = "UPDATE MyModule m SET m.assignedLecturerID = NULL "
+            + "WHERE m.assignedLecturerID = :lecturerID"
+    )
+    
 })
 public class MyModule implements Serializable {
 

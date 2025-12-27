@@ -3,8 +3,21 @@ package model;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 @Entity
+@NamedQueries({
+    @NamedQuery(
+        name = "MyLecturer.updateAcademicLeaderIDToNull",
+        query = "UPDATE MyLecturer l SET l.academicLeaderID = NULL WHERE l.academicLeaderID = :academicLeaderID"
+    ),
+    
+    @NamedQuery(
+        name = "MyLecturer.deleteByUserID",
+        query = "DELETE FROM MyLecturer l WHERE l.userID = :userID"
+    )
+})
 public class MyLecturer implements Serializable {
 
     private static final long serialVersionUID = 1L;

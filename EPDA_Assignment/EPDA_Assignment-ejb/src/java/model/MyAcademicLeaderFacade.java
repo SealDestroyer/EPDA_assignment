@@ -28,4 +28,10 @@ public class MyAcademicLeaderFacade extends AbstractFacade<MyAcademicLeader> {
         super(MyAcademicLeader.class);
     }
     
+    public void deleteByUserID(String userID) {
+        em.createNamedQuery("MyAcademicLeader.deleteByUserID")
+          .setParameter("userID", userID)
+          .executeUpdate();
+    }
+    
 }

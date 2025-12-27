@@ -29,4 +29,10 @@ public class MyStudentFacade extends AbstractFacade<MyStudent> {
     public MyStudentFacade() {
         super(MyStudent.class);
     }
+    
+    public int deleteByUserID(String userID) {
+        Query query = em.createNamedQuery("MyStudent.deleteByUserID");
+        query.setParameter("userID", userID);
+        return query.executeUpdate();
+    }
 }

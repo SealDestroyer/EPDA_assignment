@@ -32,6 +32,12 @@ import javax.persistence.NamedQuery;
             name = "MyUsers.findAcamdemicLeaders",
             query = "SELECT u FROM MyUsers u WHERE u.userID LIKE 'AL%' ORDER BY u.userID"
     )
+        ,
+        @NamedQuery(
+            name = "MyUsers.deleteByUserId",
+            query = "DELETE FROM MyUsers u WHERE u.userID = :userID"
+    )
+    
 })
 
 public class MyUsers implements Serializable {

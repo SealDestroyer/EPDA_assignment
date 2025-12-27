@@ -40,4 +40,10 @@ public class MyGradingFacade extends AbstractFacade<MyGrading> {
             return null;
         }
     }
+
+    public int deleteByGradingId(Integer gradingID) {
+        return em.createNamedQuery("MyGrading.deleteByGradingId")
+                .setParameter("gradingID", gradingID)
+                .executeUpdate();
+    }
 }
