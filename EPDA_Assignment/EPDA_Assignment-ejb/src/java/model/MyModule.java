@@ -73,19 +73,16 @@ public class MyModule implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer moduleID; // PK (DB auto increment)
-
+    private Integer moduleID; 
     private String moduleName;
     private String moduleCode;
     private String description;
-
-    private String createdBy;            // FK → AcademicLeader(UserID)
-    private String assignedLecturerID;   // FK → Lecturer(UserID)
+    private String createdBy;         
+    private String assignedLecturerID;   
 
     public MyModule() {
     }
 
-    // constructor without moduleID (DB generates it)
     public MyModule(String moduleName, String moduleCode, String description,
             String createdBy, String assignedLecturerID) {
         this.moduleName = moduleName;

@@ -15,8 +15,7 @@ public class MyStudent implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    private String userID;     // PK + FK to MyUsers.userID
-
+    private String userID;    
     private String matricNo;
     private String intakeYear;
     private String currentLevel;

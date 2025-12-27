@@ -35,17 +35,15 @@ public class MyAssessmentType implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer assessmentID; // PK (DB auto increment)
-
-    private Integer moduleID;      // FK → MyModule.moduleID
+    private Integer assessmentID;
+    private Integer moduleID;
     private String assessmentName;
     private Integer weightage;
-    private String createdBy;      // FK → Lecturer(UserID)
+    private String createdBy;
 
     public MyAssessmentType() {
     }
 
-    // constructor without assessmentID (DB generates it)
     public MyAssessmentType(Integer moduleID, String assessmentName,
             Integer weightage, String createdBy) {
         this.moduleID = moduleID;

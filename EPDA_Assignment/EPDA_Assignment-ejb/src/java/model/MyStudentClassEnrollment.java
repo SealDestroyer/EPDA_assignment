@@ -46,7 +46,6 @@ public class MyStudentClassEnrollment implements Serializable {
     public MyStudentClassEnrollment() {
     }
 
-    // constructor without enrollmentID (DB generates it)
     public MyStudentClassEnrollment(String studentID, Integer classID, String enrollmentDate) {
         this.studentID = studentID;
         this.classID = classID;

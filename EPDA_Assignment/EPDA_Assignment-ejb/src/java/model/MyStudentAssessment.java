@@ -28,7 +28,6 @@ public class MyStudentAssessment implements Serializable {
     public MyStudentAssessment() {
     }
 
-    // constructor without PK (DB generates it)
     public MyStudentAssessment(String studentID, Integer assessmentID, Integer mark,
             String dateAssessed, String feedbackText, String assessedBy, String grade) {
         this.studentID = studentID;
