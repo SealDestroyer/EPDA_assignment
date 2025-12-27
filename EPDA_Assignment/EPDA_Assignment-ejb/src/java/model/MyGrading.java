@@ -30,7 +30,6 @@ public class MyGrading implements Serializable {
     public MyGrading() {
     }
 
-    // constructor without gradingID (DB generates it)
     public MyGrading(String gradeLetter, Integer minPercentage, Integer maxPercentage) {
         this.gradeLetter = gradeLetter;
         this.minPercentage = minPercentage;
