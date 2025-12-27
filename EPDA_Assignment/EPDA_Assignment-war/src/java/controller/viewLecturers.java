@@ -62,7 +62,7 @@ public class viewLecturers extends HttpServlet {
             
             // Add search bar and Add New Lecturer button
             out.println("<div class='search-container'>");
-            out.println("<form method='GET' action='viewLecturers' class='search-form'>");
+            out.println("<form method='GET' action='viewLecturers.jsp' class='search-form'>");
             out.println("<input type='text' name='search' id='searchInput' placeholder='Search by name, email, IC, or phone...' ");
             out.println("value='" + (request.getParameter("search") != null ? request.getParameter("search") : "") + "' ");
             out.println("class='search-input' />");

@@ -122,6 +122,5 @@
     <script src="js/sidebar.js"></script>
     <script src="js/header.js"></script>
     <script src="js/footer.js"></script>
-    <script src="js/registerStudent.js"></script>
 </body>
 </html>

@@ -58,7 +58,7 @@ public class viewGrade extends HttpServlet {
             
             // Add search bar and Add New Grade button
             out.println("<div class='search-container'>");
-            out.println("<form method='GET' action='viewGrade' class='grade-search-form'>");
+            out.println("<form method='GET' action='viewGrade.jsp' class='grade-search-form'>");
             out.println("<input type='text' name='search' id='searchInput' placeholder='Search by grade letter...' ");
             out.println("value='" + (request.getParameter("search") != null ? request.getParameter("search") : "") + "' ");
             out.println("class='grade-search-input' />");

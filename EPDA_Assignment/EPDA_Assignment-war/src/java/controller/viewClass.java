@@ -58,7 +58,7 @@ public class viewClass extends HttpServlet {
             
             // Add search bar and Add New Class button
             out.println("<div class='search-container'>");
-            out.println("<form method='GET' action='viewClass' class='search-form'>");
+            out.println("<form method='GET' action='viewClass.jsp' class='search-form'>");
             out.println("<input type='text' name='search' id='searchInput' placeholder='Search by class name...' ");
             out.println("value='" + (request.getParameter("search") != null ? request.getParameter("search") : "") + "' ");
             out.println("class='search-input' />");
