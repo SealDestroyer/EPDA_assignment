@@ -6,8 +6,6 @@
     <head>
         <meta charset="UTF-8">
         <title>Edit Profile</title>
-
-        <!-- SAME CSS AS YOUR MODULE MODIFY PAGE -->
         <link rel="stylesheet" href="css/al-dashboard.css">
         <link rel="stylesheet" href="css/al-addmodule.css">
     </head>
@@ -23,7 +21,6 @@
                 <form action="LProfile" method="POST" novalidate>
                     <input type="hidden" name="action" value="update" />
 
-                    <!-- Hidden userID (do not show) -->
                     <input type="hidden" name="userID" value="${userIDVal}" />
 
                     <!-- Full Name -->
@@ -126,19 +123,19 @@
                         <div class="field-error"><c:out value="${errors.address}" /></div>
                     </div>
 
-                    <!-- Employment Type (readonly) -->
+                    <!-- Employment Type -->
                     <div class="form-group">
                         <input class="input-field" type="text" id="employmentType" value="${employmentTypeVal}" readonly placeholder=" " />
                         <label class="input-label" for="employmentType">Employment Type</label>
                     </div>
 
-                    <!-- Academic Rank (readonly) -->
+                    <!-- Academic Rank -->
                     <div class="form-group">
                         <input class="input-field" type="text" id="academicRank" value="${academicRankVal}" readonly placeholder=" " />
                         <label class="input-label" for="academicRank">Academic Rank</label>
                     </div>
 
-                    <!-- Academic Leader ID (readonly) -->
+                    <!-- Academic Leader ID -->
                     <div class="form-group">
                         <input class="input-field" type="text" id="academicLeaderID" value="${academicLeaderIDVal}" readonly placeholder=" " />
                         <label class="input-label" for="academicLeaderID">Academic Leader ID</label>

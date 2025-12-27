@@ -6,7 +6,6 @@
     <head>
         <meta charset="UTF-8">
         <title>Student Assessment List</title>
-
         <link rel="stylesheet" href="css/al-dashboard.css">
         <link rel="stylesheet" href="css/al-module.css">
 

@@ -6,7 +6,6 @@
     <head>
         <meta charset="UTF-8">
         <title>Modify Student Mark</title>
-
         <link rel="stylesheet" href="css/al-dashboard.css">
         <link rel="stylesheet" href="css/al-addmodule.css">
     </head>
@@ -24,17 +23,15 @@
 
                     <input type="hidden" name="action" value="update" />
 
-                    <!-- needed to find record -->
                     <input type="hidden" name="studentAssessmentID"
                            value="<c:out value='${studentAssessmentIDVal}'/>" />
                     
                     <input type="hidden" name="moduleID" value="<c:out value='${moduleID}'/>" />
 
-                    <!-- needed to redirect back to list -->
                     <input type="hidden" name="assessmentID"
                            value="<c:out value='${assessmentID}'/>" />
 
-                    <!-- Assessment (display only) -->
+                    <!-- Assessment -->
                     <div class="form-group">
                         <input class="input-field" type="text"
                                value="<c:out value='${assessmentName}'/>"
@@ -42,7 +39,7 @@
                         <label class="input-label">Assessment</label>
                     </div>
 
-                    <!-- Student (display only) -->
+                    <!-- Student -->
                     <div class="form-group">
                         <input class="input-field" type="text"
                                value="<c:out value='${studentDisplay}'/>"
@@ -65,7 +62,7 @@
                         </div>
                     </div>
 
-                    <!-- Grade (auto generated) -->
+                    <!-- Grade -->
                     <div class="form-group">
                         <input class="input-field" type="text"
                                value="<c:out value='${gradeVal}'/>"
@@ -73,7 +70,7 @@
                         <label class="input-label">Grade</label>
                     </div>
 
-                    <!-- Date Assessed (display only) -->
+                    <!-- Date Assessed -->
                     <div class="form-group">
                         <input class="input-field" type="text"
                                value="<c:out value='${dateAssessedVal}'/>"
@@ -94,7 +91,7 @@
                         </div>
                     </div>
 
-                    <!-- Assessed By (display only) -->
+                    <!-- Assessed By -->
                     <div class="form-group">
                         <input class="input-field" type="text"
                                value="<c:out value='${lecturerDisplay}'/>"

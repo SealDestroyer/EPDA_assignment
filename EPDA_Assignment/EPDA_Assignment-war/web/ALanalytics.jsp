@@ -11,14 +11,8 @@
         <meta charset="UTF-8">
         <title>AL Analytics</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-        <!-- Same AL dashboard CSS (background/navbar/theme base) -->
         <link rel="stylesheet" href="css/al-dashboard.css">
-
-        <!-- New Analytics CSS -->
         <link rel="stylesheet" href="css/al-analytics.css">
-
-        <!-- Google Charts -->
         <script src="https://www.gstatic.com/charts/loader.js"></script>
     </head>
 
@@ -72,7 +66,6 @@
                 }
 
                 function clearChart() {
-                    // Clear chart area (keeps your CSS empty placeholder)
                     chartDiv.innerHTML = "";
                 }
 
@@ -84,7 +77,6 @@
                                 lecturerSelect.innerHTML =
                                         '<option value="" disabled selected>Select Lecturer</option>';
 
-                                // no statusMsg anymore, so just return silently
                                 if (!list || list.length === 0) {
                                     return;
                                 }
@@ -97,13 +89,11 @@
                                 });
                             })
                             .catch(() => {
-                                // silent fail (optional: console.log)
                             });
                 }
 
                 // ================== LECTURER CHANGE ==================
                 lecturerSelect.addEventListener("change", function () {
-                    // stop old polling
                     selectedModuleID = "";
                     if (chartTimer)
                         clearInterval(chartTimer);
@@ -130,7 +120,6 @@
                                 moduleSelect.disabled = false;
                             })
                             .catch(() => {
-                                // silent fail
                             });
                 });
 
@@ -150,18 +139,17 @@
                                 drawChart(dataArr);
                             })
                             .catch(() => {
-                                // silent fail
                             });
                 }
 
                 moduleSelect.addEventListener("change", function () {
                     selectedModuleID = this.value;
 
-                    refreshChart(); // immediate draw
+                    refreshChart();
 
                     if (chartTimer)
                         clearInterval(chartTimer);
-                    chartTimer = setInterval(refreshChart, 2000); // every 2s
+                    chartTimer = setInterval(refreshChart, 2000); 
                 });
 
                 // ================== DRAW CHART (DARK THEME) ==================
@@ -184,7 +172,7 @@
                             left: 70,
                             top: 60,
                             right: 20,
-                            bottom: 70, // ✅ give space for x-axis labels
+                            bottom: 70, 
                             width: "100%",
                             height: "100%"
                         },
@@ -192,7 +180,7 @@
                         vAxis: {
                             minValue: 0,
                             maxValue: 100,
-                            textStyle: {color: "#ffffff", fontSize: 12, bold: true}, // ✅ strong white
+                            textStyle: {color: "#ffffff", fontSize: 12, bold: true}, 
                             gridlines: {color: "rgba(255,255,255,0.18)"},
                             baselineColor: "rgba(255,255,255,0.25)",
                             titleTextStyle: {color: "#ffffff"}
@@ -206,7 +194,7 @@
                         },
 
                         tooltip: {
-                            textStyle: {color: "#000"}, // ✅ tooltip text visible
+                            textStyle: {color: "#000"}, 
                             isHtml: false
                         },
 
@@ -220,7 +208,5 @@
                 loadLecturers();
             }
         </script>
-
-
     </body>
 </html>

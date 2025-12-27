@@ -6,14 +6,12 @@
     <head>
         <meta charset="UTF-8">
         <title>Add Assessment</title>
-
-        <!-- SAME CSS USED IN ADD MODULE -->
         <link rel="stylesheet" href="css/al-dashboard.css">
         <link rel="stylesheet" href="css/al-addmodule.css">
     </head>
 
     <body>
-        <!-- Lecturer navbar -->
+
         <jsp:include page="Lnavbar.jsp" />
 
         <div class="add-container">
@@ -21,24 +19,22 @@
                 <h2 class="add-title">New Assessment</h2>
                 <p class="add-subtitle">Enter assessment details below.</p>
 
-                <!-- ✅ USE CONTEXT PATH -->
                 <form action="${pageContext.request.contextPath}/Assessment"
                       method="POST" novalidate>
 
                     <input type="hidden" name="action" value="add" />
 
-                    <!-- ✅ SAFE moduleID -->
                     <input type="hidden" name="moduleID"
                            value="<c:out value='${moduleID}'/>" />
 
-                    <!-- Assessment ID (auto generated) -->
+                    <!-- Assessment ID -->
                     <div class="form-group">
                         <input class="input-field" type="text"
                                value="(Auto Generated)" disabled placeholder=" " />
                         <label class="input-label">Assessment ID</label>
                     </div>
 
-                    <!-- Module ID (display only) -->
+                    <!-- Module ID -->
                     <div class="form-group">
                         <input class="input-field" type="text"
                                value="<c:out value='${moduleID}'/>"

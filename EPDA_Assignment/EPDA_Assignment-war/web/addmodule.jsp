@@ -22,7 +22,7 @@
                 <form action="Module" method="POST" novalidate>
                     <input type="hidden" name="action" value="add" />
 
-                    <!-- Module ID (auto generated) -->
+                    <!-- Module ID -->
                     <div class="form-group">
                         <input class="input-field" type="text" id="moduleID" value="(Auto Generated)" disabled placeholder=" " />
                         <label class="input-label" for="moduleID">Module ID</label>

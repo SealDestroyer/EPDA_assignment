@@ -24,8 +24,7 @@ public class MyUsers implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    private String userID;      // PK (e.g., S001, L001, AL001, A001)
-
+    private String userID;     
     private String fullName;
     private String password;
     private String gender;
