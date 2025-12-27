@@ -20,5 +20,9 @@
         <a href="viewLecturers.jsp">Lecturers</a>
         <br><br>
         <a href="viewGrade.jsp">Grading System</a>
+        <br><br>
+        <a href="viewClass.jsp">Class</a>
+        <br><br>
+        <a href="viewReport.jsp">Report</a>
     </body>
 </html>

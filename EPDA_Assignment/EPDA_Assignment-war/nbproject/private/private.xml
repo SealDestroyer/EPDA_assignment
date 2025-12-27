@@ -3,11 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/bohch/Documents/GitHub/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-war/web/updateGrade.jsp</file>
-            <file>file:/C:/Users/bohch/Documents/GitHub/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-war/web/addGrade.jsp</file>
-            <file>file:/C:/Users/bohch/Documents/GitHub/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-war/src/java/controller/addGrade.java</file>
-            <file>file:/C:/Users/bohch/Documents/GitHub/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-war/src/java/controller/updateGrade.java</file>
-            <file>file:/C:/Users/bohch/Documents/GitHub/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-war/web/updateLecturer.jsp</file>
+            <file>file:/C:/Users/bohch/Documents/GitHub/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-war/src/java/controller/addLecturer.java</file>
+            <file>file:/C:/Users/bohch/Documents/GitHub/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-war/web/addLecturer.jsp</file>
+            <file>file:/C:/Users/bohch/Documents/GitHub/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-war/src/java/controller/viewClassStudent.java</file>
+            <file>file:/C:/Users/bohch/Documents/GitHub/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-war/src/java/controller/addClassStudent.java</file>
+            <file>file:/C:/Users/bohch/Documents/GitHub/EPDA_assignment/EPDA_Assignment/EPDA_Assignment-war/web/addClassStudent.jsp</file>
         </group>
     </open-files>
 </project-private>

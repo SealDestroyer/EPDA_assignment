@@ -9,6 +9,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import javax.persistence.Query;
 
 /**
  *
@@ -33,6 +34,12 @@ public class MyStudentClassEnrollmentFacade extends AbstractFacade<MyStudentClas
         return em.createNamedQuery("MyStudentClassEnrollment.findGradingListByAssessment")
                 .setParameter("assessmentID", assessmentID)
                 .getResultList();
+    }
+    
+    public List<MyStudentClassEnrollment> findClassStudent(Integer classID) {
+        Query q = em.createNamedQuery("MyStudentClassEnrollment.findByClassID");
+        q.setParameter("classID", classID);
+        return q.getResultList();
     }
 
 }
