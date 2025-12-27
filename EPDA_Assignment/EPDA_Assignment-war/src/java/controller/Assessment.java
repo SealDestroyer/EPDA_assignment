@@ -84,7 +84,7 @@ public class Assessment extends HttpServlet {
             // ===== LOAD STUDENT LIST FOR SELECTED ASSESSMENT =====
             if ("studentList".equals(action)) {
 
-                // 1) get assessmentID
+                // assessmentID
                 String assessmentIDStr = request.getParameter("assessmentID");
                 if (assessmentIDStr == null || assessmentIDStr.trim().isEmpty()) {
                     response.sendRedirect("Assessment?action=list&moduleID=" + moduleID);
@@ -93,14 +93,14 @@ public class Assessment extends HttpServlet {
 
                 Integer assessmentID = Integer.parseInt(assessmentIDStr);
 
-                // 2) security: assessment must belong to this module
+                // assessment must belong to this module
                 MyAssessmentType a = myAssessmentTypeFacade.find(assessmentID);
                 if (a == null || a.getModuleID() == null || !a.getModuleID().equals(moduleID)) {
                     response.sendRedirect("Assessment?action=list&moduleID=" + moduleID);
                     return;
                 }
 
-                // 3) run your student list query (from MyStudentClassEnrollmentFacade)
+                //run student list query from MyStudentClassEnrollmentFacade
                 List<Object[]> studentList
                         = myStudentClassEnrollmentFacade.findGradingListByAssessment(assessmentID);
 
@@ -130,7 +130,7 @@ public class Assessment extends HttpServlet {
                     }
                 }
 
-                // 4) send data to JSP
+                // send data to JSP
                 request.setAttribute("moduleID", moduleID);
                 request.setAttribute("assessmentID", assessmentID);
                 request.setAttribute("assessmentName", a.getAssessmentName());
@@ -145,7 +145,7 @@ public class Assessment extends HttpServlet {
 
                 List<MyAssessmentType> list = myAssessmentTypeFacade.findByModule(moduleID);
 
-                // ✅ Build nameMap (createdBy -> fullName)
+                //created by show full name
                 List<String> ids = new ArrayList<>();
                 for (MyAssessmentType a : list) {
                     if (a.getCreatedBy() != null && !a.getCreatedBy().trim().isEmpty()) {
@@ -189,7 +189,6 @@ public class Assessment extends HttpServlet {
 
                 List<MyAssessmentType> list = myAssessmentTypeFacade.findByModule(moduleID);
 
-                // ✅ ADD THIS
                 List<String> ids = new ArrayList<>();
                 for (MyAssessmentType a : list) {
                     if (a.getCreatedBy() != null && !a.getCreatedBy().trim().isEmpty()) {
@@ -370,9 +369,9 @@ public class Assessment extends HttpServlet {
                 request.setAttribute("assessmentNameVal", a.getAssessmentName());
                 request.setAttribute("weightageVal", a.getWeightage());
 
-                // ✅ Created By full name (like Module servlet)
+                // created by full name
                 String createdById = a.getCreatedBy();
-                String createdByName = createdById; // fallback
+                String createdByName = createdById; 
                 if (createdById != null && !createdById.trim().isEmpty()) {
                     MyUsers creator = myUsersFacade.find(createdById);
                     if (creator != null) {
@@ -443,7 +442,7 @@ public class Assessment extends HttpServlet {
                     }
                 }
 
-                // total rule (exclude this row)
+                // total 
                 if (weightage != null) {
                     int totalExcept = myAssessmentTypeFacade.sumWeightageByModuleExcept(moduleID, assessmentID);
                     if (totalExcept + weightage > 100) {
@@ -463,7 +462,6 @@ public class Assessment extends HttpServlet {
                     request.setAttribute("assessmentNameVal", assessmentName);
                     request.setAttribute("weightageVal", weightageStr);
 
-                    // ✅ keep Created By showing even on validation error
                     String createdById = a.getCreatedBy();
                     String createdByName = createdById;
                     if (createdById != null && !createdById.trim().isEmpty()) {

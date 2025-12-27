@@ -60,7 +60,6 @@ public class LProfile extends HttpServlet {
                     return;
                 }
 
-                // prefill values (same naming style)
                 request.setAttribute("userIDVal", u.getUserID());
                 request.setAttribute("fullNameVal", safe(u.getFullName()));
                 request.setAttribute("genderVal", safe(u.getGender()));
@@ -69,7 +68,7 @@ public class LProfile extends HttpServlet {
                 request.setAttribute("emailVal", safe(u.getEmail()));
                 request.setAttribute("addressVal", safe(u.getAddress()));
 
-                // lecturer readonly fields
+                // lecturer read only fields
                 request.setAttribute("employmentTypeVal", (l != null) ? safe(l.getEmploymentType()) : "");
                 request.setAttribute("academicRankVal", (l != null) ? safe(l.getAcademicRank()) : "");
                 request.setAttribute("academicLeaderIDVal", (l != null) ? safe(l.getAcademicLeaderID()) : "");
@@ -102,7 +101,7 @@ public class LProfile extends HttpServlet {
 
                 Map<String, String> errors = new HashMap<>();
 
-                // ==== VALIDATIONS (same as AL) ====
+                // ==== VALIDATIONS ====
                 if (fullName.isEmpty()) {
                     errors.put("fullName", "Full Name cannot be empty.");
                 } else if (fullName.length() < 2) {
@@ -143,12 +142,12 @@ public class LProfile extends HttpServlet {
                     errors.put("address", "Address must not exceed 200 characters.");
                 }
 
-                // password optional: only validate if user typed something
+                // password optional
                 if (!password.isEmpty() && password.length() < 4) {
                     errors.put("password", "Password must be at least 4 characters.");
                 }
 
-                // if got errors -> return back to LeditProfile.jsp
+                // if got errors, return back to LeditProfile.jsp
                 if (!errors.isEmpty()) {
 
                     request.setAttribute("errors", errors);
@@ -162,7 +161,7 @@ public class LProfile extends HttpServlet {
                     request.setAttribute("emailVal", email);
                     request.setAttribute("addressVal", address);
 
-                    // lecturer readonly fields
+                    // lecturer read only fields
                     request.setAttribute("employmentTypeVal", (l != null) ? safe(l.getEmploymentType()) : "");
                     request.setAttribute("academicRankVal", (l != null) ? safe(l.getAcademicRank()) : "");
                     request.setAttribute("academicLeaderIDVal", (l != null) ? safe(l.getAcademicLeaderID()) : "");
@@ -171,7 +170,7 @@ public class LProfile extends HttpServlet {
                     return;
                 }
 
-                // PASS -> update entity (MyUsers only)
+                // PASS then update entity 
                 u.setFullName(fullName);
                 u.setGender(gender);
                 u.setPhone(phone);
@@ -185,14 +184,13 @@ public class LProfile extends HttpServlet {
 
                 myUsersFacade.edit(u);
 
-                // update session user so navbar/profile updates immediately
+                // update session user
                 session.setAttribute("user", u);
 
                 response.sendRedirect("Ldashboard.jsp");
                 return;
             }
 
-            // fallback
             response.sendRedirect("LProfile?action=edit");
 
         } catch (Exception e) {

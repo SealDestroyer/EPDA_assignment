@@ -69,7 +69,7 @@ public class ALProfile extends HttpServlet {
                 request.setAttribute("emailVal", safe(u.getEmail()));
                 request.setAttribute("addressVal", safe(u.getAddress()));
 
-                // leaderRole display (readonly)
+                // leaderRole display 
                 String leaderRole = (al != null) ? safe(al.getLeaderRole()) : "";
                 request.setAttribute("leaderRoleVal", leaderRole);
 
@@ -101,7 +101,7 @@ public class ALProfile extends HttpServlet {
 
                 Map<String, String> errors = new HashMap<>();
 
-                // ==== VALIDATIONS (simple + clean like your module) ====
+                // ==== VALIDATIONS ====
                 if (fullName.isEmpty()) {
                     errors.put("fullName", "Full Name cannot be empty.");
                 } else if (fullName.length() < 2) {
@@ -147,7 +147,7 @@ public class ALProfile extends HttpServlet {
                     errors.put("password", "Password must be at least 4 characters.");
                 }
 
-                // if got errors -> return back to ALeditProfile.jsp
+                // if got errors, return back to ALeditProfile.jsp
                 if (!errors.isEmpty()) {
 
                     request.setAttribute("errors", errors);
@@ -169,7 +169,7 @@ public class ALProfile extends HttpServlet {
                     return;
                 }
 
-                // PASS -> update entity
+                // PASS then update entity
                 u.setFullName(fullName);
                 u.setGender(gender);
                 u.setPhone(phone);
@@ -183,7 +183,7 @@ public class ALProfile extends HttpServlet {
 
                 myUsersFacade.edit(u);
 
-                // update session user so navbar/profile updates immediately
+                // update session user 
                 session.setAttribute("user", u);
 
                 response.sendRedirect("ALdashboard.jsp");

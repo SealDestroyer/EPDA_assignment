@@ -80,7 +80,6 @@ public class LGrading extends HttpServlet {
                 return;
             }
 
-            // fallback
             response.sendRedirect("LGrading?action=list");
 
         } catch (Exception e) {

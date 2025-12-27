@@ -139,14 +139,14 @@ public class StudentAssessment extends HttpServlet {
                     return;
                 }
 
-                // 1) assessment must exist
+                // assessment must exist
                 MyAssessmentType a = myAssessmentTypeFacade.find(assessmentID);
                 if (a == null || a.getModuleID() == null) {
                     response.sendRedirect("Lmodule.jsp");
                     return;
                 }
 
-                // 2) module must belong to logged-in lecturer
+                // module must belong to logged-in lecturer
                 Integer moduleID = a.getModuleID();
                 MyModule moduleRow = myModuleFacade.find(moduleID);
                 if (moduleRow == null) {
@@ -161,13 +161,13 @@ public class StudentAssessment extends HttpServlet {
                     return;
                 }
 
-                // 3) load student display (from MyUsers)
+                // load student display (from MyUsers)
                 MyUsers stu = myUsersFacade.find(studentID);
                 String studentDisplay = (stu == null)
                         ? studentID
                         : (stu.getUserID() + " - " + stu.getFullName());
 
-                // 4) set attributes for addStudentMark.jsp
+                // set attributes for addStudentMark.jsp
                 request.setAttribute("moduleID", moduleID);
                 request.setAttribute("assessmentID", assessmentID);
                 request.setAttribute("assessmentName", a.getAssessmentName());
@@ -259,7 +259,7 @@ public class StudentAssessment extends HttpServlet {
                     }
                 }
 
-                // if errors -> forward back to add page with values
+                // if errors then forward back to add page with values
                 if (!errors.isEmpty()) {
 
                     // rebuild display info for UI
@@ -301,8 +301,6 @@ public class StudentAssessment extends HttpServlet {
 
                 myStudentAssessmentFacade.create(sa);
 
-                // back to list page (your list is in Assessment servlet studentList)
-                // If you already have a StudentAssessment?action=list, you can redirect there instead.
                 response.sendRedirect("Assessment?action=studentList&moduleID=" + moduleID + "&assessmentID=" + assessmentID);
                 return;
             }
@@ -410,7 +408,6 @@ public class StudentAssessment extends HttpServlet {
                 return;
             }
 
-            // fallback: go back
             response.sendRedirect("Lmodule.jsp");
 
         } catch (Exception e) {

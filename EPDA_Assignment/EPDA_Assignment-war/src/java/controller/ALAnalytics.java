@@ -50,7 +50,7 @@ public class ALAnalytics extends HttpServlet {
 
         String alID = loginUser.getUserID();
 
-        // ===== 1) Get lecturers list =====
+        // ===== lecturers list =====
         if ("lecturers".equals(action)) {
             List<String> lecturerIds = myModuleFacade.findDistinctLecturerIdsByAL(alID);
 
@@ -78,7 +78,7 @@ public class ALAnalytics extends HttpServlet {
             return;
         }
 
-        // ===== 2) Get modules list for selected lecturer =====
+        // ===== modules list for selected lecturer =====
         if ("modules".equals(action)) {
             String lecturerID = request.getParameter("lecturerID");
 
@@ -103,7 +103,7 @@ public class ALAnalytics extends HttpServlet {
             return;
         }
 
-        // ===== 3) Get chart data for selected module =====
+        // ===== chart data for selected module =====
         if ("avgChart".equals(action)) {
             String moduleIDStr = request.getParameter("moduleID");
             Integer moduleID = null;
@@ -124,7 +124,7 @@ public class ALAnalytics extends HttpServlet {
                 String assessmentName = (String) r[0];
                 Double avg = (r[1] == null) ? null : ((Number) r[1]).doubleValue();
 
-                // if no marks yet, you can show 0 (or skip)
+                // if no marks yet, wil show 0
                 double value = (avg == null) ? 0.0 : avg;
 
                 json.append(",")
