@@ -1,22 +1,17 @@
-/* ================================
-   AL ANALYTICS (matches Add Module vibe)
-   File: css/al-analytics.css
-   ================================ */
-
 /* ===== CENTER WRAPPER ===== */
 .analytics-container {
     display: flex;
     justify-content: center;
     align-items: flex-start;
     min-height: 100vh;
-    padding: 90px 40px 40px; /* top space for navbar */
+    padding: 90px 40px 40px;
     box-sizing: border-box;
 }
 
 /* ===== MAIN BOX (glass + brown glow) ===== */
 .analytics-box {
     width: 100%;
-    max-width: 980px;                 /* wide for chart */
+    max-width: 980px;                
     background-color: rgba(0, 0, 0, 0.75);
     border: 2px solid #5a3e2b;
     border-radius: 20px;
@@ -25,7 +20,6 @@
     animation: analyticsGlowBoxBrown 1.6s infinite alternate;
 }
 
-/* same glow style as Add Module */
 @keyframes analyticsGlowBoxBrown {
     from { box-shadow: 0 0 18px rgba(90, 62, 43, 0.75); }
     to   { box-shadow: 0 0 32px rgba(90, 62, 43, 1); }
@@ -54,15 +48,14 @@
 
 .analytics-field {
     flex: 1;
-    position: relative; /* for arrow */
+    position: relative; 
 }
 
-/* label above select */
 .analytics-label {
     display: block;
     font-size: 0.95em;
     margin: 0 0 6px;
-    color: #d2a679; /* gold accent */
+    color: #d2a679; 
     opacity: 0.95;
 }
 
@@ -74,7 +67,7 @@
     background: transparent;
     color: #fff;
     font-size: 16px;
-    padding: 10px 34px 10px 5px; /* right space for arrow */
+    padding: 10px 34px 10px 5px;
     box-sizing: border-box;
     cursor: pointer;
 
@@ -83,31 +76,27 @@
     -moz-appearance: none;
 }
 
-/* dropdown arrow (brown/gold) */
 .analytics-select-wrap::after {
     content: "▾";
     position: absolute;
     right: 10px;
-    top: 34px;              /* aligns with select line */
+    top: 34px;              
     font-size: 14px;
     color: #d2a679;
     pointer-events: none;
 }
 
-/* focus underline glow (brown) */
 .analytics-select:focus {
     border-bottom: 2px solid #5a3e2b;
     box-shadow: 0 8px 14px -12px rgba(90, 62, 43, 0.9);
     outline: none;
 }
 
-/* disabled look */
 .analytics-select:disabled {
     opacity: 0.6;
     cursor: not-allowed;
 }
 
-/* dropdown options (best-effort; browser dependent) */
 .analytics-select option {
     background-color: #000;
     color: #fff;
@@ -127,14 +116,11 @@
     border-radius: 14px;
     padding: 14px;
     min-height: 460px;
-
-    /* inner panel look */
     background: rgba(0, 0, 0, 0.45);
     border: 1px solid rgba(210, 166, 121, 0.35);
     box-shadow: 0 0 16px rgba(90, 62, 43, 0.35);
 }
 
-/* optional: empty chart hint (if you later put text inside #chart) */
 .analytics-chart:empty::before {
     content: "No data yet. Select a lecturer and module to display the chart.";
     display: block;
@@ -155,6 +141,6 @@
     }
 
     .analytics-select-wrap::after {
-        top: 34px; /* still fine on mobile */
+        top: 34px; 
     }
 }
