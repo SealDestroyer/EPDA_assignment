@@ -47,6 +47,10 @@ public class viewAcademicLeaders extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
 
+            // Include external CSS and JavaScript instead of inline definitions
+            out.println("<link rel='stylesheet' type='text/css' href='css/viewAcademicLeaders.css'>");
+            out.println("<script src='js/viewAcademicLeaders.js'></script>");
+
             // Get search query parameter
             String searchQuery = request.getParameter("search");
             if (searchQuery == null) {
@@ -57,20 +61,20 @@ public class viewAcademicLeaders extends HttpServlet {
             //Retrieve List of Academic Leaders Records
             List<MyUsers> usersList = myUsersFacade.findAllAcademicLeaders();
             
-            // Add search bar and Add New Academic Leader button
-            out.println("<div style='margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;'>");
-            out.println("<form method='GET' action='viewAcademicLeaders' style='display: flex; align-items: center; gap: 10px;'>");
+            // Add search bar
+            out.println("<div class='search-container'>");
+            out.println("<form method='GET' action='viewAcademicLeaders' class='search-form'>");
             out.println("<input type='text' name='search' id='searchInput' placeholder='Search by name, email, IC, or phone...' ");
             out.println("value='" + (request.getParameter("search") != null ? request.getParameter("search") : "") + "' ");
-            out.println("style='padding: 10px; width: 400px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;' />");
-            out.println("<button type='submit' style='padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;'>Search</button>");
-            out.println("<button type='button' onclick=\"location.href='viewAcademicLeaders.jsp'\" style='padding: 10px 20px; background-color: #808080; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;'>Clear</button>");
+            out.println("class='search-input' />");
+            out.println("<button type='submit' class='btn-search'>Search</button>");
+            out.println("<button type='button' onclick='clearSearch()' class='btn-clear'>Clear</button>");
             out.println("</form>");
-            out.println("<button type='button' onclick=\"location.href='addAcademicLeader.jsp'\" style='padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;'>Add New Academic Leader</button>");
+            out.println("<button type='button' onclick='addNewAcademicLeader()' class='btn-add'>Add New Academic Leader</button>");
             out.println("</div>");
 
             // Display every user from usersList in table form
-            out.println("<table border='1' cellpadding='10' cellspacing='0' style='border-collapse: collapse; width: 100%;'>");
+            out.println("<table class='leaders-table'>");
             out.println("<thead>");
             out.println("<tr>");
             out.println("<th>User ID</th>");
@@ -121,9 +125,9 @@ public class viewAcademicLeaders extends HttpServlet {
                 out.println("<td>" + (academicLeaderData != null ? academicLeaderData.getStartDate() : "") + "</td>");
                 out.println("<td>" + (academicLeaderData != null ? academicLeaderData.getEndDate() : "") + "</td>");
                 out.println("<td>" + user.getPassword() + "</td>");
-                out.println("<td>");
-                out.println("<button type='button' onclick=\"location.href='updateAcademicLeader.jsp?id=" + user.getUserID() + "'\" style='padding: 5px 10px; background-color: #FFA500; color: white; border: none; border-radius: 4px; cursor: pointer; margin-right: 5px;'>Edit</button>");
-                out.println("<button type='button' onclick=\"if(confirm('Are you sure you want to delete this academic leader?')) { location.href='deleteAcademicLeader?id=" + user.getUserID() + "'; }\" style='padding: 5px 10px; background-color: #DC3545; color: white; border: none; border-radius: 4px; cursor: pointer;'>Delete</button>");
+                out.println("<td class='actions-cell'>");
+                out.println("<button type='button' onclick='editAcademicLeader(" + user.getUserID() + ")' class='btn-edit'>Edit</button>");
+                out.println("<button type='button' onclick='deleteAcademicLeader(" + user.getUserID() + ")' class='btn-delete'>Delete</button>");
                 out.println("</td>");
                 out.println("</tr>");
             }
