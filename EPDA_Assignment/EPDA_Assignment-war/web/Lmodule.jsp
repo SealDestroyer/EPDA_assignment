@@ -64,7 +64,7 @@
                     <tbody id="moduleTableBody">
                         <c:if test="${empty moduleList}">
                             <tr>
-                                <td colspan="6" style="text-align:center;">
+                                <td colspan="7" style="text-align:center;">
                                     No modules found.
                                 </td>
                             </tr>
@@ -128,7 +128,7 @@
 
                                     tbody.innerHTML =
                                             "<tr>" +
-                                            "<td colspan='6' style='text-align:center;'>No modules found.</td>" +
+                                            "<td colspan='7' style='text-align:center;'>No modules found.</td>" +
                                             "</tr>";
 
                                     if (errorBox) {
