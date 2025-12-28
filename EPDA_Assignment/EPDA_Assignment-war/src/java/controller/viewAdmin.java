@@ -7,6 +7,7 @@ package controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import model.MyAdminFacade;
+import model.MyUsers;
 import model.MyUsersFacade;
 
 /**
@@ -43,15 +45,81 @@ public class viewAdmin extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet viewAdmin</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet viewAdmin at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+
+            // Get search query parameter
+            String searchQuery = request.getParameter("search");
+            if (searchQuery == null) {
+                searchQuery = "";
+            }
+            searchQuery = searchQuery.trim().toLowerCase();
+
+            // Get current user ID from session
+            String currentUserId = (String) request.getSession().getAttribute("userID");
+            
+            //Retrieve List of Admin Records
+            List<MyUsers> usersList = myUsersFacade.findAdminsExcludingUser(currentUserId);
+
+
+            //List<MyUsers> usersList = myUsersFacade.findAllUsers();
+            
+            // Add search bar
+            out.println("<div class='search-container'>");
+            out.println("<form method='GET' action='viewAdmin.jsp' class='search-form'>");
+            out.println("<input type='text' name='search' id='searchInput' placeholder='Search by name, email, or IC...' ");
+            out.println("value='" + (request.getParameter("search") != null ? request.getParameter("search") : "") + "' ");
+            out.println("class='search-input' />");
+            out.println("<button type='submit' class='btn-search'>Search</button>");
+            out.println("<button type='button' onclick='window.location.href=\"viewAdmin.jsp\"' class='btn-clear'>Clear</button>");
+            out.println("</form>");
+            out.println("<button type='button' onclick='window.location.href=\"addAdmin.jsp\"' class='btn-add'>Add New Admin</button>");
+            out.println("</div>");
+            
+            // Display every user from usersList in table form
+            out.println("<table class='student-table'>");
+            out.println("<thead>");
+            out.println("<tr>");
+            out.println("<th>User ID</th>");
+            out.println("<th>Full Name</th>");
+            out.println("<th>IC Number</th>");
+            out.println("<th>Gender</th>");
+            out.println("<th>Email</th>");
+            out.println("<th>Phone</th>");
+            out.println("<th>Address</th>");
+            out.println("<th>Action</th>");
+            out.println("</tr>");
+            out.println("</thead>");
+            out.println("<tbody>");
+            
+            for (MyUsers user : usersList) {
+                // Apply search filter
+                if (!searchQuery.isEmpty()) {
+                    String fullName = user.getFullName().toLowerCase();
+                    String icNumber = user.getIcNumber().toLowerCase();
+                    String email = user.getEmail().toLowerCase();
+                    
+                    // Skip this record if it doesn't match the search query
+                    if (!fullName.contains(searchQuery) && 
+                        !icNumber.contains(searchQuery) && 
+                        !email.contains(searchQuery)) {
+                        continue;
+                    }
+                }
+                
+                out.println("<tr>");
+                out.println("<td>" + user.getUserID() + "</td>");
+                out.println("<td>" + user.getFullName() + "</td>");
+                out.println("<td>" + user.getIcNumber() + "</td>");
+                out.println("<td>" + user.getGender() + "</td>");
+                out.println("<td>" + user.getEmail() + "</td>");
+                out.println("<td>" + user.getPhone() + "</td>");
+                out.println("<td>" + user.getAddress() + "</td>");
+                out.print("<td><button onclick='window.location.href=\"updateAdmin.jsp?userId=" + user.getUserID() + "\"' class='btn-edit'>Edit</button>");
+                out.print("<button onclick='if(confirm(\"Are you sure you want to delete this admin?\")) window.location.href=\"deleteAdmin?userId=" + user.getUserID() + "\"' class='btn-delete'>Delete</button></td>");
+                out.println("</tr>");
+            }
+            
+            out.println("</tbody>");
+            out.println("</table>");
         }
     }
 

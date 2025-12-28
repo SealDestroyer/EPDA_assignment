@@ -5,6 +5,7 @@
  */
 package model;
 
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -26,6 +27,18 @@ public class MyAdminFacade extends AbstractFacade<MyAdmin> {
 
     public MyAdminFacade() {
         super(MyAdmin.class);
+    }
+    
+    public List<MyAdmin> findAllExcept(String userId) {
+        return em.createNamedQuery("MyAdmin.findAll", MyAdmin.class)
+                .setParameter("userId", userId)
+                .getResultList();
+    }
+    
+    public void deleteByUserId(String userId) {
+        em.createNamedQuery("MyAdmin.deleteByUserId")
+                .setParameter("userId", userId)
+                .executeUpdate();
     }
     
 }

@@ -27,13 +27,14 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>APU Academic Management System - Login</title>
+        <link rel="stylesheet" type="text/css" href="css/login.css">
     </head>
     <body>
-
-        <h2>Login</h2>
-
         <form action="Login" method="POST">
             <table>
+                <tr>
+                    <td colspan="2"><h2>Login Form</h2></td>
+                </tr>
                 <tr>
                     <td>Email:</td>
                     <td>
@@ -46,11 +47,15 @@
                         <input type="password" name="password" size="20" required>
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <input type="submit" value="Sign in">
+                    </td>
+                    <td>
+                        <input type="button" value="Forgot Password" onclick="location.href='forgotPassword.jsp'">
+                    </td>
+                </tr>
             </table>
-
-            <br>
-            <input type="submit" value="Login">
-            <input type="reset" value="Reset">
 
         </form>
 

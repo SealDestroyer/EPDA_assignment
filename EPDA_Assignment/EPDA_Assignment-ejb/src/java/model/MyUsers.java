@@ -42,6 +42,11 @@ import javax.persistence.NamedQuery;
             name = "MyUsers.findUserIdByEmailAndPassword",
             query = "SELECT u.userID FROM MyUsers u WHERE u.email = :userEmail AND u.password = :userPassword"
     )
+        ,
+        @NamedQuery(
+            name = "MyUsers.findAdminsExcludingUser",
+            query = "SELECT u FROM MyUsers u WHERE u.userID LIKE 'AD%' AND u.userID != :userID ORDER BY u.userID"
+    )
     
 })
 
