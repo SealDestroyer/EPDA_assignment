@@ -7,11 +7,14 @@ package controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import model.MyAdminFacade;
+import model.MyUsersFacade;
 
 /**
  *
@@ -19,6 +22,12 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "viewAdmin", urlPatterns = {"/viewAdmin"})
 public class viewAdmin extends HttpServlet {
+
+    @EJB
+    private MyAdminFacade myAdminFacade;
+
+    @EJB
+    private MyUsersFacade myUsersFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,7 +46,7 @@ public class viewAdmin extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet viewAdmin</title>");            
+            out.println("<title>Servlet viewAdmin</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet viewAdmin at " + request.getContextPath() + "</h1>");
