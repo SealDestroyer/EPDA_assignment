@@ -53,7 +53,6 @@ public class updateStudent extends HttpServlet {
                 String icNumber = request.getParameter("icNumber");
                 String email = request.getParameter("email");
                 String address = request.getParameter("address");
-                String matricNo = request.getParameter("matricNo");
                 String intakeYear = request.getParameter("intakeYear");
                 String currentLevel = request.getParameter("currentLevel");
                 String status = request.getParameter("status");
@@ -71,7 +70,6 @@ public class updateStudent extends HttpServlet {
 
                 //Find and Update Student Record
                 MyStudent student = myStudentFacade.find(userID);
-                student.setMatricNo(matricNo);
                 student.setIntakeYear(intakeYear);
                 student.setCurrentLevel(currentLevel);
                 student.setStatus(status);

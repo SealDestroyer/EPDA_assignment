@@ -77,10 +77,6 @@
                         <td><textarea id="address" name="address" rows="3" required></textarea></td>
                     </tr>
                     <tr>
-                        <td><label for="matricNo">Matric Number:</label></td>
-                        <td><input type="text" id="matricNo" name="matricNo" required></td>
-                    </tr>
-                    <tr>
                         <td><label for="intakeYear">Intake Year:</label></td>
                         <td><input type="text" id="intakeYear" name="intakeYear" required></td>
                     </tr>

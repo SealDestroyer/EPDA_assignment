@@ -13,8 +13,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.MyStudent;
+import model.MyAdmin;
+import model.MyAdminFacade;
 import model.MyStudentFacade;
+import model.MyUserIDFacade;
 import model.MyUsers;
 import model.MyUsersFacade;
 
@@ -22,15 +24,21 @@ import model.MyUsersFacade;
  *
  * @author bohch
  */
-@WebServlet(name = "registerStudent", urlPatterns = {"/registerStudent"})
-public class registerStudent extends HttpServlet {
+@WebServlet(name = "loadDemoData", urlPatterns = {"/loadDemoData"})
+public class loadDemoData extends HttpServlet {
 
     @EJB
     private MyStudentFacade myStudentFacade;
 
     @EJB
-    private MyUsersFacade myUsersFacade;
+    private MyAdminFacade myAdminFacade;
 
+    @EJB
+    private MyUserIDFacade myUserIDFacade;
+
+    @EJB
+    private MyUsersFacade myUsersFacade;
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -45,35 +53,30 @@ public class registerStudent extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            // Get parameters from JSP form
-            try {
-                String userID = request.getParameter("userID");
-                String fullName = request.getParameter("fullName");
-                String password = request.getParameter("password");
-                String gender = request.getParameter("gender");
-                String phone = request.getParameter("phone");
-                String icNumber = request.getParameter("icNumber");
-                String email = request.getParameter("email");
-                String address = request.getParameter("address");
-                String intakeYear = request.getParameter("intakeYear");
-                String currentLevel = request.getParameter("currentLevel");
-                String status = request.getParameter("status");
 
-                //Create New User Record
-                MyUsers user = new MyUsers(userID, fullName, password, gender, phone, icNumber, email, address);
-                myUsersFacade.create(user);
+            //Create a superadmin demo data
+            MyAdmin admin = new MyAdmin("AL1", "SuperAdmin");
+            MyUsers user = new MyUsers("AL1", "Arlen", "12345", "Male",
+                    "0162242788", "020401101728", "arlen@gmail.com", "Bukit Jalil");
 
-                //Create New Student Record
-                MyStudent student = new MyStudent(userID, intakeYear, currentLevel, status);
-                myStudentFacade.create(student);
+            //Create 2 normal admin data
+            MyAdmin admin2 = new MyAdmin("AL2", "Admin");
+            MyUsers user2 = new MyUsers("AL2", "Jason Lim", "12345", "Male",
+                    "0178899001", "990312145678", "jason.lim@gmail.com", "Cheras");
 
-                request.setAttribute("message", "Register Successfully!");
-                request.getRequestDispatcher("viewStudent.jsp").forward(request, response);
-                out.println("<br><br><br>Register Success!");
-            } catch (Exception e) {
-                request.getRequestDispatcher("registerStudent.jsp").forward(request, response);
-                out.println("<br><br><br>Invalid Input!");
-            }
+            MyAdmin admin3 = new MyAdmin("AL3", "Admin");
+            MyUsers user3 = new MyUsers("AL3", "Aina Syafiqah", "12345", "Female",
+                    "0123456789", "010820085432", "aina.syafiqah@gmail.com", "Shah Alam");
+
+            // Persist the entities using facades
+            myUsersFacade.create(user);
+            myAdminFacade.create(admin);
+
+            myUsersFacade.create(user2);
+            myAdminFacade.create(admin2);
+
+            myUsersFacade.create(user3);
+            myAdminFacade.create(admin3);
 
         }
     }
