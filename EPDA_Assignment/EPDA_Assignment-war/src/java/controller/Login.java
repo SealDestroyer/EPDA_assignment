@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import model.MyAcademicLeaderFacade;
-import model.MyLecturerFacade;      
+import model.MyLecturerFacade;
 import model.MyUsers;
 import model.MyUsersFacade;
 
@@ -23,7 +23,7 @@ public class Login extends HttpServlet {
     private MyAcademicLeaderFacade myAcademicLeaderFacade;
 
     @EJB
-    private MyLecturerFacade myLecturerFacade;  
+    private MyLecturerFacade myLecturerFacade;
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -49,14 +49,17 @@ public class Login extends HttpServlet {
             HttpSession s = request.getSession(true);
             s.setAttribute("userID", userID);
 
+            MyUsers user = myUsersFacade.find(userID);
+            s.setAttribute("user", user);
+
             // Route based on userID content
-            if (userID.contains("AL")) {
+            if (userID.toUpperCase().startsWith("AL")) {
                 response.sendRedirect("ALdashboard.jsp");
-            } else if (userID.contains("AD")) {
+            } else if (userID.toUpperCase().startsWith("AD")) {
                 response.sendRedirect("viewStudent.jsp");
-            } else if (userID.contains("S")) {
+            } else if (userID.toUpperCase().startsWith("S")) {
                 response.sendRedirect("StudentAssessmentList.jsp");
-            } else if (userID.contains("L")) {
+            } else if (userID.toUpperCase().startsWith("L")) {
                 response.sendRedirect("Ldashboard.jsp");
             }
 
