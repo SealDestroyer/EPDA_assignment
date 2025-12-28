@@ -15,7 +15,7 @@
 
         <div class="center-content">
             <div class="btn-container">
-                <a class="btn" href="${pageContext.request.contextPath}/Module?action=goAdd">Create New Module</a>
+                <a class="btn" href="${pageContext.request.contextPath}/ALViewClass?action=list">Create New Module</a>
             </div>
         </div>
     </body>

@@ -1,6 +1,5 @@
 package controller;
 
-import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Util.escape;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +18,8 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import model.MyStudentClass;
+import model.MyStudentClassFacade;
 
 @WebServlet(name = "Module", urlPatterns = {"/Module"})
 public class Module extends HttpServlet {
@@ -28,6 +29,9 @@ public class Module extends HttpServlet {
 
     @EJB
     private MyModuleFacade myModuleFacade;
+
+    @EJB
+    private MyStudentClassFacade myStudentClassFacade;
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -46,6 +50,29 @@ public class Module extends HttpServlet {
             return;
         }
 
+        // ===== classID REQUIRED =====
+        String classIDStr = request.getParameter("classID");
+        if (classIDStr == null || classIDStr.trim().isEmpty()) {
+            response.sendRedirect("ALViewClass?action=list");
+            return;
+        }
+
+        Integer classID = Integer.parseInt(classIDStr);
+        MyStudentClass classRow = myStudentClassFacade.find(classID);
+
+        if (classRow == null) {
+            response.sendRedirect("ALViewClass?action=list");
+            return;
+        }
+
+        // ===== SECURITY: AL can only manage own assigned classes =====
+        String alID = loginUser.getUserID();
+        if (classRow.getAssignedAcademicLeaderID() == null
+                || !classRow.getAssignedAcademicLeaderID().equals(alID)) {
+            response.sendRedirect("ALViewClass?action=list");
+            return;
+        }
+
         try {
             String action = request.getParameter("action");
             if (action == null || action.trim().isEmpty()) {
@@ -55,8 +82,7 @@ public class Module extends HttpServlet {
             // ===== LIST JSON (AJAX REAL-TIME) =====
             if ("listJson".equals(action)) {
 
-                String alID = loginUser.getUserID();
-                List<MyModule> moduleList = myModuleFacade.findByCreatedBy(alID);
+                List<MyModule> moduleList = classRow.getModules();
 
                 // created by with full name
                 Set<String> ids = new HashSet<>();
@@ -104,8 +130,7 @@ public class Module extends HttpServlet {
             // ===== LIST =====
             if ("list".equals(action)) {
 
-                String alID = loginUser.getUserID();
-                List<MyModule> moduleList = myModuleFacade.findByCreatedBy(alID);
+                List<MyModule> moduleList = classRow.getModules();
 
                 // created by with full name
                 Set<String> ids = new HashSet<>();
@@ -119,8 +144,8 @@ public class Module extends HttpServlet {
                 }
                 Map<String, String> userNameMap = myUsersFacade.findUserNameMapByIds(new ArrayList<>(ids));
                 request.setAttribute("userNameMap", userNameMap);
-
                 request.setAttribute("moduleList", moduleList);
+                request.setAttribute("classID", classID);
                 request.getRequestDispatcher("module.jsp").forward(request, response);
                 return;
             }
@@ -130,14 +155,25 @@ public class Module extends HttpServlet {
 
                 String keyword = request.getParameter("keyword");
 
-                // if empty keyword then show all modules
+                // if empty keyword then show all modules for this class
                 if (keyword == null || keyword.trim().isEmpty()) {
-                    response.sendRedirect("Module?action=list");
+                    response.sendRedirect("Module?action=list&classID=" + classID);
                     return;
                 }
 
-                String alID = loginUser.getUserID();
-                List<MyModule> moduleList = myModuleFacade.searchModulesByCreatedBy(keyword, alID);
+                String kw = keyword.trim().toLowerCase();
+
+                // Search inside this class only
+                List<MyModule> moduleList = new ArrayList<>();
+                for (MyModule m : classRow.getModules()) {
+
+                    String name = (m.getModuleName() == null) ? "" : m.getModuleName().toLowerCase();
+                    String code = (m.getModuleCode() == null) ? "" : m.getModuleCode().toLowerCase();
+
+                    if (name.contains(kw) || code.contains(kw)) {
+                        moduleList.add(m);
+                    }
+                }
 
                 if (moduleList.isEmpty()) {
                     request.setAttribute("errorMsg", "No modules found for: " + keyword);
@@ -153,13 +189,14 @@ public class Module extends HttpServlet {
                         ids.add(m.getAssignedLecturerID().trim());
                     }
                 }
+
                 Map<String, String> userNameMap = myUsersFacade.findUserNameMapByIds(new ArrayList<>(ids));
                 request.setAttribute("userNameMap", userNameMap);
-
                 request.setAttribute("moduleList", moduleList);
+                request.setAttribute("classID", classID);
+
                 request.getRequestDispatcher("module.jsp").forward(request, response);
                 return;
-
             }
 
             // ===== GO ADD PAGE =====
@@ -173,6 +210,7 @@ public class Module extends HttpServlet {
                 List<MyUsers> lecturerList = myUsersFacade.findLecturers();
                 request.setAttribute("lecturerList", lecturerList);
 
+                request.setAttribute("classID", classID);
                 request.getRequestDispatcher("addmodule.jsp").forward(request, response);
                 return;
             }
@@ -243,7 +281,7 @@ public class Module extends HttpServlet {
 
                     List<MyUsers> lecturerList = myUsersFacade.findLecturers();
                     request.setAttribute("lecturerList", lecturerList);
-
+                    request.setAttribute("classID", classID);
                     request.getRequestDispatcher("addmodule.jsp").forward(request, response);
                     return;
                 }
@@ -257,7 +295,9 @@ public class Module extends HttpServlet {
                 m.setAssignedLecturerID(assignedLecturerID);
 
                 myModuleFacade.create(m);
-                response.sendRedirect("Module?action=list");
+                classRow.getModules().add(m);
+                myStudentClassFacade.edit(classRow);
+                response.sendRedirect("Module?action=list&classID=" + classID);
                 return;
             }
 
@@ -266,7 +306,7 @@ public class Module extends HttpServlet {
 
                 String moduleIDStr = request.getParameter("moduleID");
                 if (moduleIDStr == null || moduleIDStr.trim().isEmpty()) {
-                    response.sendRedirect("Module?action=list");
+                    response.sendRedirect("Module?action=list&classID=" + classID);
                     return;
                 }
 
@@ -275,12 +315,12 @@ public class Module extends HttpServlet {
                 // get module row
                 MyModule m = myModuleFacade.find(moduleID);
                 if (m == null) {
-                    response.sendRedirect("Module?action=list");
+                    response.sendRedirect("Module?action=list&classID=" + classID);
                     return;
                 }
                 // AL can only edit own modules
                 if (!loginUser.getUserID().equals(m.getCreatedBy())) {
-                    response.sendRedirect("Module?action=list");
+                    response.sendRedirect("Module?action=list&classID=" + classID);
                     return;
                 }
 
@@ -295,7 +335,7 @@ public class Module extends HttpServlet {
                 request.setAttribute("assignedLecturerIDVal", m.getAssignedLecturerID());
 
                 String createdById = m.getCreatedBy();
-                String createdByName = createdById; 
+                String createdByName = createdById;
                 if (createdById != null && !createdById.trim().isEmpty()) {
                     MyUsers creator = myUsersFacade.find(createdById);
                     if (creator != null) {
@@ -303,7 +343,7 @@ public class Module extends HttpServlet {
                     }
                 }
                 request.setAttribute("createdByName", createdByName);
-
+                request.setAttribute("classID", classID);
                 request.getRequestDispatcher("updatemodule.jsp").forward(request, response);
                 return;
             }
@@ -313,19 +353,19 @@ public class Module extends HttpServlet {
 
                 String moduleIDStr = request.getParameter("moduleID");
                 if (moduleIDStr == null || moduleIDStr.trim().isEmpty()) {
-                    response.sendRedirect("Module?action=list");
+                    response.sendRedirect("Module?action=list&classID=" + classID);
                     return;
                 }
                 Integer moduleID = Integer.parseInt(moduleIDStr);
 
                 MyModule m = myModuleFacade.find(moduleID);
                 if (m == null) {
-                    response.sendRedirect("Module?action=list");
+                    response.sendRedirect("Module?action=list&classID=" + classID);
                     return;
                 }
                 // AL can only update own modules
                 if (!loginUser.getUserID().equals(m.getCreatedBy())) {
-                    response.sendRedirect("Module?action=list");
+                    response.sendRedirect("Module?action=list&classID=" + classID);
                     return;
                 }
 
@@ -399,7 +439,7 @@ public class Module extends HttpServlet {
                         }
                     }
                     request.setAttribute("createdByName", createdByName);
-
+                    request.setAttribute("classID", classID);
                     request.getRequestDispatcher("updatemodule.jsp").forward(request, response);
                     return;
                 }
@@ -411,7 +451,7 @@ public class Module extends HttpServlet {
                 m.setAssignedLecturerID(assignedLecturerID);
 
                 myModuleFacade.edit(m);
-                response.sendRedirect("Module?action=list");
+                response.sendRedirect("Module?action=list&classID=" + classID);
                 return;
             }
 
@@ -420,7 +460,7 @@ public class Module extends HttpServlet {
 
                 String moduleIDStr = request.getParameter("moduleID");
                 if (moduleIDStr == null || moduleIDStr.trim().isEmpty()) {
-                    response.sendRedirect("Module?action=list");
+                    response.sendRedirect("Module?action=list&classID=" + classID);
                     return;
                 }
 
@@ -428,14 +468,20 @@ public class Module extends HttpServlet {
 
                 MyModule m = myModuleFacade.find(moduleID);
                 if (m != null && loginUser.getUserID().equals(m.getCreatedBy())) {
+
+                    // remove link from the many to many class first
+                    classRow.getModules().remove(m);
+                    myStudentClassFacade.edit(classRow);
+
+                    //then delete module record
                     myModuleFacade.remove(m);
                 }
 
-                response.sendRedirect("Module?action=list");
+                response.sendRedirect("Module?action=list&classID=" + classID);
                 return;
             }
 
-            response.sendRedirect("Module?action=list");
+            response.sendRedirect("Module?action=list&classID=" + classID);
 
         } catch (Exception e) {
             request.setAttribute("moduleList", java.util.Collections.emptyList());
