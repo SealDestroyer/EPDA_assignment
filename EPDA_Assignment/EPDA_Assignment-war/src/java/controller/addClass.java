@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import model.MyStudentClassFacade;
 import static model.MyStudentClass_.academicYear;
 import static model.MyStudentClass_.className;
-import static model.MyStudentClass_.createdBy;
+import static model.MyStudentClass_.assignedAcademicLeaderID;
 import static model.MyStudentClass_.semester;
 
 /**
@@ -46,14 +46,14 @@ public class addClass extends HttpServlet {
             String className = request.getParameter("className");
             String semester = request.getParameter("semester");
             String academicYear = request.getParameter("academicYear");
-            String createdBy = request.getParameter("createdBy");
+            String assignedAcademicLeaderID = request.getParameter("assignedAcademicLeaderID");
             
             //Create New Class Record
             model.MyStudentClass studentClass = new model.MyStudentClass();
             studentClass.setClassName(className);
             studentClass.setSemester(semester);
             studentClass.setAcademicYear(academicYear);
-            studentClass.setCreatedBy(createdBy);
+            studentClass.setAssignedAcademicLeaderID(assignedAcademicLeaderID);
             
             myStudentClassFacade.create(studentClass);
             

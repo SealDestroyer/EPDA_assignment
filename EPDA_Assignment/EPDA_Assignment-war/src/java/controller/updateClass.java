@@ -46,14 +46,14 @@ public class updateClass extends HttpServlet {
                 String className = request.getParameter("className");
                 String semester = request.getParameter("semester");
                 String academicYear = request.getParameter("academicYear");
-                String createdBy = request.getParameter("createdBy");
+                String assignedAcademicLeaderID = request.getParameter("assignedAcademicLeaderID");
 
                 //Find and Update Class Record
                 MyStudentClass myClass = myStudentClassFacade.find(Integer.parseInt(classId));
                 myClass.setClassName(className);
                 myClass.setSemester(semester);
                 myClass.setAcademicYear(academicYear);
-                myClass.setCreatedBy(createdBy);
+                myClass.setAssignedAcademicLeaderID(assignedAcademicLeaderID);
                 myStudentClassFacade.edit(myClass);
 
                 request.setAttribute("message", "Update Successfully!");

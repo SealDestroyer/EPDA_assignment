@@ -54,8 +54,8 @@
                         <td><input type="text" id="academicYear" name="academicYear" required></td>
                     </tr>
                     <tr>
-                        <td><label for="createdBy">Created By:</label></td>
-                        <td><input type="text" id="createdBy" name="createdBy" required></td>
+                        <td><label for="assignedAcademicLeaderID">Assigned Academic Leader ID:</label></td>
+                        <td><input type="text" id="assignedAcademicLeaderID" name="assignedAcademicLeaderID" required></td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center; padding-top: 20px;">

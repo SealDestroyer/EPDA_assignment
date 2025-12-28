@@ -76,7 +76,7 @@ public class viewClass extends HttpServlet {
             out.println("<th>Class Name</th>");
             out.println("<th>Semester</th>");
             out.println("<th>Academic Year</th>");
-            out.println("<th>Created By</th>");
+            out.println("<th>Assigned Academic Leader ID</th>");
             out.println("<th>Action</th>");
             out.println("</tr>");
             out.println("</thead>");
@@ -98,7 +98,7 @@ public class viewClass extends HttpServlet {
                 out.println("<td>" + studentClass.getClassName() + "</td>");
                 out.println("<td>" + studentClass.getSemester() + "</td>");
                 out.println("<td>" + studentClass.getAcademicYear() + "</td>");
-                out.println("<td>" + studentClass.getCreatedBy() + "</td>");
+                out.println("<td>" + studentClass.getAssignedAcademicLeaderID() + "</td>");
                 out.println("<td>");
                 out.println("<button type='button' onclick='window.location.href=\"viewClassStudent.jsp?classId=" + studentClass.getClassID() + "\"' class='btn-students'>Students</button>");
                 out.println("<button type='button' onclick='window.location.href=\"updateClass.jsp?classId=" + studentClass.getClassID() + "\"' class='btn-edit'>Edit</button>");
