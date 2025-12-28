@@ -9,6 +9,11 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 @Entity
+@NamedQueries({
+    @NamedQuery(name = "MyStudentAssessment.deleteByStudentID", query = "DELETE FROM MyStudentAssessment m WHERE m.studentID = :studentID")
+
+})
+
 public class MyStudentAssessment implements Serializable {
 
     private static final long serialVersionUID = 1L;

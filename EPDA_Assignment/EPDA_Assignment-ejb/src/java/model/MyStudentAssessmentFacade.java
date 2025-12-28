@@ -46,4 +46,10 @@ public class MyStudentAssessmentFacade extends AbstractFacade<MyStudentAssessmen
                 .getResultList();
     }
 
+    public int deleteByStudentID(String studentID) {
+        return em.createNamedQuery("MyStudentAssessment.deleteByStudentID")
+                .setParameter("studentID", studentID)
+                .executeUpdate();
+    }
+
 }

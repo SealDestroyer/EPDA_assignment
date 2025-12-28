@@ -42,6 +42,10 @@ public class viewClass extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             
+            // Include CSS and JavaScript files
+            out.println("<link rel='stylesheet' type='text/css' href='css/viewClass.css'>");
+            out.println("<script src='js/viewClass.js'></script>");
+            
             // Get search query parameter
             String searchQuery = request.getParameter("search");
             if (searchQuery == null) {
@@ -53,19 +57,19 @@ public class viewClass extends HttpServlet {
             List<MyStudentClass> classList = myStudentClassFacade.findAll();
             
             // Add search bar and Add New Class button
-            out.println("<div style='margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;'>");
-            out.println("<form method='GET' action='viewClass' style='display: flex; align-items: center; gap: 10px;'>");
+            out.println("<div class='search-container'>");
+            out.println("<form method='GET' action='viewClass.jsp' class='search-form'>");
             out.println("<input type='text' name='search' id='searchInput' placeholder='Search by class name...' ");
             out.println("value='" + (request.getParameter("search") != null ? request.getParameter("search") : "") + "' ");
-            out.println("style='padding: 10px; width: 400px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;' />");
-            out.println("<button type='submit' style='padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;'>Search</button>");
-            out.println("<button type='button' onclick=\"location.href='viewClass'\" style='padding: 10px 20px; background-color: #808080; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;'>Clear</button>");
+            out.println("class='search-input' />");
+            out.println("<button type='submit' class='btn-search'>Search</button>");
+            out.println("<button type='button' onclick='window.location.href=\"viewClass.jsp\"' class='btn-clear'>Clear</button>");
             out.println("</form>");
-            out.println("<button type='button' onclick=\"location.href='addClass.jsp'\" style='padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;'>Add New Class</button>");
+            out.println("<button type='button' onclick='window.location.href=\"addClass.jsp\"' class='btn-add'>Add New Class</button>");
             out.println("</div>");
 
             // Display every class from classList in table form
-            out.println("<table border='1' cellpadding='10' cellspacing='0' style='border-collapse: collapse; width: 100%;'>");
+            out.println("<table class='class-table'>");
             out.println("<thead>");
             out.println("<tr>");
             out.println("<th>Class ID</th>");
@@ -96,9 +100,9 @@ public class viewClass extends HttpServlet {
                 out.println("<td>" + studentClass.getAcademicYear() + "</td>");
                 out.println("<td>" + studentClass.getCreatedBy() + "</td>");
                 out.println("<td>");
-                out.println("<button type='button' onclick=\"location.href='viewClassStudent.jsp?classId=" + studentClass.getClassID() + "'\" style='padding: 5px 10px; background-color: #17A2B8; color: white; border: none; border-radius: 4px; cursor: pointer; margin-right: 5px;'>Students</button>");
-                out.println("<button type='button' onclick=\"location.href='updateClass.jsp?id=" + studentClass.getClassID() + "'\" style='padding: 5px 10px; background-color: #FFA500; color: white; border: none; border-radius: 4px; cursor: pointer; margin-right: 5px;'>Edit</button>");
-                out.println("<button type='button' onclick=\"if(confirm('Are you sure you want to delete this class?')) { location.href='deleteClass?id=" + studentClass.getClassID() + "'; }\" style='padding: 5px 10px; background-color: #DC3545; color: white; border: none; border-radius: 4px; cursor: pointer;'>Delete</button>");
+                out.println("<button type='button' onclick='window.location.href=\"viewClassStudent.jsp?classId=" + studentClass.getClassID() + "\"' class='btn-students'>Students</button>");
+                out.println("<button type='button' onclick='window.location.href=\"updateClass.jsp?classId=" + studentClass.getClassID() + "\"' class='btn-edit'>Edit</button>");
+                out.println("<button type='button' onclick='if(confirm(\"Are you sure you want to delete this class?\")) window.location.href=\"deleteClass?classId=" + studentClass.getClassID() + "\"' class='btn-delete'>Delete</button>");
                 out.println("</td>");
                 out.println("</tr>");
             }

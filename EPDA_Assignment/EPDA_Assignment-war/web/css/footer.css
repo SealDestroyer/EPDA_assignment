@@ -1,0 +1,25 @@
+/* Footer Styles */
+.footer {
+    background-color: white;
+    padding: 15px 30px;
+    text-align: center;
+    border-top: 1px solid #e0e0e0;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.footer p {
+    color: #666;
+    font-size: 14px;
+    margin: 0;
+}
+
+/* Responsive Design for Footer */
+@media (max-width: 768px) {
+    .footer {
+        padding: 10px 20px;
+    }
+    
+    .footer p {
+        font-size: 12px;
+    }
+}

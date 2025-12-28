@@ -1,0 +1,41 @@
+/* Header Styles */
+.header {
+    background-color: white;
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.header h1 {
+    font-size: 24px;
+    color: #3E2723;
+    font-weight: 600;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+}
+
+.user-profile i {
+    font-size: 32px;
+    color: #666;
+    cursor: pointer;
+    background-color: #e0e0e0;
+    border-radius: 50%;
+    padding: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.user-profile i:hover {
+    background-color: #d0d0d0;
+}
+
+/* Responsive Design for Header */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 20px;
+    }
+}

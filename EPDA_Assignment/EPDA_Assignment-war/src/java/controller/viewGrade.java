@@ -42,6 +42,10 @@ public class viewGrade extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             
+            // Include CSS and JavaScript
+            out.println("<link rel='stylesheet' type='text/css' href='css/viewGrade.css'>");
+            out.println("<script src='js/viewGrade.js'></script>");
+            
             // Get search query parameter
             String searchQuery = request.getParameter("search");
             if (searchQuery == null) {
@@ -53,19 +57,19 @@ public class viewGrade extends HttpServlet {
             List<MyGrading> gradingList = myGradingFacade.findAll();
             
             // Add search bar and Add New Grade button
-            out.println("<div style='margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;'>");
-            out.println("<form method='GET' action='viewGrade' style='display: flex; align-items: center; gap: 10px;'>");
+            out.println("<div class='search-container'>");
+            out.println("<form method='GET' action='viewGrade.jsp' class='grade-search-form'>");
             out.println("<input type='text' name='search' id='searchInput' placeholder='Search by grade letter...' ");
             out.println("value='" + (request.getParameter("search") != null ? request.getParameter("search") : "") + "' ");
-            out.println("style='padding: 10px; width: 400px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;' />");
-            out.println("<button type='submit' style='padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;'>Search</button>");
-            out.println("<button type='button' onclick=\"location.href='viewGrade'\" style='padding: 10px 20px; background-color: #808080; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;'>Clear</button>");
+            out.println("class='grade-search-input' />");
+            out.println("<button type='submit' class='btn-search'>Search</button>");
+            out.println("<button type='button' onclick='window.location.href=\"viewGrade.jsp\"' class='btn-clear'>Clear</button>");
             out.println("</form>");
-            out.println("<button type='button' onclick=\"location.href='addGrade.jsp'\" style='padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;'>Add New Grade</button>");
+            out.println("<button type='button' onclick='window.location.href=\"addGrade.jsp\"' class='btn-add'>Add New Grade</button>");
             out.println("</div>");
 
             // Display every grading from gradingList in table form
-            out.println("<table border='1' cellpadding='10' cellspacing='0' style='border-collapse: collapse; width: 100%;'>");
+            out.println("<table class='grade-table'>");
             out.println("<thead>");
             out.println("<tr>");
             out.println("<th>Grading ID</th>");
@@ -94,8 +98,8 @@ public class viewGrade extends HttpServlet {
                 out.println("<td>" + grading.getMinPercentage() + "%</td>");
                 out.println("<td>" + grading.getMaxPercentage() + "%</td>");
                 out.println("<td>");
-                out.println("<button type='button' onclick=\"location.href='updateGrade.jsp?id=" + grading.getGradingID() + "'\" style='padding: 5px 10px; background-color: #FFA500; color: white; border: none; border-radius: 4px; cursor: pointer; margin-right: 5px;'>Edit</button>");
-                out.println("<button type='button' onclick=\"if(confirm('Are you sure you want to delete this grade?')) { location.href='deleteGrade?id=" + grading.getGradingID() + "'; }\" style='padding: 5px 10px; background-color: #DC3545; color: white; border: none; border-radius: 4px; cursor: pointer;'>Delete</button>");
+                out.println("<button type='button' onclick='window.location.href=\"updateGrade.jsp?gradingId=" + grading.getGradingID() + "\"' class='btn-edit'>Edit</button>");
+                out.println("<button type='button' onclick='if(confirm(\"Are you sure you want to delete this grade?\")) window.location.href=\"deleteGrade?gradingId=" + grading.getGradingID() + "\"' class='btn-delete'>Delete</button>");
                 out.println("</td>");
                 out.println("</tr>");
             }

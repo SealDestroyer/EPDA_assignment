@@ -28,4 +28,16 @@ public class MyLecturerFacade extends AbstractFacade<MyLecturer> {
         super(MyLecturer.class);
     }
     
+    public int updateAcademicLeaderIDToNull(String academicLeaderID) {
+        return em.createNamedQuery("MyLecturer.updateAcademicLeaderIDToNull")
+                .setParameter("academicLeaderID", academicLeaderID)
+                .executeUpdate();
+    }
+    
+    public int deleteByUserID(String userID) {
+        return em.createNamedQuery("MyLecturer.deleteByUserID")
+                .setParameter("userID", userID)
+                .executeUpdate();
+    }
+    
 }

@@ -69,4 +69,18 @@ public class MyUsersFacade extends AbstractFacade<MyUsers> {
 
         return map;
     }
+
+    public void deleteByUserId(String userID) {
+        Query q = em.createNamedQuery("MyUsers.deleteByUserId");
+        q.setParameter("userID", userID);
+        q.executeUpdate();
+    }
+
+    public String findUserIdByEmailAndPassword(String email, String password) {
+        Query q = em.createNamedQuery("MyUsers.findUserIdByEmailAndPassword");
+        q.setParameter("userEmail", email);
+        q.setParameter("userPassword", password);
+        List<String> results = q.getResultList();
+        return results.isEmpty() ? null : results.get(0);
+    }
 }

@@ -57,18 +57,19 @@ public class viewStudent extends HttpServlet {
             List<MyUsers> usersList = myUsersFacade.findAllStudents();
             
             // Add search bar
-            out.println("<div style='margin-bottom: 20px;'>");
-            out.println("<form method='GET' action='viewStudent' style='display: flex; align-items: center; gap: 10px;'>");
+            out.println("<div class='search-container'>");
+            out.println("<form method='GET' action='viewStudent.jsp' class='search-form'>");
             out.println("<input type='text' name='search' id='searchInput' placeholder='Search by name, matric no, email, or IC...' ");
             out.println("value='" + (request.getParameter("search") != null ? request.getParameter("search") : "") + "' ");
-            out.println("style='padding: 10px; width: 400px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;' />");
-            out.println("<button type='submit' style='padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;'>Search</button>");
-            out.println("<button type='button' onclick=\"location.href='viewStudent.jsp'\" style='padding: 10px 20px; background-color: #808080; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;'>Clear</button>");
+            out.println("class='search-input' />");
+            out.println("<button type='submit' class='btn-search'>Search</button>");
+            out.println("<button type='button' onclick='window.location.href=\"viewStudent.jsp\"' class='btn-clear'>Clear</button>");
             out.println("</form>");
+            out.println("<button type='button' onclick='window.location.href=\"registerStudent.jsp\"' class='btn-add'>Add New Student</button>");
             out.println("</div>");
             
             // Display every user from usersList in table form
-            out.println("<table border='1' cellpadding='10' cellspacing='0' style='border-collapse: collapse; width: 100%;'>");
+            out.println("<table class='student-table'>");
             out.println("<thead>");
             out.println("<tr>");
             out.println("<th>User ID</th>");
@@ -119,10 +120,8 @@ public class viewStudent extends HttpServlet {
                 out.println("<td>" + (studentData != null ? studentData.getIntakeYear() : "N/A") + "</td>");
                 out.println("<td>" + (studentData != null ? studentData.getCurrentLevel() : "N/A") + "</td>");
                 out.println("<td>" + (studentData != null ? studentData.getStatus() : "N/A") + "</td>");
-                out.println("<td>");
-                out.println("<button onclick=\"location.href='updateStudent.jsp?id=" + user.getUserID() + "'\" style='margin-right: 5px;'>Edit</button>");
-                out.println("<button onclick=\"if(confirm('Are you sure you want to delete this student?')) location.href='deleteStudent?id=" + user.getUserID() + "'\">Delete</button>");
-                out.println("</td>");
+                out.print("<td><button onclick='window.location.href=\"updateStudent.jsp?userId=" + user.getUserID() + "\"' class='btn-edit'>Edit</button>");
+                out.print("<button onclick='if(confirm(\"Are you sure you want to delete this student?\")) window.location.href=\"deleteStudent?userId=" + user.getUserID() + "\"' class='btn-delete'>Delete</button></td>");
                 out.println("</tr>");
             }
             

@@ -72,13 +72,14 @@ public class viewClassStudent extends HttpServlet {
             out.println("<th>Class ID</th>");
             out.println("<th>Enrollment Date</th>");
             out.println("<th>Student ID</th>");
+            out.println("<th>Action</th>");
             out.println("</tr>");
             out.println("</thead>");
             out.println("<tbody>");
             
             if (studentClassEnrollmentList == null || studentClassEnrollmentList.isEmpty()) {
                 out.println("<tr>");
-                out.println("<td colspan='4' style='text-align: center;'>No students enrolled in this class</td>");
+                out.println("<td colspan='5' style='text-align: center;'>No students enrolled in this class</td>");
                 out.println("</tr>");
             } else {
                 for (MyStudentClassEnrollment enrollment : studentClassEnrollmentList) {
@@ -87,6 +88,9 @@ public class viewClassStudent extends HttpServlet {
                     out.println("<td>" + enrollment.getClassID() + "</td>");
                     out.println("<td>" + enrollment.getEnrollmentDate() + "</td>");
                     out.println("<td>" + enrollment.getStudentID() + "</td>");
+                    out.println("<td>");
+                    out.println("<button type='button' onclick=\"if(confirm('Are you sure you want to remove this student from the class?')) { location.href='removeClassStudent?enrollmentID=" + enrollment.getEnrollmentID() + "&classID=" + enrollment.getClassID() + "'; }\" style='padding: 5px 15px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;'>Remove</button>");
+                    out.println("</td>");
                     out.println("</tr>");
                 }
             }

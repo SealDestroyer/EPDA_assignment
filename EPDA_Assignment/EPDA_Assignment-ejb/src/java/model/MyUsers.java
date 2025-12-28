@@ -32,6 +32,17 @@ import javax.persistence.NamedQuery;
             name = "MyUsers.findAcamdemicLeaders",
             query = "SELECT u FROM MyUsers u WHERE u.userID LIKE 'AL%' ORDER BY u.userID"
     )
+        ,
+        @NamedQuery(
+            name = "MyUsers.deleteByUserId",
+            query = "DELETE FROM MyUsers u WHERE u.userID = :userID"
+    )
+        ,
+        @NamedQuery(
+            name = "MyUsers.findUserIdByEmailAndPassword",
+            query = "SELECT u.userID FROM MyUsers u WHERE u.email = :userEmail AND u.password = :userPassword"
+    )
+    
 })
 
 public class MyUsers implements Serializable {
@@ -47,6 +58,7 @@ public class MyUsers implements Serializable {
     private String icNumber;
     private String email;
     private String address;
+    private Integer secretKey;
 
     public MyUsers() {
     }
@@ -61,6 +73,7 @@ public class MyUsers implements Serializable {
         this.icNumber = icNumber;
         this.email = email;
         this.address = address;
+        this.secretKey = (int) (Math.random() * 900000) + 100000;
     }
 
     public String getUserID() {
@@ -125,6 +138,14 @@ public class MyUsers implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public Integer getSecretKey() {
+        return secretKey;
+    }
+
+    public void setSecretKey(Integer secretKey) {
+        this.secretKey = secretKey;
     }
 
     @Override
