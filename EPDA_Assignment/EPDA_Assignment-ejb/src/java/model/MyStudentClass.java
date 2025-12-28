@@ -1,12 +1,17 @@
 package model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.NamedQueries;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -25,8 +30,14 @@ public class MyStudentClass implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer classID;
 
-    private Integer moduleID;
-    private String createdBy;
+    @ManyToMany
+    @JoinTable(
+            name = "MYSTUDENTCLASS_MYMODULE",
+            joinColumns = @JoinColumn(name = "CLASS_ID"),
+            inverseJoinColumns = @JoinColumn(name = "MODULE_ID")
+    )
+    private List<MyModule> modules = new ArrayList<>();
+    private String assignedAcademicLeaderID;
     private String className;
     private String semester;
     private String academicYear;
@@ -34,28 +45,13 @@ public class MyStudentClass implements Serializable {
     public MyStudentClass() {
     }
 
-    public MyStudentClass(String createdBy, String className, String semester, String academicYear) {
-        this.createdBy = createdBy;
+    public MyStudentClass(String assignedAcademicLeaderID,
+            String className,
+            String semester,
+            String academicYear) {
+        this.assignedAcademicLeaderID = assignedAcademicLeaderID;
         this.className = className;
         this.semester = semester;
-        this.academicYear = academicYear;
-        this.moduleID=0; //0=No Module Been Assigned Yet
-    }
-
-    public MyStudentClass(Integer moduleID, String createdBy,
-            String className, String semester, String academicYear) {
-        this.moduleID = moduleID;
-        this.createdBy = createdBy;
-        this.className = className;
-        this.semester = semester;
-        this.academicYear = academicYear;
-    }
-
-    public String getAcademicYear() {
-        return academicYear;
-    }
-
-    public void setAcademicYear(String academicYear) {
         this.academicYear = academicYear;
     }
 
@@ -67,20 +63,20 @@ public class MyStudentClass implements Serializable {
         this.classID = classID;
     }
 
-    public Integer getModuleID() {
-        return moduleID;
+    public List<MyModule> getModules() {
+        return modules;
     }
 
-    public void setModuleID(Integer moduleID) {
-        this.moduleID = moduleID;
+    public void setModules(List<MyModule> modules) {
+        this.modules = modules;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
+    public String getAssignedAcademicLeaderID() {
+        return assignedAcademicLeaderID;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public void setAssignedAcademicLeaderID(String assignedAcademicLeaderID) {
+        this.assignedAcademicLeaderID = assignedAcademicLeaderID;
     }
 
     public String getClassName() {
@@ -99,6 +95,15 @@ public class MyStudentClass implements Serializable {
         this.semester = semester;
     }
 
+    public String getAcademicYear() {
+        return academicYear;
+    }
+
+    public void setAcademicYear(String academicYear) {
+        this.academicYear = academicYear;
+    }
+
+    // ===== equals & hashCode =====
     @Override
     public int hashCode() {
         return (classID != null ? classID.hashCode() : 0);
