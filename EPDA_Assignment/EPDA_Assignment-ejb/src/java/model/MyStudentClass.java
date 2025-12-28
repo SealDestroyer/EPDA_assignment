@@ -37,6 +37,16 @@ import javax.persistence.Table;
             + "AND LOWER(c.className) LIKE :kw "
             + "ORDER BY c.classID"
     )
+    ,
+    @NamedQuery(
+            name = "MyStudentClass.searchModulesByLecturerWithClass",
+            query = "SELECT m, c "
+            + "FROM MyStudentClass c "
+            + "JOIN c.modules m "
+            + "WHERE m.assignedLecturerID = :lecturerId "
+            + "AND (LOWER(m.moduleName) LIKE :kw OR LOWER(m.moduleCode) LIKE :kw) "
+            + "ORDER BY m.moduleID, c.classID"
+    )
 })
 
 @Table(name = "MYSTUDENTCLASS")

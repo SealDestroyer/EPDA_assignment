@@ -22,6 +22,7 @@
             <div class="search-bar-container">
                 <form action="Module" method="GET" class="search-form">
                     <input type="hidden" name="action" value="search"/>
+                    <input type="hidden" name="classID" value="${classID}"/>
 
                     <div class="search-box">
                         <input type="text" name="keyword"
@@ -37,11 +38,13 @@
             <div class="table-top-bar">
                 <form action="Module" method="GET" class="top-btn-form">
                     <input type="hidden" name="action" value="goAdd"/>
+                    <input type="hidden" name="classID" value="${classID}"/>
                     <button type="submit">+ Add New Module</button>
                 </form>
 
                 <form action="Module" method="GET" class="top-btn-form">
                     <input type="hidden" name="action" value="list"/>
+                    <input type="hidden" name="classID" value="${classID}"/>
                     <button type="submit">Reset</button>
                 </form>
             </div>
@@ -89,12 +92,14 @@
                                 <td class="actions-cell">
                                     <form action="Module" method="GET" style="display:inline;">
                                         <input type="hidden" name="action" value="edit"/>
+                                        <input type="hidden" name="classID" value="${classID}"/>
                                         <input type="hidden" name="moduleID" value="${m.moduleID}"/>
                                         <button type="submit" class="modify-btn">Modify</button>
                                     </form>
 
                                     <form action="Module" method="POST" class="delete-form" style="display:inline;">
                                         <input type="hidden" name="action" value="delete"/>
+                                        <input type="hidden" name="classID" value="${classID}"/>
                                         <input type="hidden" name="moduleID" value="${m.moduleID}"/>
 
                                         <button type="button"
@@ -161,7 +166,7 @@
                     dmModuleName.textContent = btn.dataset.modulename;
 
                     selectedForm = btn.closest("form");
-                    pauseAutoRefresh = true;    
+                    pauseAutoRefresh = true;
                     modal.style.display = "flex";
                 });
 
@@ -203,7 +208,9 @@
                     if (pauseAutoRefresh)
                         return;
 
-                    fetch("Module?action=listJson", {cache: "no-store"})
+                    const classID = new URLSearchParams(window.location.search).get("classID");
+                    if (!classID) return;
+                    fetch("Module?action=listJson&classID=" + encodeURIComponent(classID), {cache: "no-store"})
                             .then(res => res.json())
                             .then(data => {
                                 const tbody = document.getElementById("moduleTableBody");
@@ -227,11 +234,13 @@
                                             "<td class='actions-cell'>" +
                                             "<form action='Module' method='GET' style='display:inline;'>" +
                                             "<input type='hidden' name='action' value='edit'/>" +
+                                            "<input type='hidden' name='classID' value='" + classID + "'/>" +
                                             "<input type='hidden' name='moduleID' value='" + m.moduleID + "'/>" +
                                             "<button type='submit' class='modify-btn'>Modify</button>" +
                                             "</form>" +
                                             "<form action='Module' method='POST' class='delete-form' style='display:inline;'>" +
                                             "<input type='hidden' name='action' value='delete'/>" +
+                                            "<input type='hidden' name='classID' value='" + classID + "'/>" +
                                             "<input type='hidden' name='moduleID' value='" + m.moduleID + "'/>" +
                                             "<button type='button' class='delete-btn open-delete-modal' " +
                                             "data-moduleid='" + m.moduleID + "' " +
@@ -253,7 +262,7 @@
                 const intervalMs = 2000;
 
                 if (!isSearchMode) {
-                    refreshModuleTable();         
+                    refreshModuleTable();
                     setInterval(refreshModuleTable, intervalMs);
                 }
 
