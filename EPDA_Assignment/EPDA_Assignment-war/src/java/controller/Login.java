@@ -29,49 +29,40 @@ public class Login extends HttpServlet {
             throws ServletException, IOException {
 
         try {
-            String userID = request.getParameter("userID");
+            String email = request.getParameter("email");
             String password = request.getParameter("password");
 
             // validate empty
-            if (userID == null || userID.trim().isEmpty()
+            if (email == null || email.trim().isEmpty()
                     || password == null || password.trim().isEmpty()) {
                 throw new Exception();
             }
 
-            userID = userID.trim();
+            email = email.trim();
 
-            // find user
-            MyUsers found = myUsersFacade.find(userID);
-            if (found == null) {
-                throw new Exception();
-            }
-
-            // check password
-            if (!password.equals(found.getPassword())) {
-                throw new Exception();
-            }
-
-            boolean isAL = (myAcademicLeaderFacade.find(userID) != null);
-            boolean isLecturer = (myLecturerFacade.find(userID) != null);
-
-            if (!isAL && !isLecturer) {
-                // not an AL or Lecturer
+            // validate credentials and get user ID
+            String userID = myUsersFacade.findUserIdByEmailAndPassword(email, password);
+            if (userID == null) {
                 throw new Exception();
             }
 
             HttpSession s = request.getSession(true);
-            s.setAttribute("user", found);
-            s.setAttribute("userID", found.getUserID());
+            s.setAttribute("userID", userID);
 
-            if (isAL) {
+            // Route based on userID content
+            if (userID.contains("AL")) {
                 response.sendRedirect("ALdashboard.jsp");
-            } else {
+            } else if (userID.contains("AD")) {
+                response.sendRedirect("viewStudent.jsp");
+            } else if (userID.contains("S")) {
+                response.sendRedirect("StudentAssessmentList.jsp");
+            } else if (userID.contains("L")) {
                 response.sendRedirect("Ldashboard.jsp");
             }
 
         } catch (Exception e) {
             request.getRequestDispatcher("login.jsp").include(request, response);
-            response.getWriter().println("<br><br><br>Invalid input!");
+            response.getWriter().println("<br><br><br>Invalid Login Credentials!");
         }
     }
 

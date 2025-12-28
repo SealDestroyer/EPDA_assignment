@@ -75,4 +75,12 @@ public class MyUsersFacade extends AbstractFacade<MyUsers> {
         q.setParameter("userID", userID);
         q.executeUpdate();
     }
+
+    public String findUserIdByEmailAndPassword(String email, String password) {
+        Query q = em.createNamedQuery("MyUsers.findUserIdByEmailAndPassword");
+        q.setParameter("userEmail", email);
+        q.setParameter("userPassword", password);
+        List<String> results = q.getResultList();
+        return results.isEmpty() ? null : results.get(0);
+    }
 }

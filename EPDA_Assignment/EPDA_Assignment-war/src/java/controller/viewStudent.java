@@ -63,7 +63,7 @@ public class viewStudent extends HttpServlet {
             out.println("value='" + (request.getParameter("search") != null ? request.getParameter("search") : "") + "' ");
             out.println("class='search-input' />");
             out.println("<button type='submit' class='btn-search'>Search</button>");
-            out.println("<button type='button' onclick='clearSearch()' class='btn-clear'>Clear</button>");
+            out.println("<button type='button' onclick='window.location.href=\"viewStudent.jsp\"' class='btn-clear'>Clear</button>");
             out.println("</form>");
             out.println("<button type='button' onclick='window.location.href=\"registerStudent.jsp\"' class='btn-add'>Add New Student</button>");
             out.println("</div>");
@@ -120,8 +120,8 @@ public class viewStudent extends HttpServlet {
                 out.println("<td>" + (studentData != null ? studentData.getIntakeYear() : "N/A") + "</td>");
                 out.println("<td>" + (studentData != null ? studentData.getCurrentLevel() : "N/A") + "</td>");
                 out.println("<td>" + (studentData != null ? studentData.getStatus() : "N/A") + "</td>");
-                out.print("<td><button onclick='editStudent(" + user.getUserID() + ")' class='btn-edit'>Edit</button>");
-                out.print("<button onclick='deleteStudent(" + user.getUserID() + ")' class='btn-delete'>Delete</button></td>");
+                out.print("<td><button onclick='window.location.href=\"updateStudent.jsp?userId=" + user.getUserID() + "\"' class='btn-edit'>Edit</button>");
+                out.print("<button onclick='if(confirm(\"Are you sure you want to delete this student?\")) window.location.href=\"deleteStudent?userId=" + user.getUserID() + "\"' class='btn-delete'>Delete</button></td>");
                 out.println("</tr>");
             }
             

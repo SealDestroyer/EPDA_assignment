@@ -67,9 +67,9 @@ public class viewLecturers extends HttpServlet {
             out.println("value='" + (request.getParameter("search") != null ? request.getParameter("search") : "") + "' ");
             out.println("class='search-input' />");
             out.println("<button type='submit' class='btn-search'>Search</button>");
-            out.println("<button type='button' onclick='clearSearch()' class='btn-clear'>Clear</button>");
+            out.println("<button type='button' onclick='window.location.href=\"viewLecturers.jsp\"' class='btn-clear'>Clear</button>");
             out.println("</form>");
-            out.println("<button type='button' onclick='addNewLecturer()' class='btn-add'>Add New Lecturer</button>");
+            out.println("<button type='button' onclick='window.location.href=\"addLecturer.jsp\"' class='btn-add'>Add New Lecturer</button>");
             out.println("</div>");
 
             // Display every user from usersList in table form
@@ -125,8 +125,8 @@ public class viewLecturers extends HttpServlet {
                 out.println("<td>" + (lecturerData != null ? lecturerData.getAcademicLeaderID() : "") + "</td>");
                 out.println("<td>" + user.getPassword() + "</td>");
                 out.println("<td>");
-                out.println("<button type='button' onclick='editLecturer(" + user.getUserID() + ")' class='btn-edit'>Edit</button>");
-                out.println("<button type='button' onclick='deleteLecturer(" + user.getUserID() + ")' class='btn-delete'>Delete</button>");
+                out.println("<button type='button' onclick='window.location.href=\"updateLecturer.jsp?userId=" + user.getUserID() + "\"' class='btn-edit'>Edit</button>");
+                out.println("<button type='button' onclick='if(confirm(\"Are you sure you want to delete this lecturer?\")) window.location.href=\"deleteLecturer?userId=" + user.getUserID() + "\"' class='btn-delete'>Delete</button>");
                 out.println("</td>");
                 out.println("</tr>");
             }

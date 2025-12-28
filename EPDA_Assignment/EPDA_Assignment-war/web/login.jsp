@@ -4,7 +4,30 @@
     Author     : You
 --%>
 
+<%@page import="model.MyUserID"%>
+<%@page import="model.MyUserIDFacade"%>
+<%@page import="javax.persistence.EntityManagerFactory"%>
+<%@page import="javax.persistence.Persistence"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
+<%
+    // Comment out the initialization logic for now to avoid the error
+    // This should be done in a servlet or through proper dependency injection
+    /*
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("YourPersistenceUnitName");
+    MyUserIDFacade myUserIDFacade = new MyUserIDFacade(emf.createEntityManager());
+    
+    // Initialize default user IDs if the database is empty
+    long count = myUserIDFacade.countRecord();
+    if (count <= 0) {
+        myUserIDFacade.create(new MyUserID("S0", "student"));
+        myUserIDFacade.create(new MyUserID("AL0", "academicLeader"));
+        myUserIDFacade.create(new MyUserID("AD0", "admin"));
+        myUserIDFacade.create(new MyUserID("L0", "lecture"));
+    }
+    */
+%>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -18,9 +41,9 @@
         <form action="Login" method="POST">
             <table>
                 <tr>
-                    <td>User ID:</td>
+                    <td>Email:</td>
                     <td>
-                        <input type="text" name="userID" size="20" required>
+                        <input type="email" name="email" size="20" required>
                     </td>
                 </tr>
                 <tr>

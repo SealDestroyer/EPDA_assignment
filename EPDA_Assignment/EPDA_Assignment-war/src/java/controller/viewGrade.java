@@ -63,9 +63,9 @@ public class viewGrade extends HttpServlet {
             out.println("value='" + (request.getParameter("search") != null ? request.getParameter("search") : "") + "' ");
             out.println("class='grade-search-input' />");
             out.println("<button type='submit' class='btn-search'>Search</button>");
-            out.println("<button type='button' onclick='clearSearch()' class='btn-clear'>Clear</button>");
+            out.println("<button type='button' onclick='window.location.href=\"viewGrade.jsp\"' class='btn-clear'>Clear</button>");
             out.println("</form>");
-            out.println("<button type='button' onclick='addNewGrade()' class='btn-add'>Add New Grade</button>");
+            out.println("<button type='button' onclick='window.location.href=\"addGrade.jsp\"' class='btn-add'>Add New Grade</button>");
             out.println("</div>");
 
             // Display every grading from gradingList in table form
@@ -98,8 +98,8 @@ public class viewGrade extends HttpServlet {
                 out.println("<td>" + grading.getMinPercentage() + "%</td>");
                 out.println("<td>" + grading.getMaxPercentage() + "%</td>");
                 out.println("<td>");
-                out.println("<button type='button' onclick='editGrade(" + grading.getGradingID() + ")' class='btn-edit'>Edit</button>");
-                out.println("<button type='button' onclick='deleteGrade(" + grading.getGradingID() + ")' class='btn-delete'>Delete</button>");
+                out.println("<button type='button' onclick='window.location.href=\"updateGrade.jsp?gradingId=" + grading.getGradingID() + "\"' class='btn-edit'>Edit</button>");
+                out.println("<button type='button' onclick='if(confirm(\"Are you sure you want to delete this grade?\")) window.location.href=\"deleteGrade?gradingId=" + grading.getGradingID() + "\"' class='btn-delete'>Delete</button>");
                 out.println("</td>");
                 out.println("</tr>");
             }

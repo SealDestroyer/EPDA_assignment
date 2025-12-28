@@ -63,9 +63,9 @@ public class viewClass extends HttpServlet {
             out.println("value='" + (request.getParameter("search") != null ? request.getParameter("search") : "") + "' ");
             out.println("class='search-input' />");
             out.println("<button type='submit' class='btn-search'>Search</button>");
-            out.println("<button type='button' onclick='clearSearch()' class='btn-clear'>Clear</button>");
+            out.println("<button type='button' onclick='window.location.href=\"viewClass.jsp\"' class='btn-clear'>Clear</button>");
             out.println("</form>");
-            out.println("<button type='button' onclick='addNewClass()' class='btn-add'>Add New Class</button>");
+            out.println("<button type='button' onclick='window.location.href=\"addClass.jsp\"' class='btn-add'>Add New Class</button>");
             out.println("</div>");
 
             // Display every class from classList in table form
@@ -100,9 +100,9 @@ public class viewClass extends HttpServlet {
                 out.println("<td>" + studentClass.getAcademicYear() + "</td>");
                 out.println("<td>" + studentClass.getCreatedBy() + "</td>");
                 out.println("<td>");
-                out.println("<button type='button' onclick='viewStudents(" + studentClass.getClassID() + ")' class='btn-students'>Students</button>");
-                out.println("<button type='button' onclick='editClass(" + studentClass.getClassID() + ")' class='btn-edit'>Edit</button>");
-                out.println("<button type='button' onclick='deleteClass(" + studentClass.getClassID() + ")' class='btn-delete'>Delete</button>");
+                out.println("<button type='button' onclick='window.location.href=\"viewClassStudent.jsp?classId=" + studentClass.getClassID() + "\"' class='btn-students'>Students</button>");
+                out.println("<button type='button' onclick='window.location.href=\"updateClass.jsp?classId=" + studentClass.getClassID() + "\"' class='btn-edit'>Edit</button>");
+                out.println("<button type='button' onclick='if(confirm(\"Are you sure you want to delete this class?\")) window.location.href=\"deleteClass?classId=" + studentClass.getClassID() + "\"' class='btn-delete'>Delete</button>");
                 out.println("</td>");
                 out.println("</tr>");
             }

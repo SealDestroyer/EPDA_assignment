@@ -63,14 +63,14 @@ public class viewAcademicLeaders extends HttpServlet {
             
             // Add search bar
             out.println("<div class='search-container'>");
-            out.println("<form method='GET' action='viewAcademicLeaders' class='search-form'>");
+            out.println("<form method='GET' action='viewAcademicLeaders.jsp' class='search-form'>");
             out.println("<input type='text' name='search' id='searchInput' placeholder='Search by name, email, IC, or phone...' ");
             out.println("value='" + (request.getParameter("search") != null ? request.getParameter("search") : "") + "' ");
             out.println("class='search-input' />");
             out.println("<button type='submit' class='btn-search'>Search</button>");
-            out.println("<button type='button' onclick='clearSearch()' class='btn-clear'>Clear</button>");
+            out.println("<button type='button' onclick='window.location.href=\"viewAcademicLeaders.jsp\"' class='btn-clear'>Clear</button>");
             out.println("</form>");
-            out.println("<button type='button' onclick='addNewAcademicLeader()' class='btn-add'>Add New Academic Leader</button>");
+            out.println("<button type='button' onclick='window.location.href=\"addAcademicLeader.jsp\"' class='btn-add'>Add New Academic Leader</button>");
             out.println("</div>");
 
             // Display every user from usersList in table form
@@ -126,8 +126,8 @@ public class viewAcademicLeaders extends HttpServlet {
                 out.println("<td>" + (academicLeaderData != null ? academicLeaderData.getEndDate() : "") + "</td>");
                 out.println("<td>" + user.getPassword() + "</td>");
                 out.println("<td class='actions-cell'>");
-                out.println("<button type='button' onclick='editAcademicLeader(" + user.getUserID() + ")' class='btn-edit'>Edit</button>");
-                out.println("<button type='button' onclick='deleteAcademicLeader(" + user.getUserID() + ")' class='btn-delete'>Delete</button>");
+                out.println("<button type='button' onclick='window.location.href=\"updateAcademicLeader.jsp?userId=" + user.getUserID() + "\"' class='btn-edit'>Edit</button>");
+                out.println("<button type='button' onclick='if(confirm(\"Are you sure you want to delete this academic leader?\")) window.location.href=\"deleteAcademicLeader?userId=" + user.getUserID() + "\"' class='btn-delete'>Delete</button>");
                 out.println("</td>");
                 out.println("</tr>");
             }
