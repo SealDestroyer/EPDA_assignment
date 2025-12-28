@@ -10,6 +10,7 @@
 <%@page import="javax.persistence.Persistence"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
+<%--
 <%
     // Load demo data via servlet
     // This will initialize the demo admin users in the database
@@ -19,6 +20,7 @@
         // Silently catch any errors during demo data loading
     }
 %>
+--%>
 
 <!DOCTYPE html>
 <html>
