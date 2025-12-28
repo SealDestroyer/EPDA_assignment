@@ -25,7 +25,6 @@ public class MyStudent implements Serializable {
 
     @Id
     private String userID;    
-    private String matricNo;
     private String intakeYear;
     private String currentLevel;
     private String status;
@@ -33,9 +32,8 @@ public class MyStudent implements Serializable {
     public MyStudent() {
     }
 
-    public MyStudent(String userID, String matricNo, String intakeYear, String currentLevel, String status) {
+    public MyStudent(String userID, String intakeYear, String currentLevel, String status) {
         this.userID = userID;
-        this.matricNo = matricNo;
         this.intakeYear = intakeYear;
         this.currentLevel = currentLevel;
         this.status = status;
@@ -47,14 +45,6 @@ public class MyStudent implements Serializable {
 
     public void setUserID(String userID) {
         this.userID = userID;
-    }
-
-    public String getMatricNo() {
-        return matricNo;
-    }
-
-    public void setMatricNo(String matricNo) {
-        this.matricNo = matricNo;
     }
 
     public String getIntakeYear() {

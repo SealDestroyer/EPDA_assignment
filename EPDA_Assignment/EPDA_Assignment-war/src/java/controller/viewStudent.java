@@ -59,7 +59,7 @@ public class viewStudent extends HttpServlet {
             // Add search bar
             out.println("<div class='search-container'>");
             out.println("<form method='GET' action='viewStudent.jsp' class='search-form'>");
-            out.println("<input type='text' name='search' id='searchInput' placeholder='Search by name, matric no, email, or IC...' ");
+            out.println("<input type='text' name='search' id='searchInput' placeholder='Search by name, email, or IC...' ");
             out.println("value='" + (request.getParameter("search") != null ? request.getParameter("search") : "") + "' ");
             out.println("class='search-input' />");
             out.println("<button type='submit' class='btn-search'>Search</button>");
@@ -73,7 +73,6 @@ public class viewStudent extends HttpServlet {
             out.println("<thead>");
             out.println("<tr>");
             out.println("<th>User ID</th>");
-            out.println("<th>Matric No</th>");
             out.println("<th>Full Name</th>");
             out.println("<th>IC Number</th>");
             out.println("<th>Gender</th>");
@@ -94,14 +93,12 @@ public class viewStudent extends HttpServlet {
                 
                 // Apply search filter
                 if (!searchQuery.isEmpty()) {
-                    String matricNo = (studentData != null ? studentData.getMatricNo() : "").toLowerCase();
                     String fullName = user.getFullName().toLowerCase();
                     String icNumber = user.getIcNumber().toLowerCase();
                     String email = user.getEmail().toLowerCase();
                     
                     // Skip this record if it doesn't match the search query
-                    if (!matricNo.contains(searchQuery) && 
-                        !fullName.contains(searchQuery) && 
+                    if (!fullName.contains(searchQuery) && 
                         !icNumber.contains(searchQuery) && 
                         !email.contains(searchQuery)) {
                         continue;
@@ -110,7 +107,6 @@ public class viewStudent extends HttpServlet {
                 
                 out.println("<tr>");
                 out.println("<td>" + user.getUserID() + "</td>");
-                out.println("<td>" + (studentData != null ? studentData.getMatricNo() : "N/A") + "</td>");
                 out.println("<td>" + user.getFullName() + "</td>");
                 out.println("<td>" + user.getIcNumber() + "</td>");
                 out.println("<td>" + user.getGender() + "</td>");

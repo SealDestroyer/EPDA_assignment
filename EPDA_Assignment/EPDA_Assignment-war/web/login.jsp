@@ -11,21 +11,13 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <%
-    // Comment out the initialization logic for now to avoid the error
-    // This should be done in a servlet or through proper dependency injection
-    /*
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory("YourPersistenceUnitName");
-    MyUserIDFacade myUserIDFacade = new MyUserIDFacade(emf.createEntityManager());
-    
-    // Initialize default user IDs if the database is empty
-    long count = myUserIDFacade.countRecord();
-    if (count <= 0) {
-        myUserIDFacade.create(new MyUserID("S0", "student"));
-        myUserIDFacade.create(new MyUserID("AL0", "academicLeader"));
-        myUserIDFacade.create(new MyUserID("AD0", "admin"));
-        myUserIDFacade.create(new MyUserID("L0", "lecture"));
+    // Load demo data via servlet
+    // This will initialize the demo admin users in the database
+    try {
+        request.getRequestDispatcher("/loadDemoData").include(request, response);
+    } catch (Exception e) {
+        // Silently catch any errors during demo data loading
     }
-    */
 %>
 
 <!DOCTYPE html>
