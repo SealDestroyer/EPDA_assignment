@@ -72,7 +72,59 @@ import javax.persistence.NamedQuery;
             query = "UPDATE MyModule m SET m.assignedLecturerID = NULL "
             + "WHERE m.assignedLecturerID = :lecturerID"
     )
-    
+    ,
+@NamedQuery(
+            name = "MyModule.searchByLecturerWithClass",
+            query = "SELECT m, c "
+            + "FROM MyModule m "
+            + "JOIN MyStudentClass c ON c.classID = m.classID "
+            + "WHERE m.assignedLecturerID = :lecturerId "
+            + "AND (LOWER(m.moduleName) LIKE :kw OR LOWER(m.moduleCode) LIKE :kw) "
+            + "ORDER BY m.moduleID"
+    )
+    ,
+@NamedQuery(
+            name = "MyModule.findDistinctLecturerIdsByAL",
+            query = "SELECT DISTINCT m.assignedLecturerID "
+            + "FROM MyModule m "
+            + "WHERE m.createdBy = :alID "
+            + "AND m.assignedLecturerID IS NOT NULL "
+            + "ORDER BY m.assignedLecturerID"
+    )
+    ,
+@NamedQuery(
+            name = "MyStudentClass.findModulesByLecturerWithClass",
+            query = "SELECT m, c "
+            + "FROM MyStudentClass c "
+            + "JOIN c.modules m "
+            + "WHERE m.assignedLecturerID = :lecturerId "
+            + "ORDER BY m.moduleID, c.classID"
+    )
+    ,
+@NamedQuery(
+            name = "MyModule.findByALAndLecturer",
+            query = "SELECT m FROM MyModule m "
+            + "WHERE m.createdBy = :alID "
+            + "AND m.assignedLecturerID = :lecturerID "
+            + "ORDER BY m.moduleID"
+    )
+    ,
+
+@NamedQuery(
+            name = "MyModule.findByLecturerID",
+            query = "SELECT m FROM MyModule m "
+            + "WHERE m.assignedLecturerID = :lecturerID "
+            + "ORDER BY m.moduleCode"
+    )
+    ,
+
+@NamedQuery(
+            name = "MyModule.countByModuleAndLecturer",
+            query = "SELECT COUNT(m) FROM MyModule m "
+            + "WHERE m.moduleID = :mid "
+            + "AND m.assignedLecturerID = :lid"
+    )
+
 })
 public class MyModule implements Serializable {
 
@@ -80,12 +132,12 @@ public class MyModule implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer moduleID; 
+    private Integer moduleID;
     private String moduleName;
     private String moduleCode;
     private String description;
-    private String createdBy;         
-    private String assignedLecturerID;   
+    private String createdBy;
+    private String assignedLecturerID;
 
     public MyModule() {
     }

@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import model.MyModule;
 import model.MyModuleFacade;
+import model.MyStudentClass;
+import model.MyStudentClassFacade;
 import model.MyUsers;
 import model.MyUsersFacade;
 
@@ -55,7 +57,19 @@ public class LecturerModule extends HttpServlet {
             // ===== LIST JSON (AJAX REAL-TIME for lecturer only) =====
             if ("listJson".equals(action)) {
 
-                List<MyModule> moduleList = myModuleFacade.findByAssignedLecturer(lecturerId);
+                List<Object[]> rows = myModuleFacade.findByAssignedLecturerWithClass(lecturerId);
+
+                List<MyModule> moduleList = new ArrayList<>();
+                Map<Integer, String> classMap = new java.util.HashMap<>();
+
+                for (Object[] r : rows) {
+                    MyModule m = (MyModule) r[0];
+                    MyStudentClass c = (MyStudentClass) r[1];
+
+                    moduleList.add(m);
+                    classMap.put(m.getModuleID(),
+                            c.getClassID() + " - " + c.getClassName());
+                }
 
                 // created by with full name
                 Set<String> ids = new HashSet<>();
@@ -75,7 +89,7 @@ public class LecturerModule extends HttpServlet {
                 StringBuilder json = new StringBuilder("[");
                 for (int i = 0; i < moduleList.size(); i++) {
                     MyModule m = moduleList.get(i);
-
+                    String classText = classMap.get(m.getModuleID());
                     String createdByText
                             = (userNameMap.get(m.getCreatedBy()) == null ? "" : userNameMap.get(m.getCreatedBy()))
                             + " (" + m.getCreatedBy() + ")";
@@ -89,6 +103,7 @@ public class LecturerModule extends HttpServlet {
                             .append("\"moduleName\":\"").append(escape(m.getModuleName())).append("\",")
                             .append("\"moduleCode\":\"").append(escape(m.getModuleCode())).append("\",")
                             .append("\"description\":\"").append(escape(m.getDescription())).append("\",")
+                            .append("\"class\":\"").append(escape(classText)).append("\",")
                             .append("\"createdBy\":\"").append(escape(createdByText)).append("\",")
                             .append("\"lecturer\":\"").append(escape(lecturerText)).append("\"")
                             .append("}");
@@ -106,7 +121,20 @@ public class LecturerModule extends HttpServlet {
             // ===== LIST (assigned modules only) =====
             if ("list".equals(action)) {
 
-                List<MyModule> moduleList = myModuleFacade.findByAssignedLecturer(lecturerId);
+                List<Object[]> rows = myModuleFacade.findByAssignedLecturerWithClass(lecturerId);
+
+                List<MyModule> moduleList = new ArrayList<>();
+                Map<Integer, String> classMap = new java.util.HashMap<>();
+
+                for (Object[] r : rows) {
+                    MyModule m = (MyModule) r[0];
+                    MyStudentClass c = (MyStudentClass) r[1];
+
+                    moduleList.add(m);
+                    classMap.put(m.getModuleID(), c.getClassID() + " - " + c.getClassName());
+                }
+
+                request.setAttribute("classMap", classMap);
 
                 // created by with lectrer full name
                 Map<String, String> userNameMap = buildUserNameMap(moduleList);
@@ -130,7 +158,20 @@ public class LecturerModule extends HttpServlet {
                     return;
                 }
 
-                List<MyModule> moduleList = myModuleFacade.searchModulesByLecturer(keyword, lecturerId);
+                List<Object[]> rows = myModuleFacade.searchModulesByLecturerWithClass(keyword, lecturerId);
+
+                List<MyModule> moduleList = new ArrayList<>();
+                Map<Integer, String> classMap = new java.util.HashMap<>();
+
+                for (Object[] r : rows) {
+                    MyModule m = (MyModule) r[0];
+                    MyStudentClass c = (MyStudentClass) r[1];
+
+                    moduleList.add(m);
+                    classMap.put(m.getModuleID(), c.getClassID() + " - " + c.getClassName());
+                }
+
+                request.setAttribute("classMap", classMap);
 
                 if (moduleList == null || moduleList.isEmpty()) {
                     request.setAttribute("errorMsg", "No modules found for: " + keyword);
@@ -201,4 +242,3 @@ public class LecturerModule extends HttpServlet {
         return "Lecturer module list servlet";
     }
 }
-    
