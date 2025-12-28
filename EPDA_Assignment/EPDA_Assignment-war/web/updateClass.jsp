@@ -25,7 +25,7 @@
 <body>
     <%
         // Get the ID parameter
-        String classId = request.getParameter("id");
+        String classId = request.getParameter("classId");
         MyStudentClass myClass = null;
         
         if (classId != null) {

@@ -41,11 +41,7 @@ public class viewClass extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            
-            // Include CSS and JavaScript files
-            out.println("<link rel='stylesheet' type='text/css' href='css/viewClass.css'>");
-            out.println("<script src='js/viewClass.js'></script>");
-            
+
             // Get search query parameter
             String searchQuery = request.getParameter("search");
             if (searchQuery == null) {

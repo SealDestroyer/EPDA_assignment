@@ -27,7 +27,7 @@
 <body>
     <%
         // Get the ID parameter
-        String userId = request.getParameter("id");
+        String userId = request.getParameter("userId");
         MyUsers user = null;
         MyLecturer lecturer = null;
         

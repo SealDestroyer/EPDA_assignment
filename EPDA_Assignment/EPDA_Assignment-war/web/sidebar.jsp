@@ -1,10 +1,19 @@
+<%@ page import="model.MyUsers" %>
 <!-- Sidebar -->
 <div class="sidebar">
     <div class="sidebar-header">
-        <p>Welcome back, <strong>Administrator</strong></p>
+        <%
+            MyUsers user = (MyUsers) session.getAttribute("user");
+            String userName = (user != null) ? user.getFullName() : "Administrator";
+        %>
+        <p>Welcome back, <strong><%= userName %></strong></p>
     </div>
     
     <nav class="sidebar-nav">
+        <a href="viewAdmin.jsp" class="nav-item">
+            <i class="fas fa-user-shield"></i>
+            <span>Admin</span>
+        </a>
         <a href="viewStudent.jsp" class="nav-item">
             <i class="fas fa-user-graduate"></i>
             <span>Students</span>

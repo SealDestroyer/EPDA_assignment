@@ -34,7 +34,7 @@
         <div class="content-area" id="content-area">
             <%
                 // Get the ID parameter
-                String gradeId = request.getParameter("id");
+                String gradeId = request.getParameter("gradingId");
                 MyGrading grade = null;
                 
                 if (gradeId != null) {
