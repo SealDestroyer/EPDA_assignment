@@ -50,6 +50,20 @@
                             <label class="input-label" for="password">New Password (optional)</label>
                             <div class="field-error"><c:out value="${errors.password}" /></div>
                     </div>
+                    
+                    <!-- Secret Key -->
+                    <div class="form-group">
+                        <input
+                            class="input-field <c:if test='${not empty errors.secretKey}'>input-error</c:if>"
+                                type="text"
+                                id="secretKey"
+                                name="secretKey"
+                                value="${secretKeyVal}"
+                            placeholder=" "
+                            />
+                        <label class="input-label" for="secretKey">Secret Key</label>
+                        <div class="field-error"><c:out value="${errors.secretKey}" /></div>
+                    </div>
 
                     <!-- Gender -->
                     <div class="form-group select-group">
