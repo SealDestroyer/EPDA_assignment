@@ -1,3 +1,132 @@
+/* Admin Profile Form Styles */
+
+.form-title {
+    text-align: center;
+    color: #FF6347;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    padding: 20px 0 15px 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    position: relative;
+}
+
+.form-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 35%;
+    height: 3px;
+    background-color: #FF6347;
+}
+
+.profile-table {
+    width: 100%;
+    max-width: 750px;
+    margin: 30px auto;
+    border-collapse: collapse;
+    border-radius: 20px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.profile-table tr {
+    margin-bottom: 15px;
+    border: none;
+}
+
+.profile-table td {
+    padding: 10px 5px;
+    vertical-align: middle;
+    border: none;
+    font-size: 16px;
+    font-family: inherit;
+}
+
+.profile-table td:first-child {
+    width: 50%;
+    text-align: center;
+    padding-right: 20px;
+    font-weight: 500;
+    color: #333;
+}
+
+.profile-table td:last-child {
+    width: 50%;
+}
+
+/* Add padding to the button row */
+.profile-table tr:last-child td {
+    padding: 30px 20px;
+}
+
+.profile-table input[type="text"],
+.profile-table input[type="password"],
+.profile-table input[type="email"],
+.profile-table input[type="tel"],
+.profile-table select,
+.profile-table textarea {
+    width: 90%;
+    padding: 10px 12px;
+    border: none;
+    background-color: #E5E5E5;
+    border-radius: 4px;
+    font-size: 15px;
+    color: #333;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.profile-table input:focus,
+.profile-table select:focus,
+.profile-table textarea:focus {
+    outline: none;
+    background-color: #D5D5D5;
+}
+
+.profile-table select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    padding-right: 35px;
+}
+
+.profile-table textarea {
+    resize: vertical;
+    min-height: 60px;
+    font-family: inherit;
+}
+
+.btn-update {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 35px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    min-width: 140px;
+    font-family: inherit;
+}
+
+.btn-update:hover {
+    background-color: #0056b3;
+}
+
+.btn-update:active {
+    transform: scale(0.98);
+}
+
 .error-message {
     color: red;
     font-size: 14px;
@@ -8,3 +137,53 @@
     border: 2px solid red !important;
     background-color: #ffe6e6;
 }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .form-container {
+        padding: 30px 20px;
+        margin: 20px;
+    }
+
+    .profile-table td:first-child {
+        width: 40%;
+        padding-right: 10px;
+        font-size: 13px;
+    }
+
+    .profile-table input,
+    .profile-table select,
+    .profile-table textarea {
+        font-size: 13px;
+        padding: 8px 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-container {
+        padding: 20px 15px;
+    }
+
+    .form-title {
+        font-size: 18px;
+    }
+
+    .profile-table td {
+        display: block;
+        width: 100%;
+        text-align: left !important;
+        padding: 5px 0;
+    }
+
+    .profile-table td:first-child {
+        padding-right: 0;
+        padding-bottom: 5px;
+    }
+
+    .profile-table tr {
+        margin-bottom: 20px;
+        display: block;
+    }
+}
+
+

@@ -42,9 +42,6 @@
         <jsp:include page="header.jsp" />
         
         <div class="content-area" id="content-area">
-            <% if (request.getAttribute("message") != null) { %>
-                <p style="color: green; font-weight: bold; text-align: center;"><%= request.getAttribute("message") %></p>
-            <% } %>
             <form action="addAdmin" method="post" onsubmit="return validateForm()">
                 <table class="profile-table">
                     <tr>
@@ -88,7 +85,7 @@
                     </tr>
                     <tr>
                         <td><label for="phone">Phone:</label></td>
-                        <td><input type="tel" id="phone" name="phone" onblur="validatePhone()" required></td>
+                        <td><input type="tel" id="phone" name="phone" placeholder="e.g., 0123456789" onblur="validatePhone()" required></td>
                     </tr>
                     <tr class="error-row" id="phone-error" style="display: none;">
                         <td></td>
@@ -96,7 +93,7 @@
                     </tr>
                     <tr>
                         <td><label for="icNumber">IC Number:</label></td>
-                        <td><input type="text" id="icNumber" name="icNumber" onblur="validateICNumber()" required></td>
+                        <td><input type="text" id="icNumber" name="icNumber" placeholder="e.g., 123456-12-3456" onblur="validateICNumber()" required></td>
                     </tr>
                     <tr class="error-row" id="icNumber-error" style="display: none;">
                         <td></td>
