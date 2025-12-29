@@ -19,7 +19,11 @@ import javax.persistence.NamedQuery;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "MyUserID.count", query = "SELECT COUNT(u) FROM MyUserID u")
+    @NamedQuery(name = "MyUserID.count", query = "SELECT COUNT(u) FROM MyUserID u"),
+    @NamedQuery(name = "MyUserID.findByAD", query = "SELECT u FROM MyUserID u WHERE u.currentUserId LIKE '%AD%'"),
+    @NamedQuery(name = "MyUserID.findByAL", query = "SELECT u FROM MyUserID u WHERE u.currentUserId LIKE '%AL%'"),
+    @NamedQuery(name = "MyUserID.findByL", query = "SELECT u FROM MyUserID u WHERE u.currentUserId LIKE '%L%'"),
+    @NamedQuery(name = "MyUserID.findByS", query = "SELECT u FROM MyUserID u WHERE u.currentUserId LIKE '%S%'")
 })
 public class MyUserID implements Serializable {
 
@@ -44,6 +48,22 @@ public class MyUserID implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getCurrentUserId() {
+        return currentUserId;
+    }
+
+    public void setCurrentUserId(String currentUserId) {
+        this.currentUserId = currentUserId;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 
     @Override

@@ -5,6 +5,10 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="model.MyUserIDFacade" %>
+<%@ page import="model.MyUserID" %>
+<%@ page import="java.util.List" %>
+<%@ page import="javax.naming.InitialContext" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,9 +20,19 @@
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/footer.css">
     <link rel="stylesheet" href="css/registerStudent.css">
+    <link rel="stylesheet" href="css/adminProfile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <%
+        InitialContext ic = new InitialContext();
+        MyUserIDFacade facade = (MyUserIDFacade) ic.lookup("java:global/EPDA_Assignment/EPDA_Assignment-ejb/MyUserIDFacade");
+        List<MyUserID> adminList = facade.findByAD();
+        String currentAdminID = adminList.get(0).getCurrentUserId();
+        Integer adminNumber= Integer.parseInt(currentAdminID.substring(2)) + 1;
+        String newAdminID = "AD"+adminNumber;
+    %>
+    
     <!-- Include Sidebar -->
     <jsp:include page="sidebar.jsp" />
     
@@ -31,7 +45,7 @@
             <% if (request.getAttribute("message") != null) { %>
                 <p style="color: green; font-weight: bold; text-align: center;"><%= request.getAttribute("message") %></p>
             <% } %>
-            <form action="addAdmin" method="post">
+            <form action="addAdmin" method="post" onsubmit="return validateForm()">
                 <table class="profile-table">
                     <tr>
                         <td colspan="2">
@@ -40,41 +54,69 @@
                     </tr>
                     <tr>
                         <td><label for="userID">User ID:</label></td>
-                        <td><input type="text" id="userID" name="userID" required></td>
+                        <td><input type="text" id="userID" name="userID" value="<%= newAdminID %>" readonly required></td>
                     </tr>
                     <tr>
                         <td><label for="fullName">Full Name:</label></td>
-                        <td><input type="text" id="fullName" name="fullName" required></td>
+                        <td><input type="text" id="fullName" name="fullName" onblur="validateFullName()" required></td>
+                    </tr>
+                    <tr class="error-row" id="fullName-error" style="display: none;">
+                        <td></td>
+                        <td><span class="error-message" id="fullName-error-message"></span></td>
                     </tr>
                     <tr>
                         <td><label for="password">Password:</label></td>
-                        <td><input type="password" id="password" name="password" required></td>
+                        <td><input type="password" id="password" name="password" onblur="validatePassword()" required></td>
+                    </tr>
+                    <tr class="error-row" id="password-error" style="display: none;">
+                        <td></td>
+                        <td><span class="error-message" id="password-error-message"></span></td>
                     </tr>
                     <tr>
                         <td><label for="gender">Gender:</label></td>
                         <td>
-                            <select id="gender" name="gender" required>
+                            <select id="gender" name="gender" onblur="validateGender()" required>
                                 <option value="">Select Gender</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
                             </select>
                         </td>
                     </tr>
+                    <tr class="error-row" id="gender-error" style="display: none;">
+                        <td></td>
+                        <td><span class="error-message" id="gender-error-message"></span></td>
+                    </tr>
                     <tr>
                         <td><label for="phone">Phone:</label></td>
-                        <td><input type="tel" id="phone" name="phone" required></td>
+                        <td><input type="tel" id="phone" name="phone" onblur="validatePhone()" required></td>
+                    </tr>
+                    <tr class="error-row" id="phone-error" style="display: none;">
+                        <td></td>
+                        <td><span class="error-message" id="phone-error-message"></span></td>
                     </tr>
                     <tr>
                         <td><label for="icNumber">IC Number:</label></td>
-                        <td><input type="text" id="icNumber" name="icNumber" required></td>
+                        <td><input type="text" id="icNumber" name="icNumber" onblur="validateICNumber()" required></td>
+                    </tr>
+                    <tr class="error-row" id="icNumber-error" style="display: none;">
+                        <td></td>
+                        <td><span class="error-message" id="icNumber-error-message"></span></td>
                     </tr>
                     <tr>
                         <td><label for="email">Email:</label></td>
-                        <td><input type="email" id="email" name="email" required></td>
+                        <td><input type="email" id="email" name="email" onblur="validateEmail()" required></td>
+                    </tr>
+                    <tr class="error-row" id="email-error" style="display: none;">
+                        <td></td>
+                        <td><span class="error-message" id="email-error-message"></span></td>
                     </tr>
                     <tr>
                         <td><label for="address">Address:</label></td>
-                        <td><textarea id="address" name="address" rows="3" required></textarea></td>
+                        <td><textarea id="address" name="address" rows="3" onblur="validateAddress()" required></textarea></td>
+                    </tr>
+                    <tr class="error-row" id="address-error" style="display: none;">
+                        <td></td>
+                        <td><span class="error-message" id="address-error-message"></span></td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center; padding-top: 20px;">
@@ -93,5 +135,6 @@
     <script src="js/sidebar.js"></script>
     <script src="js/header.js"></script>
     <script src="js/footer.js"></script>
+    <script src="js/adminProfile.js"></script>
 </body>
 </html>
