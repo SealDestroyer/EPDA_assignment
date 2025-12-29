@@ -4,6 +4,10 @@
     Author     : bohch
 --%>
 
+<%@page import="javax.naming.InitialContext"%>
+<%@page import="model.MyStudentClassEnrollmentFacade"%>
+<%@page import="model.MyUsers"%>
+<%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,10 +19,15 @@
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/footer.css">
-    <link rel="stylesheet" href="css/addClassStudent.css">
+    <link rel="stylesheet" href="css/classStudentProfile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <%
+        InitialContext ic = new InitialContext();
+        MyStudentClassEnrollmentFacade userFacade = (MyStudentClassEnrollmentFacade) ic.lookup("java:global/EPDA_Assignment/EPDA_Assignment-ejb/MyStudentClassEnrollmentFacade");
+        List<MyUsers> students = userFacade.findStudentsNotInClass(Integer.parseInt(request.getParameter("classID")));
+    %>
     <!-- Include Sidebar -->
     <jsp:include page="sidebar.jsp" />
     
@@ -28,10 +37,7 @@
         <jsp:include page="header.jsp" />
         
         <div class="content-area" id="content-area">
-            <% if (request.getAttribute("message") != null) { %>
-                <p style="color: green; font-weight: bold; text-align: center;"><%= request.getAttribute("message") %></p>
-            <% } %>
-            <form action="addClassStudent" method="post">
+            <form action="addClassStudent" method="post" onsubmit="return validateForm()">
                 <table class="profile-table">
                     <tr>
                         <td colspan="2">
@@ -44,11 +50,26 @@
                     </tr>
                     <tr>
                         <td><label for="studentID">Student ID:</label></td>
-                        <td><input type="text" id="studentID" name="studentID" required></td>
+                        <td>
+                            <select id="studentID" name="studentID" onblur="validateStudentID()" required>
+                                <option value="">Select a student</option>
+                                <% for (MyUsers student : students) { %>
+                                    <option value="<%= student.getUserID() %>"><%= student.getUserID() %> - <%= student.getFullName() %></option>
+                                <% } %>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr class="error-row" id="studentID-error" style="display: none;">
+                        <td></td>
+                        <td><span class="error-message" id="studentID-error-message"></span></td>
                     </tr>
                     <tr>
                         <td><label for="enrollmentDate">Enrollment Date:</label></td>
-                        <td><input type="date" id="enrollmentDate" name="enrollmentDate" value="<%= new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()) %>" required></td>
+                        <td><input type="date" id="enrollmentDate" name="enrollmentDate" value="<%= new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()) %>" onblur="validateEnrollmentDate()" required></td>
+                    </tr>
+                    <tr class="error-row" id="enrollmentDate-error" style="display: none;">
+                        <td></td>
+                        <td><span class="error-message" id="enrollmentDate-error-message"></span></td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center; padding-top: 20px;">
@@ -67,5 +88,6 @@
     <script src="js/sidebar.js"></script>
     <script src="js/header.js"></script>
     <script src="js/footer.js"></script>
+    <script src="js/classStudentProfile.js"></script>
 </body>
 </html>

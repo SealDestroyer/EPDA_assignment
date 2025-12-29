@@ -5,6 +5,10 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="javax.naming.InitialContext"%>
+<%@page import="java.util.List"%>
+<%@page import="model.MyUsers"%>
+<%@page import="model.MyUsersFacade"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,10 +19,15 @@
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/footer.css">
-    <link rel="stylesheet" href="css/addClass.css">
+    <link rel="stylesheet" href="css/classProfile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <%
+        InitialContext ic = new InitialContext();
+        MyUsersFacade userFacade = (MyUsersFacade) ic.lookup("java:global/EPDA_Assignment/EPDA_Assignment-ejb/MyUsersFacade");
+        List<MyUsers> academicLeader = userFacade.findAllAcademicLeaders();
+    %>
     <!-- Include Sidebar -->
     <jsp:include page="sidebar.jsp" />
     
@@ -28,13 +37,7 @@
         <jsp:include page="header.jsp" />
         
         <div class="content-area" id="content-area">
-            <% if (request.getAttribute("message") != null) { %>
-                <p style="color: green; font-weight: bold; text-align: center;"><%= request.getAttribute("message") %></p>
-            <% } %>
-            <% if (request.getAttribute("error") != null) { %>
-                <p style="color: red; font-weight: bold; text-align: center;"><%= request.getAttribute("error") %></p>
-            <% } %>
-            <form action="addClass" method="post">
+            <form action="addClass" method="post" onsubmit="return validateForm()">
                 <table class="profile-table">
                     <tr>
                         <td colspan="2">
@@ -43,19 +46,42 @@
                     </tr>
                     <tr>
                         <td><label for="className">Class Name:</label></td>
-                        <td><input type="text" id="className" name="className" required></td>
+                        <td><input type="text" id="className" name="className" onblur="validateClassName()" required></td>
+                    </tr>
+                    <tr class="error-row" id="className-error" style="display: none;">
+                        <td></td>
+                        <td><span class="error-message" id="className-error-message"></span></td>
                     </tr>
                     <tr>
                         <td><label for="semester">Semester:</label></td>
-                        <td><input type="text" id="semester" name="semester" required></td>
+                        <td><input type="text" id="semester" name="semester" onblur="validateSemester()" required></td>
+                    </tr>
+                    <tr class="error-row" id="semester-error" style="display: none;">
+                        <td></td>
+                        <td><span class="error-message" id="semester-error-message"></span></td>
                     </tr>
                     <tr>
                         <td><label for="academicYear">Academic Year:</label></td>
-                        <td><input type="text" id="academicYear" name="academicYear" required></td>
+                        <td><input type="text" id="academicYear" name="academicYear" onblur="validateAcademicYear()" required></td>
+                    </tr>
+                    <tr class="error-row" id="academicYear-error" style="display: none;">
+                        <td></td>
+                        <td><span class="error-message" id="academicYear-error-message"></span></td>
                     </tr>
                     <tr>
                         <td><label for="assignedAcademicLeaderID">Assigned Academic Leader ID:</label></td>
-                        <td><input type="text" id="assignedAcademicLeaderID" name="assignedAcademicLeaderID" required></td>
+                        <td>
+                            <select id="assignedAcademicLeaderID" name="assignedAcademicLeaderID" onblur="validateAcademicLeader()" required>
+                                <option value="">Select Academic Leader</option>
+                                <% for (MyUsers leader : academicLeader) { %>
+                                    <option value="<%= leader.getUserID() %>"><%= leader.getUserID() %> - <%= leader.getFullName() %></option>
+                                <% } %>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr class="error-row" id="assignedAcademicLeaderID-error" style="display: none;">
+                        <td></td>
+                        <td><span class="error-message" id="assignedAcademicLeaderID-error-message"></span></td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center; padding-top: 20px;">
@@ -74,5 +100,6 @@
     <script src="js/sidebar.js"></script>
     <script src="js/header.js"></script>
     <script src="js/footer.js"></script>
+    <script src="js/classProfile.js"></script>
 </body>
 </html>
