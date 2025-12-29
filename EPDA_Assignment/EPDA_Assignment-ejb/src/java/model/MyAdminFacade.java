@@ -35,6 +35,12 @@ public class MyAdminFacade extends AbstractFacade<MyAdmin> {
                 .getResultList();
     }
     
+    public MyAdmin findByUserId(String userId) {
+        return em.createNamedQuery("MyAdmin.findByUserId", MyAdmin.class)
+                .setParameter("userId", userId)
+                .getSingleResult();
+    }
+    
     public void deleteByUserId(String userId) {
         em.createNamedQuery("MyAdmin.deleteByUserId")
                 .setParameter("userId", userId)

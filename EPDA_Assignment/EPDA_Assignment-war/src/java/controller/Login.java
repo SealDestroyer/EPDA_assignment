@@ -9,12 +9,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import model.MyAcademicLeaderFacade;
+import model.MyAdmin;
+import model.MyAdminFacade;
 import model.MyLecturerFacade;
 import model.MyUsers;
 import model.MyUsersFacade;
 
 @WebServlet(name = "Login", urlPatterns = {"/Login"})
 public class Login extends HttpServlet {
+
+    @EJB
+    private MyAdminFacade myAdminFacade;
 
     @EJB
     private MyUsersFacade myUsersFacade;
@@ -56,7 +61,11 @@ public class Login extends HttpServlet {
             if (userID.toUpperCase().startsWith("AL")) {
                 response.sendRedirect("ALdashboard.jsp");
             } else if (userID.toUpperCase().startsWith("AD")) {
-                response.sendRedirect("viewStudent.jsp");
+                MyAdmin admin= myAdminFacade.findByUserId(userID);
+                if(admin.getPositionTitle().equals("Admin")){
+                    response.sendRedirect("viewStudent.jsp");
+                }
+                response.sendRedirect("viewAdmin.jsp");
             } else if (userID.toUpperCase().startsWith("S")) {
                 response.sendRedirect("StudentAssessmentList.jsp");
             } else if (userID.toUpperCase().startsWith("L")) {

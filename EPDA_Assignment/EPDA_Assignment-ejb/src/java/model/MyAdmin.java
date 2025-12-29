@@ -20,7 +20,8 @@ import javax.persistence.NamedQuery;
 @Entity
 @NamedQueries({
     @NamedQuery(name = "MyAdmin.findAll", query = "SELECT m FROM MyAdmin m WHERE m.userId != :userId"),
-    @NamedQuery(name = "MyAdmin.deleteByUserId", query = "DELETE FROM MyAdmin m WHERE m.userId = :userId")
+    @NamedQuery(name = "MyAdmin.deleteByUserId", query = "DELETE FROM MyAdmin m WHERE m.userId = :userId"),
+    @NamedQuery(name = "MyAdmin.findByUserId", query = "SELECT m FROM MyAdmin m WHERE m.userId = :userId")
     })
 public class MyAdmin implements Serializable {
 
@@ -35,6 +36,14 @@ public class MyAdmin implements Serializable {
 
     public MyAdmin(String userId, String positionTitle) {
         this.userId = userId;
+        this.positionTitle = positionTitle;
+    }
+
+    public String getPositionTitle() {
+        return positionTitle;
+    }
+
+    public void setPositionTitle(String positionTitle) {
         this.positionTitle = positionTitle;
     }
 

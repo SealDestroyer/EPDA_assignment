@@ -30,7 +30,7 @@
         <link rel="stylesheet" type="text/css" href="css/login.css">
     </head>
     <body>
-        <form action="ForgetPassword" method="POST">
+        <form action="forgetPassword" method="POST">
             <table>
                 <tr>
                     <td colspan="2"><h2>Forget Password</h2></td>
@@ -42,17 +42,24 @@
                     </td>
                 </tr>
                 <tr>
+                    <td>New Password:</td>
+                    <td>
+                        <input type="password" name="newPassword" size="20" required>
+                    </td>
+                </tr>
+                <tr>
                     <td>Secret Key:</td>
                     <td>
                         <input type="password" name="secretKey" size="20" required>
                     </td>
                 </tr>
+                
                 <tr>
                     <td>
                         <input type="button" value="Sign in" onclick="location.href='login.jsp'">
                     </td>
                     <td>
-                        <input type="submit" value="Reset">
+                        <input type="submit" value="Reset Password">
                     </td>
                 </tr>
             </table>

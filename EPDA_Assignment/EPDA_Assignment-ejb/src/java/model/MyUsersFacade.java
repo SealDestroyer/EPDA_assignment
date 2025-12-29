@@ -89,4 +89,20 @@ public class MyUsersFacade extends AbstractFacade<MyUsers> {
         List<String> results = q.getResultList();
         return results.isEmpty() ? null : results.get(0);
     }
+    
+    public MyUsers findByEmailAndSecretKey(String email, Integer secretKey) {
+        Query q = em.createNamedQuery("MyUsers.findByEmailAndSecretKey");
+        q.setParameter("email", email);
+        q.setParameter("secretKey", secretKey);
+        List<MyUsers> results = q.getResultList();
+        return results.isEmpty() ? null : results.get(0);
+    }
+    
+    public void updatePasswordAndSecretKeyByEmail(String email, String password, Integer secretKey) {
+        Query q = em.createNamedQuery("MyUsers.updatePasswordAndSecretKeyByEmail");
+        q.setParameter("email", email);
+        q.setParameter("password", password);
+        q.setParameter("secretKey", secretKey);
+        q.executeUpdate();
+    }
 }
