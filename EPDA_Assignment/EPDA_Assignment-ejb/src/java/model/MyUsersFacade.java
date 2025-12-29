@@ -105,4 +105,11 @@ public class MyUsersFacade extends AbstractFacade<MyUsers> {
         q.setParameter("secretKey", secretKey);
         q.executeUpdate();
     }
+    
+    public MyUsers findByEmail(String email) {
+        Query q = em.createNamedQuery("MyUsers.findByEmail");
+        q.setParameter("email", email);
+        List<MyUsers> results = q.getResultList();
+        return results.isEmpty() ? null : results.get(0);
+    }
 }

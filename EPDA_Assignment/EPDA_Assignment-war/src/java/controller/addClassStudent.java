@@ -7,8 +7,6 @@ package controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -25,45 +23,69 @@ import model.MyStudentClassEnrollmentFacade;
 @WebServlet(name = "addClassStudent", urlPatterns = {"/addClassStudent"})
 public class addClassStudent extends HttpServlet {
 
+    private static final long serialVersionUID = 1L;
+
     @EJB
     private MyStudentClassEnrollmentFacade myStudentClassEnrollmentFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try {
-            String studentID = request.getParameter("studentID");
-            Integer classID = Integer.parseInt(request.getParameter("classID"));
-            String enrollmentDate = request.getParameter("enrollmentDate");
-            
-            //Create New Enrollment Record
-            MyStudentClassEnrollment studentEnrollment = new MyStudentClassEnrollment(studentID, classID, enrollmentDate);
-            myStudentClassEnrollmentFacade.create(studentEnrollment);
-            
-            request.setAttribute("message", "Student added to class successfully!");
-            request.getRequestDispatcher("viewClassStudent.jsp?classId=" + classID).forward(request, response);
-        } catch (Exception e) {
-            String classID = request.getParameter("classID");
-            request.getRequestDispatcher("addClassStudent.jsp?classID=" + classID).forward(request, response);
+        try (PrintWriter out = response.getWriter()) {
+            try {
+                // Get and validate request parameters
+                String studentID = request.getParameter("studentID");
+                String classIDParam = request.getParameter("classID");
+                String enrollmentDate = request.getParameter("enrollmentDate");
+
+                // Validate studentID is not null or empty
+                if (studentID == null || studentID.trim().isEmpty()) {
+                    throw new IllegalArgumentException("Student ID is required!");
+                }
+
+                // Validate classID
+                if (classIDParam == null || classIDParam.trim().isEmpty()) {
+                    throw new IllegalArgumentException("Class ID is required!");
+                }
+
+                // Parse and validate classID
+                int classID;
+                try {
+                    classID = Integer.parseInt(classIDParam);
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("Invalid Class ID format. Please enter a valid number.");
+                }
+
+                // Validate enrollmentDate is not null or empty
+                if (enrollmentDate == null || enrollmentDate.trim().isEmpty()) {
+                    throw new IllegalArgumentException("Enrollment date is required!");
+                }
+
+                // Create new enrollment record
+                MyStudentClassEnrollment studentEnrollment = new MyStudentClassEnrollment(studentID, classID, enrollmentDate);
+                myStudentClassEnrollmentFacade.create(studentEnrollment);
+
+                // Display success message and redirect to view page
+                out.println("<script type='text/javascript'>");
+                out.println("alert('Student added to class successfully!');");
+                out.println("window.location.href = 'viewClassStudent.jsp?classId=" + classID + "';");
+                out.println("</script>");
+            } catch (Exception e) {
+                // Display error message and go back
+                out.println("<script type='text/javascript'>");
+                out.println("alert('An error occurred while adding student to class: " + e.getMessage().replace("'", "\\'") + "');");
+                out.println("window.history.back();");
+                out.println("</script>");
+            }
         }
     }
-    
+
     /**
      * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -73,11 +95,6 @@ public class addClassStudent extends HttpServlet {
 
     /**
      * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -87,12 +104,9 @@ public class addClassStudent extends HttpServlet {
 
     /**
      * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "Add student to class";
+    }
 }

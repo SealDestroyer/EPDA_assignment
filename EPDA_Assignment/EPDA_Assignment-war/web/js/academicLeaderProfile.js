@@ -163,9 +163,9 @@ function validateEmail() {
         return false;
     }
     
-    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    const emailPattern = /^[a-zA-Z0-9._-]+@apu\.edu\.my$/;
     if (!emailPattern.test(email.value.trim())) {
-        showError(errorRow, errorMessage, 'Please enter a valid email address', email);
+        showError(errorRow, errorMessage, 'Please enter a valid APU email address (@apu.edu.my)', email);
         return false;
     }
     

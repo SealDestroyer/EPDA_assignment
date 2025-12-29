@@ -23,7 +23,9 @@ import javax.persistence.NamedQuery;
     @NamedQuery(name = "MyUserID.findByAD", query = "SELECT u FROM MyUserID u WHERE u.currentUserId LIKE 'AD%'"),
     @NamedQuery(name = "MyUserID.findByAL", query = "SELECT u FROM MyUserID u WHERE u.currentUserId LIKE 'AL%'"),
     @NamedQuery(name = "MyUserID.findByL", query = "SELECT u FROM MyUserID u WHERE u.currentUserId LIKE 'L%'"),
-    @NamedQuery(name = "MyUserID.findByS", query = "SELECT u FROM MyUserID u WHERE u.currentUserId LIKE 'S%'")
+    @NamedQuery(name = "MyUserID.findByS", query = "SELECT u FROM MyUserID u WHERE u.currentUserId LIKE 'S%'"),
+    @NamedQuery(name = "MyUserID.updateCurrentUserId", query = "UPDATE MyUserID u SET u.currentUserId = :currentUserId WHERE u.userType = :userType")
+
 })
 public class MyUserID implements Serializable {
 

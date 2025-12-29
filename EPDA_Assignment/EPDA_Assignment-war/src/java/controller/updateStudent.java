@@ -43,8 +43,8 @@ public class updateStudent extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            // Get parameters from JSP form
             try {
+                // Get parameters from JSP form
                 String userID = request.getParameter("userID");
                 String fullName = request.getParameter("fullName");
                 String password = request.getParameter("password");
@@ -57,7 +57,90 @@ public class updateStudent extends HttpServlet {
                 String currentLevel = request.getParameter("currentLevel");
                 String status = request.getParameter("status");
 
-                //Find and Update User Record
+                // Validate that all required fields are not null or empty
+                if (userID == null || userID.trim().isEmpty()
+                        || fullName == null || fullName.trim().isEmpty()
+                        || password == null || password.trim().isEmpty()
+                        || gender == null || gender.trim().isEmpty()
+                        || phone == null || phone.trim().isEmpty()
+                        || icNumber == null || icNumber.trim().isEmpty()
+                        || email == null || email.trim().isEmpty()
+                        || address == null || address.trim().isEmpty()
+                        || intakeYear == null || intakeYear.trim().isEmpty()
+                        || currentLevel == null || currentLevel.trim().isEmpty()
+                        || status == null || status.trim().isEmpty()) {
+                    throw new IllegalArgumentException("All fields are required!");
+                }
+
+                // Validate full name (minimum 3 characters, only letters and spaces)
+                if (fullName.trim().length() < 3 || !fullName.trim().matches("^[a-zA-Z\\s]+$")) {
+                    throw new IllegalArgumentException("Full name must be at least 3 characters and contain only letters!");
+                }
+
+                // Validate password (minimum 8 characters, must contain uppercase, lowercase, and digit)
+                if (password.length() < 8
+                        || !password.matches(".*[a-z].*")
+                        || !password.matches(".*[A-Z].*")
+                        || !password.matches(".*\\d.*")) {
+                    throw new IllegalArgumentException("Password must be at least 8 characters with uppercase, lowercase, and number!");
+                }
+
+                // Validate gender (must be Male or Female)
+                if (!gender.equals("Male") && !gender.equals("Female")) {
+                    throw new IllegalArgumentException("Invalid gender selection!");
+                }
+
+                // Validate phone number (must be exactly 10 digits)
+                if (!phone.matches("^[0-9]{10}$")) {
+                    throw new IllegalArgumentException("Phone number must be exactly 10 digits!");
+                }
+
+                // Validate IC number format (12 digits, with or without hyphens)
+                String icDigits = icNumber.replace("-", "");
+                if (!icDigits.matches("^\\d{12}$")) {
+                    throw new IllegalArgumentException("IC number must be 12 digits!");
+                }
+
+                // Validate IC date portion (YYMMDD)
+                int month = Integer.parseInt(icDigits.substring(2, 4));
+                int day = Integer.parseInt(icDigits.substring(4, 6));
+                if (month < 1 || month > 12 || day < 1 || day > 31) {
+                    throw new IllegalArgumentException("Invalid date in IC number!");
+                }
+
+                // Validate email format
+                if (!email.trim().matches("^[a-zA-Z0-9._-]+@apu\\.edu\\.my$")) {
+                    throw new IllegalArgumentException("Email must end with @apu.edu.my!");
+                }
+
+                // Validate address (minimum 10 characters)
+                if (address.trim().length() < 10) {
+                    throw new IllegalArgumentException("Address must be at least 10 characters!");
+                }
+
+                // Validate intake year (must be 4 digits between 2000 and next year)
+                if (!intakeYear.trim().matches("^\\d{4}$")) {
+                    throw new IllegalArgumentException("Intake year must be 4 digits!");
+                }
+                int year = Integer.parseInt(intakeYear.trim());
+                int currentYear = java.time.Year.now().getValue();
+                if (year < 2000 || year > currentYear + 1) {
+                    throw new IllegalArgumentException("Intake year must be between 2000 and " + (currentYear + 1) + "!");
+                }
+
+                // Validate current level (must be one of the predefined options)
+                if (!currentLevel.equals("Year 1") && !currentLevel.equals("Year 2")
+                        && !currentLevel.equals("Year 3") && !currentLevel.equals("Year 4")) {
+                    throw new IllegalArgumentException("Invalid current level selection!");
+                }
+
+                // Check if email already exists for a different user
+                MyUsers existingUser = myUsersFacade.findByEmail(email);
+                if (existingUser != null && !existingUser.getUserID().equals(userID)) {
+                    throw new IllegalArgumentException("Email already exists for another user!");
+                }
+
+                // Find and update user record in MyUsers table
                 MyUsers user = myUsersFacade.find(userID);
                 user.setFullName(fullName);
                 user.setPassword(password);
@@ -68,19 +151,24 @@ public class updateStudent extends HttpServlet {
                 user.setAddress(address);
                 myUsersFacade.edit(user);
 
-                //Find and Update Student Record
+                // Find and update student record in MyStudent table
                 MyStudent student = myStudentFacade.find(userID);
                 student.setIntakeYear(intakeYear);
                 student.setCurrentLevel(currentLevel);
                 student.setStatus(status);
                 myStudentFacade.edit(student);
 
-                request.setAttribute("message", "Register Successfully!");
-                request.getRequestDispatcher("registerStudent.jsp").forward(request, response);
-                out.println("<br><br><br>Register Success!");
+                // Display success message and redirect to view student page
+                out.println("<script type='text/javascript'>");
+                out.println("alert('Student Updated Successfully!');");
+                out.println("window.location.href = 'viewStudent.jsp';");
+                out.println("</script>");
             } catch (Exception e) {
-                request.getRequestDispatcher("registerStudent.jsp").forward(request, response);
-                out.println("<br><br><br>Invalid Input!");
+                // Handle any unexpected errors and return to form
+                out.println("<script type='text/javascript'>");
+                out.println("alert('Error: " + e.getMessage().replace("'", "\\'") + "');");
+                out.println("window.history.back();");
+                out.println("</script>");
             }
 
         }

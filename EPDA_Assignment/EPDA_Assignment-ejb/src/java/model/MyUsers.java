@@ -57,8 +57,11 @@ import javax.persistence.NamedQuery;
             name = "MyUsers.updatePasswordAndSecretKeyByEmail",
             query = "UPDATE MyUsers u SET u.password = :password, u.secretKey = :secretKey WHERE u.email = :email"
     )
-    
-    
+        ,
+        @NamedQuery(
+            name = "MyUsers.findByEmail",
+            query = "SELECT u FROM MyUsers u WHERE u.email = :email"
+    )
     
 })
 

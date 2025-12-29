@@ -48,4 +48,11 @@ public class MyUserIDFacade extends AbstractFacade<MyUserID> {
         return em.createNamedQuery("MyUserID.findByS", MyUserID.class).getResultList();
     }
     
+    public void updateCurrentUserId(String currentUserId, String userType) {
+        em.createNamedQuery("MyUserID.updateCurrentUserId")
+                .setParameter("currentUserId", currentUserId)
+                .setParameter("userType", userType)
+                .executeUpdate();
+    }
+    
 }

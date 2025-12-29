@@ -24,7 +24,7 @@ public class addGrade extends HttpServlet {
 
     @EJB
     private MyGradingFacade myGradingFacade;
-    
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -37,37 +37,76 @@ public class addGrade extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
-        try {
-            String gradeLetter = request.getParameter("gradeLetter");
-            String minPercentageStr = request.getParameter("minPercentage");
-            String maxPercentageStr = request.getParameter("maxPercentage");
-            
-            Integer minPercentage = Integer.parseInt(minPercentageStr);
-            Integer maxPercentage = Integer.parseInt(maxPercentageStr);
-            
-            //Create New Grade Record
-            model.MyGrading grade = new model.MyGrading(gradeLetter, minPercentage, maxPercentage);
-            
-            myGradingFacade.create(grade);
-            
-            //Redirect to viewGrade.jsp after successful addition
-            response.sendRedirect("viewGrade.jsp");
-        } catch (Exception e) {
-            //Set error message and forward back to the form
-            request.setAttribute("error", "Error: " + e.getMessage());
-            request.getRequestDispatcher("addGrade.jsp").forward(request, response);
+        try (PrintWriter out = response.getWriter()) {
+            try {
+                // Retrieve form parameters from the request
+                String gradeLetter = request.getParameter("gradeLetter");
+                String minPercentageStr = request.getParameter("minPercentage");
+                String maxPercentageStr = request.getParameter("maxPercentage");
+
+                // Validate that all required parameters are present
+                if (gradeLetter == null || gradeLetter.trim().isEmpty()) {
+                    throw new IllegalArgumentException("Grade letter is required!");
+                }
+                if (minPercentageStr == null || minPercentageStr.trim().isEmpty()) {
+                    throw new IllegalArgumentException("Minimum percentage is required!");
+                }
+                if (maxPercentageStr == null || maxPercentageStr.trim().isEmpty()) {
+                    throw new IllegalArgumentException("Maximum percentage is required!");
+                }
+
+                // Validate grade letter format (A-F optionally followed by + or -)
+                if (!gradeLetter.trim().matches("^[A-Fa-f][+\\-]?$")) {
+                    throw new IllegalArgumentException("Grade letter must be a letter (A-F) optionally followed by + or -!");
+                }
+
+                // Parse percentage values to integers
+                Integer minPercentage;
+                Integer maxPercentage;
+                try {
+                    minPercentage = Integer.parseInt(minPercentageStr);
+                    maxPercentage = Integer.parseInt(maxPercentageStr);
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("Percentages must be valid numbers!");
+                }
+
+                // Validate percentage ranges (must be between 0 and 100)
+                if (minPercentage < 0 || minPercentage > 100) {
+                    throw new IllegalArgumentException("Minimum percentage must be between 0 and 100!");
+                }
+                if (maxPercentage < 0 || maxPercentage > 100) {
+                    throw new IllegalArgumentException("Maximum percentage must be between 0 and 100!");
+                }
+
+                // Validate that maximum is greater than minimum
+                if (maxPercentage <= minPercentage) {
+                    throw new IllegalArgumentException("Maximum percentage must be greater than minimum percentage!");
+                }
+
+                // Create new grade record with validated data
+                model.MyGrading grade = new model.MyGrading(gradeLetter.trim(), minPercentage, maxPercentage);
+
+                // Persist the grade record to the database
+                myGradingFacade.create(grade);
+
+                // Display success message and redirect to grade list page
+                out.println("<script type='text/javascript'>");
+                out.println("alert('Grade Added Successfully!');");
+                out.println("window.location.href = 'viewGrade.jsp';");
+                out.println("</script>");
+            } catch (Exception e) {
+                // Handle errors by displaying error message and returning to form
+                out.println("<script type='text/javascript'>");
+                out.println("alert('Error: " + e.getMessage().replace("'", "\\'") + "');");
+                out.println("window.history.back();");
+                out.println("</script>");
+            }
         }
+
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * Handles the HTTP GET method.
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -76,12 +115,7 @@ public class addGrade extends HttpServlet {
     }
 
     /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * Handles the HTTP POST method.
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -89,14 +123,9 @@ public class addGrade extends HttpServlet {
         processRequest(request, response);
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
+    }
 
 }
