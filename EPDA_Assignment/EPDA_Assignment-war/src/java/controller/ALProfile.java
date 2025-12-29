@@ -60,7 +60,7 @@ public class ALProfile extends HttpServlet {
                     return;
                 }
 
-                // prefill values (same naming style as module)
+                // prefill values
                 request.setAttribute("userIDVal", u.getUserID());
                 request.setAttribute("fullNameVal", safe(u.getFullName()));
                 request.setAttribute("genderVal", safe(u.getGender()));
@@ -68,6 +68,8 @@ public class ALProfile extends HttpServlet {
                 request.setAttribute("icNumberVal", safe(u.getIcNumber()));
                 request.setAttribute("emailVal", safe(u.getEmail()));
                 request.setAttribute("addressVal", safe(u.getAddress()));
+                request.setAttribute("secretKeyVal",
+                        (u.getSecretKey() == null) ? "" : String.valueOf(u.getSecretKey()));
 
                 // leaderRole display 
                 String leaderRole = (al != null) ? safe(al.getLeaderRole()) : "";
@@ -92,12 +94,13 @@ public class ALProfile extends HttpServlet {
 
                 // read inputs
                 String fullName = trim(request.getParameter("fullName"));
-                String password = trim(request.getParameter("password")); // optional
+                String password = trim(request.getParameter("password")); 
                 String gender = trim(request.getParameter("gender"));
                 String phone = trim(request.getParameter("phone"));
                 String icNumber = trim(request.getParameter("icNumber"));
                 String email = trim(request.getParameter("email"));
                 String address = trim(request.getParameter("address"));
+                String secretKey = trim(request.getParameter("secretKey"));
 
                 Map<String, String> errors = new HashMap<>();
 
@@ -147,12 +150,20 @@ public class ALProfile extends HttpServlet {
                     errors.put("password", "Password must be at least 4 characters.");
                 }
 
+                if (secretKey.isEmpty()) {
+                    errors.put("secretKey", "Secret Key cannot be empty.");
+                } else if (!secretKey.matches("\\d+")) {
+                    errors.put("secretKey", "Secret Key must contain numbers only.");
+                } else if (secretKey.length() < 4) {
+                    errors.put("secretKey", "Secret Key must be at least 4 digits.");
+                }
+
                 // if got errors, return back to ALeditProfile.jsp
                 if (!errors.isEmpty()) {
 
                     request.setAttribute("errors", errors);
 
-                    // keep old values
+                    // keep typed values
                     request.setAttribute("userIDVal", userID);
                     request.setAttribute("fullNameVal", fullName);
                     request.setAttribute("genderVal", gender);
@@ -160,6 +171,7 @@ public class ALProfile extends HttpServlet {
                     request.setAttribute("icNumberVal", icNumber);
                     request.setAttribute("emailVal", email);
                     request.setAttribute("addressVal", address);
+                    request.setAttribute("secretKeyVal", secretKey);
 
                     // leaderRole display
                     String leaderRole = (al != null) ? safe(al.getLeaderRole()) : "";
@@ -176,6 +188,7 @@ public class ALProfile extends HttpServlet {
                 u.setIcNumber(icNumber);
                 u.setEmail(email);
                 u.setAddress(address);
+                u.setSecretKey(Integer.valueOf(secretKey));
 
                 if (!password.isEmpty()) {
                     u.setPassword(password);
