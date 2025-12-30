@@ -40,26 +40,58 @@ public class forgetPassword extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-           MyUsers user = myUsersFacade.findByEmailAndSecretKey(request.getParameter("email"), Integer.parseInt(request.getParameter("secretKey")));
-           if(user != null){
+            try {
+                // Retrieve form parameters from the request
+                String email = request.getParameter("email");
+                String secretKeyStr = request.getParameter("secretKey");
+                String newPassword = request.getParameter("newPassword");
+                
+                // Validate that all required fields are present and not empty
+                if (email == null || email.trim().isEmpty()) {
+                    throw new IllegalArgumentException("Email is required");
+                }
+                if (secretKeyStr == null || secretKeyStr.trim().isEmpty()) {
+                    throw new IllegalArgumentException("Secret key is required");
+                }
+                if (newPassword == null || newPassword.trim().isEmpty()) {
+                    throw new IllegalArgumentException("New password is required");
+                }
+                
+                // Parse and validate that the secret key is a valid integer
+                Integer secretKey;
+                try {
+                    secretKey = Integer.parseInt(secretKeyStr.trim());
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("Invalid secret key format");
+                }
+                
+                // Find user by email and secret key
+                MyUsers user = myUsersFacade.findByEmailAndSecretKey(email.trim(), secretKey);
+                if (user == null) {
+                    throw new IllegalArgumentException("Invalid email or secret key. Please try again");
+                }
+                
                 // Generate a new secret key for future password resets that differs from the old one
                 Integer newSecretKey;
                 do {
                     newSecretKey = (int) (Math.random() * 900000) + 100000;
                 } while (newSecretKey.equals(user.getSecretKey()));
                 
-                myUsersFacade.updatePasswordAndSecretKeyByEmail(request.getParameter("email"), request.getParameter("newPassword"), newSecretKey); 
-                out.println("<script type=\"text/javascript\">");
+                // Update the user's password and secret key in the database
+                myUsersFacade.updatePasswordAndSecretKeyByEmail(email.trim(), newPassword.trim(), newSecretKey);
+                
+                // Display success message and redirect to login page after successful password reset
+                out.println("<script type='text/javascript'>");
                 out.println("alert('Password reset successful! Please login with your new password.');");
-                out.println("location='login.jsp';");
+                out.println("window.location.href = 'login.jsp';");
                 out.println("</script>");
-              } else {
-                out.println("<script type=\"text/javascript\">");
-                out.println("alert('Invalid email or secret key. Please try again.');");
-                out.println("location='forgetPassword.jsp';");
+            } catch (Exception e) {
+                // Display error message and return to the form for user correction
+                out.println("<script type='text/javascript'>");
+                out.println("alert('Error: " + e.getMessage().replace("'", "\\'") + "');");
+                out.println("window.history.back();");
                 out.println("</script>");
-              }
+            }
         }
     }
 
