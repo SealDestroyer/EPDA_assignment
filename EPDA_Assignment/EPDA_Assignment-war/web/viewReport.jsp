@@ -27,17 +27,6 @@
                     <div class="welcome-message">
                         <h2>View Reports</h2>
                         
-                        <!-- Add search bar and clear button -->
-                        <div class='search-container'>
-                            <form method='GET' action='viewReport.jsp' class='search-form'>
-                                <input type='text' name='search' id='searchInput' placeholder='Search by report name or description...' 
-                                value='<%= request.getParameter("search") != null ? request.getParameter("search") : "" %>' 
-                                class='search-input' />
-                                <button type='submit' class='btn-search'>Search</button>
-                                <button type='button' onclick='window.location.href="viewReport.jsp"' class='btn-clear'>Clear</button>
-                            </form>
-                        </div>
-                        
                         <table class="data-table">
                             <thead>
                                 <tr>
@@ -51,7 +40,7 @@
                                 <tr>
                                     <td>1</td>
                                     <td>User Summary Report</td>
-                                    <td>Summary of all users in the system including students, lecturers, and administrators</td>
+                                    <td>Summary of all system users including students, lecturers, academic leaders, and administrators</td>
                                     <td>
                                         <button class="btn-generate" onclick="window.location.href='generateUserSummaryReport.jsp?reportId=1&reportName=User%20Summary%20Report'">Generate</button>
                                     </td>
@@ -59,33 +48,33 @@
                                 <tr>
                                     <td>2</td>
                                     <td>Class & Enrollment Report</td>
-                                    <td>Overview of all classes and student enrollment statistics</td>
+                                    <td>Overview of all classes with student enrollment statistics</td>
                                     <td>
-                                        <button class="btn-generate" onclick="window.location.href='generateUserSummaryReport.jsp?reportId=2&reportName=Class%20%26%20Enrollment%20Report'">Generate</button>
+                                        <button class="btn-generate" onclick="window.location.href='generateClassEnrollmentReport.jsp?reportId=2&reportName=Class%20%26%20Enrollment%20Report'">Generate</button>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>3</td>
-                                    <td>Module Offering Report</td>
-                                    <td>Details of all available modules and their offerings</td>
+                                    <td>Class Module Offering Report</td>
+                                    <td>Summary of module offerings for each class</td>
                                     <td>
-                                        <button class="btn-generate" onclick="window.location.href='generateUserSummaryReport.jsp?reportId=3&reportName=Module%20Offering%20Report'">Generate</button>
+                                        <button class="btn-generate" onclick="window.location.href='generateClassModuleReport'">Generate</button>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>4</td>
                                     <td>Grading Scheme Report</td>
-                                    <td>Comprehensive overview of grading schemes and assessment criteria</td>
+                                    <td>Overview of grading schemes</td>
                                     <td>
-                                        <button class="btn-generate" onclick="window.location.href='generateUserSummaryReport.jsp?reportId=4&reportName=Grading%20Scheme%20Report'">Generate</button>
+                                        <button class="btn-generate" onclick="window.location.href='generateGradingSchemeReport'">Generate</button>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>5</td>
-                                    <td>Lecturer Workload Report</td>
-                                    <td>Analysis of lecturer assignments and workload distribution</td>
+                                    <td>Academic Leader Workload Report</td>
+                                    <td>Summary of academic leader workload</td>
                                     <td>
-                                        <button class="btn-generate" onclick="window.location.href='generateUserSummaryReport.jsp?reportId=5&reportName=Lecturer%20Workload%20Report'">Generate</button>
+                                        <button class="btn-generate" onclick="window.location.href='generateAcademicLeaderWorkloadReport'">Generate</button>
                                     </td>
                                 </tr>
                             </tbody>

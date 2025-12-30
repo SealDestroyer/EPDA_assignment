@@ -9,8 +9,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.ejb.EJB;
@@ -19,17 +20,17 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.MyUsersFacade;
+import model.MyStudentClassEnrollmentFacade;
 
 /**
  *
  * @author bohch
  */
-@WebServlet(name = "generateUserSummaryReport", urlPatterns = {"/generateUserSummaryReport"})
-public class generateUserSummaryReport extends HttpServlet {
+@WebServlet(name = "generateClassEnrollmentReport", urlPatterns = {"/generateClassEnrollmentReport"})
+public class generateClassEnrollmentReport extends HttpServlet {
 
     @EJB
-    private MyUsersFacade myUsersFacade;
+    private MyStudentClassEnrollmentFacade myStudentClassEnrollmentFacade;
     
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,7 +44,6 @@ public class generateUserSummaryReport extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
         try (PrintWriter out = response.getWriter()) {
             // Get current date and time
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -64,61 +64,64 @@ public class generateUserSummaryReport extends HttpServlet {
             Timestamp endTimestamp = Timestamp.valueOf(endDateTime);
 
             // Find users from database
-            long lecturersCount = myUsersFacade.findAllLecturersWithDateRange(startTimestamp, endTimestamp);
-            long studentsCount = myUsersFacade.findAllStudentsWithDateRange(startTimestamp, endTimestamp);
-            long academicsLeaderCount = myUsersFacade.findAllAcademicsLeaderWithDateRange(startTimestamp, endTimestamp);
-            long adminsCount = myUsersFacade.findAllAdminsWithDateRange(startTimestamp, endTimestamp);
+            List<Object[]> enrollmentData = myStudentClassEnrollmentFacade.countByClassIDAndDateRange(startTimestamp, endTimestamp);
 
-            // Check if no data found
-            long totalCount = lecturersCount + studentsCount + academicsLeaderCount + adminsCount;
-            
-            if (totalCount == 0) {
-                // Display no data message
-                out.println("<html>");
-                out.println("  <head>");
-                out.println("    <title>" + reportName + "</title>");
-                out.println("  </head>");
-                out.println("  <body>");
-                out.println("    <h2>" + reportName + " (" + startDate + " to " + endDate + ")</h2>");
-                out.println("    <p><strong>Generated on:</strong> " + generatedDateTime + "</p>");
-                out.println("    <p>No user data found for the selected range.</p>");
-                out.println("  </body>");
-                out.println("</html>");
-                return;
-            }
-
+            out.println("<!DOCTYPE html>");
             out.println("<html>");
-            out.println("  <head>");
+            out.println("<head>");
+            out.println("<title>Class Enrollment Report</title>");
             out.println("    <script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>");
             out.println("    <script type=\"text/javascript\">");
-            out.println("      google.charts.load('current', {'packages':['corechart']});");
-            out.println("      google.charts.setOnLoadCallback(drawChart);");
+            out.println("      google.charts.load('current', {'packages':['corechart', 'bar']});");
+            out.println("      google.charts.setOnLoadCallback(drawBasic);");
             out.println("");
-            out.println("      function drawChart() {");
+            out.println("      function drawBasic() {");
             out.println("");
-            out.println("        var data = google.visualization.arrayToDataTable([");
-            out.println("          ['User Role', 'Count'],");
-            out.println("          ['Lecturers',     " + lecturersCount + "],");
-            out.println("          ['Students',      " + studentsCount + "],");
-            out.println("          ['Academic Leaders',  " + academicsLeaderCount + "],");
-            out.println("          ['Admins',    " + adminsCount + "]");
+            boolean hasData = enrollmentData != null && !enrollmentData.isEmpty();
+
+            out.println("        var data = new google.visualization.DataTable();");
+            out.println("        data.addColumn('string', 'Class ID');");
+            out.println("        data.addColumn('number', 'Enrollment Count');");
+            out.println("        data.addRows([");
+
+            // Iterate through enrollmentData to populate chart
+            if (hasData) {
+                for (Object[] row : enrollmentData) {
+                    String classId = row[0].toString();
+                    Number count = (Number) row[1];
+                    out.println("          ['" + classId + "', " + count.longValue() + "],");
+                }
+            }
+
             out.println("        ]);");
+            out.println("        var hasData = " + hasData + ";");
+            out.println("        if (!hasData) {");
+            out.println("          document.getElementById('chart_div').innerHTML = 'No enrollment data found for the selected range.';");
+            out.println("          return;");
+            out.println("        }");
             out.println("");
             out.println("        var options = {");
-            out.println("          title: '" + reportName + " (" + startDate + " to " + endDate + ")'");
+            out.println("          chartArea: {width: '50%'},");
+            out.println("          hAxis: {");
+            out.println("            title: 'Enrollment Count',");
+            out.println("            minValue: 0");
+            out.println("          },");
+            out.println("          vAxis: {");
+            out.println("            title: 'Class ID'");
+            out.println("          }");
             out.println("        };");
             out.println("");
-            out.println("        var chart = new google.visualization.PieChart(document.getElementById('piechart'));");
+            out.println("        var chart = new google.visualization.BarChart(document.getElementById('chart_div'));");
             out.println("");
             out.println("        chart.draw(data, options);");
             out.println("      }");
             out.println("    </script>");
-            out.println("  </head>");
-            out.println("  <body>");
-            out.println("    <h2>" + reportName + " (" + startDate + " to " + endDate + ")</h2>");
-            out.println("    <p><strong>Generated on:</strong> " + generatedDateTime + "</p>");
-            out.println("    <div id=\"piechart\" style=\"width: 900px; height: 500px;\"></div>");
-            out.println("  </body>");
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h2>" + reportName + " (" + startDate + " to " + endDate + ")</h2>");
+            out.println("<p><strong>Generated on:</strong> " + generatedDateTime + "</p>");
+            out.println("<div id=\"chart_div\" style=\"width: 900px; height: 500px;\"></div>");
+            out.println("</body>");
             out.println("</html>");
         }
     }

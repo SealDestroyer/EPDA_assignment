@@ -40,7 +40,6 @@ public class addClassStudent extends HttpServlet {
                 // Get and validate request parameters
                 String studentID = request.getParameter("studentID");
                 String classIDParam = request.getParameter("classID");
-                String enrollmentDate = request.getParameter("enrollmentDate");
 
                 // Validate studentID is not null or empty
                 if (studentID == null || studentID.trim().isEmpty()) {
@@ -60,13 +59,8 @@ public class addClassStudent extends HttpServlet {
                     throw new IllegalArgumentException("Invalid Class ID format. Please enter a valid number.");
                 }
 
-                // Validate enrollmentDate is not null or empty
-                if (enrollmentDate == null || enrollmentDate.trim().isEmpty()) {
-                    throw new IllegalArgumentException("Enrollment date is required!");
-                }
-
-                // Create new enrollment record
-                MyStudentClassEnrollment studentEnrollment = new MyStudentClassEnrollment(studentID, classID, enrollmentDate);
+                // Create new enrollment record with current date
+                MyStudentClassEnrollment studentEnrollment = new MyStudentClassEnrollment(studentID, classID);
                 myStudentClassEnrollmentFacade.create(studentEnrollment);
 
                 // Display success message and redirect to view page

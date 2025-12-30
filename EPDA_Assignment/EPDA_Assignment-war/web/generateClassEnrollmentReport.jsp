@@ -28,11 +28,11 @@
         <jsp:include page="header.jsp" />
         
         <div class="content-area" id="content-area">
-            <form action="generateUserSummaryReport" method="post" onsubmit="return validateForm()">
+            <form action="generateClassEnrollmentReport" method="post" onsubmit="return validateForm()">
                 <table class="profile-table">
                     <tr>
                         <td colspan="2">
-                            <h2 class="form-title">GENERATE USER SUMMARY REPORT</h2>
+                            <h2 class="form-title">GENERATE CLASS ENROLLMENT REPORT</h2>
                         </td>
                     </tr>
                     <tr>

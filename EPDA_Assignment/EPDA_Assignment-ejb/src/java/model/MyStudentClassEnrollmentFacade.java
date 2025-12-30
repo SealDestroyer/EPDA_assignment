@@ -5,6 +5,7 @@
  */
 package model;
 
+import java.sql.Timestamp;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -63,6 +64,13 @@ public class MyStudentClassEnrollmentFacade extends AbstractFacade<MyStudentClas
     public List<MyUsers> findStudentsNotInClass(Integer classID) {
         Query q = em.createNamedQuery("MyStudentClassEnrollment.findStudentsNotInClass");
         q.setParameter("classID", classID);
+        return q.getResultList();
+    }
+    
+    public List<Object[]> countByClassIDAndDateRange(Timestamp startDate, Timestamp endDate) {
+        Query q = em.createNamedQuery("MyStudentClassEnrollment.countByClassIDAndDateRange");
+        q.setParameter("startDate", startDate);
+        q.setParameter("endDate", endDate);
         return q.getResultList();
     }
 

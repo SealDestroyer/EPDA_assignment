@@ -1,6 +1,7 @@
 package model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -55,7 +56,15 @@ import javax.persistence.NamedQuery;
                   + "  SELECT e.studentID FROM MyStudentClassEnrollment e "
                   + "  WHERE e.classID = :classID"
                   + ")"
+    ),
+    @NamedQuery(
+            name = "MyStudentClassEnrollment.countByClassIDAndDateRange",
+            query = "SELECT e.classID, COUNT(e) "
+                  + "FROM MyStudentClassEnrollment e "
+                  + "WHERE e.enrollmentDate BETWEEN :startDate AND :endDate "
+                  + "GROUP BY e.classID"
     )
+
 })
 
 public class MyStudentClassEnrollment implements Serializable {
@@ -67,12 +76,18 @@ public class MyStudentClassEnrollment implements Serializable {
     private Integer enrollmentID;
     private String studentID;
     private Integer classID;
-    private String enrollmentDate;
+    private Timestamp enrollmentDate;
 
     public MyStudentClassEnrollment() {
     }
 
-    public MyStudentClassEnrollment(String studentID, Integer classID, String enrollmentDate) {
+    public MyStudentClassEnrollment(String studentID, Integer classID) {
+        this.studentID = studentID;
+        this.classID = classID;
+        this.enrollmentDate = new Timestamp(System.currentTimeMillis());
+    }
+
+    public MyStudentClassEnrollment(String studentID, Integer classID, Timestamp enrollmentDate) {
         this.studentID = studentID;
         this.classID = classID;
         this.enrollmentDate = enrollmentDate;
@@ -102,11 +117,11 @@ public class MyStudentClassEnrollment implements Serializable {
         this.classID = classID;
     }
 
-    public String getEnrollmentDate() {
+    public Timestamp getEnrollmentDate() {
         return enrollmentDate;
     }
 
-    public void setEnrollmentDate(String enrollmentDate) {
+    public void setEnrollmentDate(Timestamp enrollmentDate) {
         this.enrollmentDate = enrollmentDate;
     }
 
