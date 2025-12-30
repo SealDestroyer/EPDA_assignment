@@ -106,65 +106,6 @@ public class MyModuleFacade extends AbstractFacade<MyModule> {
                 .getResultList();
     }
 
-    public List<String> findDistinctLecturerIdsByAL(String alID) {
-        if (alID == null || alID.trim().isEmpty()) {
-            return java.util.Collections.emptyList();
-        }
-
-        return em.createQuery(
-                "SELECT DISTINCT m.assignedLecturerID "
-                + "FROM MyModule m "
-                + "WHERE m.createdBy = :alID "
-                + "AND m.assignedLecturerID IS NOT NULL "
-                + "ORDER BY m.assignedLecturerID",
-                String.class
-        ).setParameter("alID", alID.trim())
-                .getResultList();
-    }
-
-    public List<MyModule> findByALAndLecturer(String alID, String lecturerID) {
-        if (alID == null || alID.trim().isEmpty() || lecturerID == null || lecturerID.trim().isEmpty()) {
-            return java.util.Collections.emptyList();
-        }
-
-        return em.createQuery(
-                "SELECT m FROM MyModule m "
-                + "WHERE m.createdBy = :alID "
-                + "AND m.assignedLecturerID = :lecturerID "
-                + "ORDER BY m.moduleID",
-                MyModule.class
-        ).setParameter("alID", alID.trim())
-                .setParameter("lecturerID", lecturerID.trim())
-                .getResultList();
-    }
-
-    public List<MyModule> findByLecturerID(String lecturerID) {
-        if (lecturerID == null || lecturerID.trim().isEmpty()) {
-            return java.util.Collections.emptyList();
-        }
-
-        return em.createQuery(
-                "SELECT m FROM MyModule m WHERE m.assignedLecturerID = :lecturerID ORDER BY m.moduleCode",
-                MyModule.class
-        ).setParameter("lecturerID", lecturerID.trim())
-                .getResultList();
-    }
-
-    public boolean isModuleOwnedByLecturer(Integer moduleID, String lecturerID) {
-        if (moduleID == null || lecturerID == null || lecturerID.trim().isEmpty()) {
-            return false;
-        }
-
-        Long count = em.createQuery(
-                "SELECT COUNT(m) FROM MyModule m WHERE m.moduleID = :mid AND m.assignedLecturerID = :lid",
-                Long.class
-        ).setParameter("mid", moduleID)
-                .setParameter("lid", lecturerID.trim())
-                .getSingleResult();
-
-        return count != null && count > 0;
-    }
-
     public List<MyModule> findByCreatedBy(String createdBy) {
         if (createdBy == null || createdBy.trim().isEmpty()) {
             return java.util.Collections.emptyList();
@@ -194,4 +135,72 @@ public class MyModuleFacade extends AbstractFacade<MyModule> {
         return q.executeUpdate();
     }
 
+    public List<Object[]> searchModulesByLecturerWithClass(String keyword, String lecturerId) {
+
+        String kw = "%" + (keyword == null ? "" : keyword.toLowerCase().trim()) + "%";
+
+        return em.createNamedQuery(
+                "MyStudentClass.searchModulesByLecturerWithClass",
+                Object[].class)
+                .setParameter("lecturerId", lecturerId)
+                .setParameter("kw", kw)
+                .getResultList();
+    }
+
+    public List<String> findDistinctLecturerIdsByAL(String alID) {
+        if (alID == null || alID.trim().isEmpty()) {
+            return java.util.Collections.emptyList();
+        }
+
+        return em.createNamedQuery("MyModule.findDistinctLecturerIdsByAL", String.class)
+                .setParameter("alID", alID.trim())
+                .getResultList();
+    }
+
+    public List<MyModule> findByALAndLecturer(String alID, String lecturerID) {
+        if (alID == null || alID.trim().isEmpty()
+                || lecturerID == null || lecturerID.trim().isEmpty()) {
+            return java.util.Collections.emptyList();
+        }
+
+        return em.createNamedQuery("MyModule.findByALAndLecturer", MyModule.class)
+                .setParameter("alID", alID.trim())
+                .setParameter("lecturerID", lecturerID.trim())
+                .getResultList();
+    }
+
+    public List<MyModule> findByLecturerID(String lecturerID) {
+        if (lecturerID == null || lecturerID.trim().isEmpty()) {
+            return java.util.Collections.emptyList();
+        }
+
+        return em.createNamedQuery("MyModule.findByLecturerID", MyModule.class)
+                .setParameter("lecturerID", lecturerID.trim())
+                .getResultList();
+    }
+
+    public boolean isModuleOwnedByLecturer(Integer moduleID, String lecturerID) {
+        if (moduleID == null || lecturerID == null || lecturerID.trim().isEmpty()) {
+            return false;
+        }
+
+        Long count = em.createNamedQuery(
+                "MyModule.countByModuleAndLecturer",
+                Long.class)
+                .setParameter("mid", moduleID)
+                .setParameter("lid", lecturerID.trim())
+                .getSingleResult();
+
+        return count != null && count > 0;
+    }
+
+    public List<Object[]> findByAssignedLecturerWithClass(String lecturerId) {
+        if (lecturerId == null || lecturerId.trim().isEmpty()) {
+            return java.util.Collections.emptyList();
+        }
+
+        return em.createNamedQuery("MyStudentClass.findModulesByLecturerWithClass", Object[].class)
+                .setParameter("lecturerId", lecturerId.trim())
+                .getResultList();
+    }
 }

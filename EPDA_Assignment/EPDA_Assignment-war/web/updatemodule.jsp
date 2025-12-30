@@ -20,7 +20,7 @@
 
                 <form action="Module" method="POST" novalidate>
                     <input type="hidden" name="action" value="update" />
-
+                    <input type="hidden" name="classID" value="${classID}" />
                     <input type="hidden" name="moduleID" value="${moduleIDVal}" />
 
                     <!-- Module Name -->
@@ -93,7 +93,10 @@
 
                     <div class="form-buttons">
                         <button class="btn" type="submit">Update</button>
-                        <a class="btn btn-secondary" href="${pageContext.request.contextPath}/Module?action=list">Cancel</a>
+                        <a class="btn btn-secondary"
+                           href="${pageContext.request.contextPath}/Module?action=list&classID=${classID}">
+                            Cancel
+                        </a>
                     </div>
                 </form>
             </div>

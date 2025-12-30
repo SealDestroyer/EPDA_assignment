@@ -16,10 +16,38 @@ import javax.persistence.Table;
 
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "MyStudentClass.deleteByClassId", 
-                query = "DELETE FROM MyStudentClass c WHERE c.classID = :classID")
-})
+    @NamedQuery(
+            name = "MyStudentClass.deleteByClassId",
+            query = "DELETE FROM MyStudentClass c WHERE c.classID = :classID"
+    )
+    ,
 
+    @NamedQuery(
+            name = "MyStudentClass.findByAssignedAcademicLeaderID",
+            query = "SELECT c FROM MyStudentClass c "
+            + "WHERE c.assignedAcademicLeaderID = :alID "
+            + "ORDER BY c.classID"
+    )
+    ,
+
+    @NamedQuery(
+            name = "MyStudentClass.searchByClassNameForAL",
+            query = "SELECT c FROM MyStudentClass c "
+            + "WHERE c.assignedAcademicLeaderID = :alID "
+            + "AND LOWER(c.className) LIKE :kw "
+            + "ORDER BY c.classID"
+    )
+    ,
+    @NamedQuery(
+            name = "MyStudentClass.searchModulesByLecturerWithClass",
+            query = "SELECT m, c "
+            + "FROM MyStudentClass c "
+            + "JOIN c.modules m "
+            + "WHERE m.assignedLecturerID = :lecturerId "
+            + "AND (LOWER(m.moduleName) LIKE :kw OR LOWER(m.moduleCode) LIKE :kw) "
+            + "ORDER BY m.moduleID, c.classID"
+    )
+})
 
 @Table(name = "MYSTUDENTCLASS")
 public class MyStudentClass implements Serializable {

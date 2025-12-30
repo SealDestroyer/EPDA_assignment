@@ -21,7 +21,7 @@
 
                 <form action="Module" method="POST" novalidate>
                     <input type="hidden" name="action" value="add" />
-
+                    <input type="hidden" name="classID" value="${classID}" />
                     <!-- Module ID -->
                     <div class="form-group">
                         <input class="input-field" type="text" id="moduleID" value="(Auto Generated)" disabled placeholder=" " />
@@ -98,7 +98,10 @@
 
                     <div class="form-buttons">
                         <button class="btn" type="submit">Add</button>
-                        <a class="btn btn-secondary" href="${pageContext.request.contextPath}/Module?action=list">Cancel</a>
+                        <a class="btn btn-secondary"
+                           href="${pageContext.request.contextPath}/Module?action=list&classID=${classID}">
+                            Cancel
+                        </a>
                     </div>
                 </form>
             </div>

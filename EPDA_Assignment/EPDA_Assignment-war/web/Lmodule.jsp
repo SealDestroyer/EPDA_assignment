@@ -52,6 +52,7 @@
                     <thead>
                         <tr>
                             <th>Module ID</th>
+                            <th>Class</th>
                             <th>Module Name</th>
                             <th>Module Code</th>
                             <th>Description</th>
@@ -63,7 +64,7 @@
                     <tbody id="moduleTableBody">
                         <c:if test="${empty moduleList}">
                             <tr>
-                                <td colspan="6" style="text-align:center;">
+                                <td colspan="7" style="text-align:center;">
                                     No modules found.
                                 </td>
                             </tr>
@@ -72,7 +73,7 @@
                         <c:forEach items="${moduleList}" var="m">
                             <tr>
                                 <td>${m.moduleID}</td>
-
+                                <td>${classMap[m.moduleID]}</td>
                                 <td>
                                     <a class="assessment-link"
                                        href="${pageContext.request.contextPath}/Assessment?action=list&moduleID=${m.moduleID}">
@@ -127,7 +128,7 @@
 
                                     tbody.innerHTML =
                                             "<tr>" +
-                                            "<td colspan='6' style='text-align:center;'>No modules found.</td>" +
+                                            "<td colspan='7' style='text-align:center;'>No modules found.</td>" +
                                             "</tr>";
 
                                     if (errorBox) {
@@ -144,6 +145,7 @@
                                 tbody.innerHTML = data.map(m =>
                                     "<tr>" +
                                             "<td>" + m.moduleID + "</td>" +
+                                            "<td>" + escapeHtml(m.class) + "</td>" +
                                             "<td>" +
                                             "<a class='assessment-link' href='" + ctx + "/Assessment?action=list&moduleID=" + m.moduleID + "'>" +
                                             escapeHtml(m.moduleName) +
