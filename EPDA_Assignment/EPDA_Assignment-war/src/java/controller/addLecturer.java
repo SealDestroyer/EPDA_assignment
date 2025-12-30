@@ -33,6 +33,9 @@ public class addLecturer extends HttpServlet {
 
     @EJB
     private MyUsersFacade myUsersFacade;
+    
+    @EJB
+    private model.MyUserIDFacade myUserIDFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -47,8 +50,8 @@ public class addLecturer extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
             try {
+                // Retrieve form parameters from the request
                 String userID = request.getParameter("userID");
                 String fullName = request.getParameter("fullName");
                 String password = request.getParameter("password");
@@ -61,20 +64,79 @@ public class addLecturer extends HttpServlet {
                 String academicRank = request.getParameter("academicRank");
                 String academicLeaderID = request.getParameter("academicLeaderID");
 
-                //Create New User Record
+                // Validate required fields are not null or empty
+                if (userID == null || userID.trim().isEmpty() ||
+                    fullName == null || fullName.trim().isEmpty() ||
+                    password == null || password.trim().isEmpty() ||
+                    gender == null || gender.trim().isEmpty() ||
+                    phone == null || phone.trim().isEmpty() ||
+                    icNumber == null || icNumber.trim().isEmpty() ||
+                    email == null || email.trim().isEmpty() ||
+                    address == null || address.trim().isEmpty() ||
+                    employmentType == null || employmentType.trim().isEmpty() ||
+                    academicRank == null || academicRank.trim().isEmpty()) {
+                    throw new IllegalArgumentException("All fields are required!");
+                }
+                
+                // Validate full name length (minimum 3 characters)
+                if (fullName.trim().length() < 3) {
+                    throw new IllegalArgumentException("Full name must be at least 3 characters long!");
+                }
+                
+                // Validate password length (minimum 8 characters)
+                if (password.length() < 8) {
+                    throw new IllegalArgumentException("Password must be at least 8 characters long!");
+                }
+                
+                // Validate phone number format (must be 10 digits)
+                if (!phone.matches("^[0-9]{10}$")) {
+                    throw new IllegalArgumentException("Phone number must be exactly 10 digits!");
+                }
+                
+                // Validate IC number format (must be 12 digits, with or without hyphens)
+                String icDigits = icNumber.replace("-", "");
+                if (!icDigits.matches("^\\d{12}$")) {
+                    throw new IllegalArgumentException("IC number must be 12 digits!");
+                }
+                
+                // Validate email format (must be @apu.edu.my domain)
+                if (!email.matches("^[a-zA-Z0-9._-]+@apu\\.edu\\.my$")) {
+                    throw new IllegalArgumentException("Please enter a valid APU email address (@apu.edu.my)!");
+                }
+                
+                // Validate address length (minimum 10 characters)
+                if (address.trim().length() < 10) {
+                    throw new IllegalArgumentException("Address must be at least 10 characters long!");
+                }
+
+                // Check if email already exists in the database to prevent duplicates
+                MyUsers existingUser = myUsersFacade.findByEmail(email);
+                if (existingUser != null) {
+                    throw new IllegalArgumentException("Email already exists!");
+                }
+                
+                // Create new user record with basic information
                 MyUsers user = new MyUsers(userID, fullName, password, gender, phone, icNumber, email, address);
                 myUsersFacade.create(user);
 
-                //Create New Lecturer Record
+                // Create new lecturer record with lecturer-specific details
                 MyLecturer lecturer = new MyLecturer(userID, employmentType, academicRank, academicLeaderID);
                 myLecturerFacade.create(lecturer);
 
-                //request.setAttribute("message", "Lecturer added successfully!");
-                request.getRequestDispatcher("viewLecturers.jsp").forward(request, response);
-                out.println("<br><br><br>Lecturer Added Successfully!");
+                // Update the lecturer ID counter for the next lecturer registration
+                myUserIDFacade.updateCurrentUserId(userID, "Lecturer");
+
+                // Display success message and redirect to view lecturers page
+                out.println("<script type='text/javascript'>");
+                out.println("alert('Lecturer Added Successfully!');");
+                out.println("window.location.href = 'viewLecturers.jsp';");
+                out.println("</script>");
             } catch (Exception e) {
-                request.getRequestDispatcher("addLecturer.jsp").forward(request, response);
-                out.println("<br><br><br>Invalid Input!");
+                // Handle any errors and return to form
+                out.println("<script type='text/javascript'>");
+                out.println("alert('Error: " + e.getMessage().replace("'", "\\'") + "');");
+                out.println("window.history.back();");
+                out.println("</script>");
             }
         }
     }

@@ -26,15 +26,15 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>APU Academic Management System - Login</title>
+        <title>APU Academic Management System - Forget Password</title>
         <link rel="stylesheet" type="text/css" href="css/login.css">
-        <script src="js/login.js"></script>
+        <script src="js/forgetPassword.js"></script>
     </head>
     <body>
-        <form action="Login" method="POST">
+        <form action="forgetPassword" method="POST" onsubmit="return validateForm()">
             <table>
                 <tr>
-                    <td colspan="2"><h2>Login Form</h2></td>
+                    <td colspan="2"><h2>Forget Password</h2></td>
                 </tr>
                 <tr>
                     <td>Email Address:</td>
@@ -47,9 +47,9 @@
                     <td><span class="error-message" id="email-error-message"></span></td>
                 </tr>
                 <tr>
-                    <td>Password:</td>
+                    <td>New Password:</td>
                     <td>
-                        <input type="password" id="password" name="password" size="20" required onblur="validatePassword()">
+                        <input type="password" id="password" name="newPassword" size="20" required onblur="validatePassword()">
                     </td>
                 </tr>
                 <tr class="error-row" id="password-error" style="display: none;">
@@ -57,11 +57,22 @@
                     <td><span class="error-message" id="password-error-message"></span></td>
                 </tr>
                 <tr>
+                    <td>Secret Key:</td>
                     <td>
-                        <input type="submit" value="Sign in">
+                        <input type="password" id="secretKey" name="secretKey" size="20" required onblur="validateSecretKey()">
+                    </td>
+                </tr>
+                <tr class="error-row" id="secretKey-error" style="display: none;">
+                    <td></td>
+                    <td><span class="error-message" id="secretKey-error-message"></span></td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <input type="button" value="Sign in" onclick="location.href = 'login.jsp'">
                     </td>
                     <td>
-                        <input type="button" value="Forget Password" onclick="location.href = 'forgetPassword.jsp'">
+                        <input type="submit" value="Reset Password">
                     </td>
                 </tr>
             </table>

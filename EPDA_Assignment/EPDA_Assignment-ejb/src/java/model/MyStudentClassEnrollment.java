@@ -46,8 +46,16 @@ import javax.persistence.NamedQuery;
     @NamedQuery(
             name = "MyStudentClassEnrollment.deleteByEnrollmentID",
             query = "DELETE FROM MyStudentClassEnrollment e WHERE e.enrollmentID = :enrollmentID"
+    ),
+    @NamedQuery(
+            name = "MyStudentClassEnrollment.findStudentsNotInClass",
+            query = "SELECT u FROM MyUsers u "
+                  + "WHERE u.userID LIKE 'S%' "
+                  + "AND u.userID NOT IN ("
+                  + "  SELECT e.studentID FROM MyStudentClassEnrollment e "
+                  + "  WHERE e.classID = :classID"
+                  + ")"
     )
-
 })
 
 public class MyStudentClassEnrollment implements Serializable {

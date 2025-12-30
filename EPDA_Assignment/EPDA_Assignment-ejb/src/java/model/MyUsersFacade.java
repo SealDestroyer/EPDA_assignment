@@ -51,6 +51,12 @@ public class MyUsersFacade extends AbstractFacade<MyUsers> {
         Query q = em.createNamedQuery("MyUsers.findAcamdemicLeaders");
         return q.getResultList();
     }
+    
+    public List<MyUsers> findAdminsExcludingUser(String userID) {
+        Query q = em.createNamedQuery("MyUsers.findAdminsExcludingUser");
+        q.setParameter("userID", userID);
+        return q.getResultList();
+    }
 
     public Map<String, String> findUserNameMapByIds(List<String> ids) {
         Map<String, String> map = new HashMap<>();
@@ -81,6 +87,29 @@ public class MyUsersFacade extends AbstractFacade<MyUsers> {
         q.setParameter("userEmail", email);
         q.setParameter("userPassword", password);
         List<String> results = q.getResultList();
+        return results.isEmpty() ? null : results.get(0);
+    }
+    
+    public MyUsers findByEmailAndSecretKey(String email, Integer secretKey) {
+        Query q = em.createNamedQuery("MyUsers.findByEmailAndSecretKey");
+        q.setParameter("email", email);
+        q.setParameter("secretKey", secretKey);
+        List<MyUsers> results = q.getResultList();
+        return results.isEmpty() ? null : results.get(0);
+    }
+    
+    public void updatePasswordAndSecretKeyByEmail(String email, String password, Integer secretKey) {
+        Query q = em.createNamedQuery("MyUsers.updatePasswordAndSecretKeyByEmail");
+        q.setParameter("email", email);
+        q.setParameter("password", password);
+        q.setParameter("secretKey", secretKey);
+        q.executeUpdate();
+    }
+    
+    public MyUsers findByEmail(String email) {
+        Query q = em.createNamedQuery("MyUsers.findByEmail");
+        q.setParameter("email", email);
+        List<MyUsers> results = q.getResultList();
         return results.isEmpty() ? null : results.get(0);
     }
 }

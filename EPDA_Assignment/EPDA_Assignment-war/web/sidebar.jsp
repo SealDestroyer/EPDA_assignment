@@ -1,10 +1,45 @@
+<%@ page import="model.MyUsers" %>
+<%@ page import="model.MyAdminFacade" %>
+<%@ page import="model.MyAdmin" %>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.NamingException" %>
 <!-- Sidebar -->
 <div class="sidebar">
     <div class="sidebar-header">
-        <p>Welcome back, <strong>Administrator</strong></p>
+        <%
+            MyUsers user = (MyUsers) session.getAttribute("user");
+            String userName = "Guest";
+            String positionTitle = "";
+            
+            
+            if (user != null) {
+                userName = user.getFullName();
+                try {
+                    InitialContext ctx = new InitialContext();
+                    MyAdminFacade myAdminFacade = (MyAdminFacade) ctx.lookup("java:global/EPDA_Assignment/EPDA_Assignment-ejb/MyAdminFacade");
+                    if (myAdminFacade != null) {
+                        MyAdmin admin = myAdminFacade.findByUserId(user.getUserID());
+                        if (admin != null) {
+                            positionTitle = admin.getPositionTitle();
+                        }
+                    }
+                } catch (NamingException e) {
+                    userName = "EJB lookup failed: " + e.getMessage();
+                }
+            }
+            
+        %>
+        <p>Welcome back, <strong><%= userName %></strong></p>
     </div>
     
     <nav class="sidebar-nav">
+        <% if ("SuperAdmin".equals(positionTitle)) { %>
+        <a href="viewAdmin.jsp" class="nav-item">
+            <i class="fas fa-user-shield"></i>
+            <span>Admin</span>
+        </a>
+        <% } %>
+        <% if ("Admin".equals(positionTitle)) { %>
         <a href="viewStudent.jsp" class="nav-item">
             <i class="fas fa-user-graduate"></i>
             <span>Students</span>
@@ -29,6 +64,7 @@
             <i class="fas fa-file-alt"></i>
             <span>Reports</span>
         </a>
+        <% } %>
     </nav>
     
     <div class="sidebar-footer">

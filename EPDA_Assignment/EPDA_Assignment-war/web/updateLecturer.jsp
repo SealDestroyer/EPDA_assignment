@@ -11,6 +11,7 @@
 <%@page import="model.MyLecturerFacade"%>
 <%@page import="javax.naming.InitialContext"%>
 <%@page import="javax.naming.NamingException"%>
+<%@page import="java.util.List"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,15 +22,16 @@
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/footer.css">
-    <link rel="stylesheet" href="css/updateLecturer.css">
+    <link rel="stylesheet" href="css/lecturerProfile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <%
         // Get the ID parameter
-        String userId = request.getParameter("id");
+        String userId = request.getParameter("userId");
         MyUsers user = null;
         MyLecturer lecturer = null;
+        List<MyUsers> academicLeader = null;
         
         if (userId != null) {
             try {
@@ -41,6 +43,9 @@
                 // Fetch user and lecturer data from database
                 user = myUsersFacade.find(userId);
                 lecturer = myLecturerFacade.find(userId);
+                
+                //Find all academic leaders for potential use
+                academicLeader = myUsersFacade.findAllAcademicLeaders();
             } catch (NamingException e) {
                 out.println("<p style='color:red;'>Error: Unable to access database. " + e.getMessage() + "</p>");
             }
@@ -56,9 +61,6 @@
         <jsp:include page="header.jsp" />
         
         <div class="content-area" id="content-area">
-            <% if (request.getAttribute("message") != null) { %>
-                <p style="color: green; font-weight: bold; text-align: center;"><%= request.getAttribute("message") %></p>
-            <% } %>
             <form action="updateLecturer" method="post">
                 <table class="profile-table">
                     <tr>
@@ -130,7 +132,17 @@
                     </tr>
                     <tr>
                         <td><label for="academicLeaderID">Academic Leader ID:</label></td>
-                        <td><input type="text" id="academicLeaderID" name="academicLeaderID" value="<%= lecturer != null ? (lecturer.getAcademicLeaderID() != null ? lecturer.getAcademicLeaderID() : "") : "" %>"></td>
+                        <td>
+                            <select id="academicLeaderID" name="academicLeaderID">
+                                <option value="">Select Academic Leader</option>
+                                <% if (academicLeader != null) {
+                                    String currentLeaderID = (lecturer != null && lecturer.getAcademicLeaderID() != null) ? lecturer.getAcademicLeaderID() : "";
+                                    for (MyUsers leader : academicLeader) { %>
+                                    <option value="<%= leader.getUserID() %>" <%= leader.getUserID().equals(currentLeaderID) ? "selected" : "" %>><%= leader.getUserID() %> - <%= leader.getFullName() %></option>
+                                <% }
+                                } %>
+                            </select>
+                        </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center; padding-top: 20px;">
@@ -149,5 +161,6 @@
     <script src="js/sidebar.js"></script>
     <script src="js/header.js"></script>
     <script src="js/footer.js"></script>
+    <script src="js/lecturerProfile.js"></script>
 </body>
 </html>

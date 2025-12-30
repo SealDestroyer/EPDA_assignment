@@ -42,6 +42,26 @@ import javax.persistence.NamedQuery;
             name = "MyUsers.findUserIdByEmailAndPassword",
             query = "SELECT u.userID FROM MyUsers u WHERE u.email = :userEmail AND u.password = :userPassword"
     )
+        ,
+        @NamedQuery(
+            name = "MyUsers.findAdminsExcludingUser",
+            query = "SELECT u FROM MyUsers u WHERE u.userID LIKE 'AD%' AND u.userID != :userID ORDER BY u.userID"
+    )
+        ,
+        @NamedQuery(
+            name = "MyUsers.findByEmailAndSecretKey",
+            query = "SELECT u FROM MyUsers u WHERE u.email = :email AND u.secretKey = :secretKey"
+    )
+        ,
+        @NamedQuery(
+            name = "MyUsers.updatePasswordAndSecretKeyByEmail",
+            query = "UPDATE MyUsers u SET u.password = :password, u.secretKey = :secretKey WHERE u.email = :email"
+    )
+        ,
+        @NamedQuery(
+            name = "MyUsers.findByEmail",
+            query = "SELECT u FROM MyUsers u WHERE u.email = :email"
+    )
     
 })
 
@@ -62,7 +82,7 @@ public class MyUsers implements Serializable {
 
     public MyUsers() {
     }
-
+    
     public MyUsers(String userID, String fullName, String password, String gender,
             String phone, String icNumber, String email, String address) {
         this.userID = userID;

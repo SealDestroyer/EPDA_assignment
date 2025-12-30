@@ -1,41 +1,38 @@
 <%-- 
-    Document   : addLecturer
-    Created on : Dec 26, 2025, 1:41:14 PM
+    Document   : addAdmin
+    Created on : Dec 28, 2025, 9:16:31 PM
     Author     : bohch
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="javax.naming.InitialContext"%>
-<%@page import="model.MyUsersFacade"%>
-<%@page import="model.MyUsers"%>
-<%@page import="model.MyUserIDFacade"%>
-<%@page import="model.MyUserID"%>
-<%@page import="java.util.List"%>
+<%@ page import="model.MyUserIDFacade" %>
+<%@ page import="model.MyUserID" %>
+<%@ page import="java.util.List" %>
+<%@ page import="javax.naming.InitialContext" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Lecturer - Admin Dashboard</title>
+    <title>Add New Admin - Admin Dashboard</title>
     <link rel="stylesheet" href="css/adminDashboard.css">
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/footer.css">
-    <link rel="stylesheet" href="css/lecturerProfile.css">
+    <link rel="stylesheet" href="css/registerStudent.css">
+    <link rel="stylesheet" href="css/adminProfile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <%
         InitialContext ic = new InitialContext();
         MyUserIDFacade facade = (MyUserIDFacade) ic.lookup("java:global/EPDA_Assignment/EPDA_Assignment-ejb/MyUserIDFacade");
-        List<MyUserID> lecturerList = facade.findByL();
-        String currentLecturerID = lecturerList.get(0).getCurrentUserId();
-        Integer lecturerNumber= Integer.parseInt(currentLecturerID.substring(1)) + 1;
-        String newLecturerID = "L"+lecturerNumber;
-
-        MyUsersFacade userFacade = (MyUsersFacade) ic.lookup("java:global/EPDA_Assignment/EPDA_Assignment-ejb/MyUsersFacade");
-        List<MyUsers> academicLeader = userFacade.findAllAcademicLeaders();
+        List<MyUserID> adminList = facade.findByAD();
+        String currentAdminID = adminList.get(0).getCurrentUserId();
+        Integer adminNumber= Integer.parseInt(currentAdminID.substring(2)) + 1;
+        String newAdminID = "AD"+adminNumber;
     %>
+    
     <!-- Include Sidebar -->
     <jsp:include page="sidebar.jsp" />
     
@@ -45,16 +42,16 @@
         <jsp:include page="header.jsp" />
         
         <div class="content-area" id="content-area">
-            <form action="addLecturer" method="post" onsubmit="return validateForm()">
+            <form action="addAdmin" method="post" onsubmit="return validateForm()">
                 <table class="profile-table">
                     <tr>
                         <td colspan="2">
-                            <h2 class="form-title">ADD NEW LECTURER</h2>
+                            <h2 class="form-title">ADD ADMIN</h2>
                         </td>
                     </tr>
                     <tr>
                         <td><label for="userID">User ID:</label></td>
-                        <td><input type="text" id="userID" name="userID" value="<%= newLecturerID %>" readonly required></td>
+                        <td><input type="text" id="userID" name="userID" value="<%= newAdminID %>" readonly required></td>
                     </tr>
                     <tr>
                         <td><label for="fullName">Full Name:</label></td>
@@ -119,51 +116,8 @@
                         <td><span class="error-message" id="address-error-message"></span></td>
                     </tr>
                     <tr>
-                        <td><label for="employmentType">Employment Type:</label></td>
-                        <td>
-                            <select id="employmentType" name="employmentType" onblur="validateEmploymentType()" required>
-                                <option value="">Select Employment Type</option>
-                                <option value="Full-Time">Full-Time</option>
-                                <option value="Part-Time">Part-Time</option>
-                                <option value="Contract">Contract</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr class="error-row" id="employmentType-error" style="display: none;">
-                        <td></td>
-                        <td><span class="error-message" id="employmentType-error-message"></span></td>
-                    </tr>
-                    <tr>
-                        <td><label for="academicRank">Academic Rank:</label></td>
-                        <td>
-                            <select id="academicRank" name="academicRank" onblur="validateAcademicRank()" required>
-                                <option value="">Select Academic Rank</option>
-                                <option value="Professor">Professor</option>
-                                <option value="Associate Professor">Associate Professor</option>
-                                <option value="Assistant Professor">Assistant Professor</option>
-                                <option value="Lecturer">Lecturer</option>
-                                <option value="Senior Lecturer">Senior Lecturer</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr class="error-row" id="academicRank-error" style="display: none;">
-                        <td></td>
-                        <td><span class="error-message" id="academicRank-error-message"></span></td>
-                    </tr>
-                    <tr>
-                        <td><label for="academicLeaderID">Academic Leader ID:</label></td>
-                        <td>
-                            <select id="academicLeaderID" name="academicLeaderID">
-                                <option value="">Select Academic Leader</option>
-                                <% for (MyUsers leader : academicLeader) { %>
-                                    <option value="<%= leader.getUserID() %>"><%= leader.getUserID() %> - <%= leader.getFullName() %></option>
-                                <% } %>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
                         <td colspan="2" style="text-align: center; padding-top: 20px;">
-                            <button type="submit" class="btn-update">Add Lecturer</button>
+                            <button type="submit" class="btn-update">Add Admin</button>
                         </td>
                     </tr>
                 </table>
@@ -178,6 +132,6 @@
     <script src="js/sidebar.js"></script>
     <script src="js/header.js"></script>
     <script src="js/footer.js"></script>
-    <script src="js/lecturerProfile.js"></script>
+    <script src="js/adminProfile.js"></script>
 </body>
 </html>

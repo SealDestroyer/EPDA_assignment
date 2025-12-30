@@ -10,12 +10,19 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 /**
  *
  * @author bohch
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(name = "MyAdmin.findAll", query = "SELECT m FROM MyAdmin m WHERE m.userId != :userId"),
+    @NamedQuery(name = "MyAdmin.deleteByUserId", query = "DELETE FROM MyAdmin m WHERE m.userId = :userId"),
+    @NamedQuery(name = "MyAdmin.findByUserId", query = "SELECT m FROM MyAdmin m WHERE m.userId = :userId")
+    })
 public class MyAdmin implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -29,6 +36,14 @@ public class MyAdmin implements Serializable {
 
     public MyAdmin(String userId, String positionTitle) {
         this.userId = userId;
+        this.positionTitle = positionTitle;
+    }
+
+    public String getPositionTitle() {
+        return positionTitle;
+    }
+
+    public void setPositionTitle(String positionTitle) {
         this.positionTitle = positionTitle;
     }
 

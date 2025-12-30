@@ -13,8 +13,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.MyAcademicLeader;
-import model.MyAcademicLeaderFacade;
+import model.MyAdmin;
+import model.MyAdminFacade;
+import model.MyUserIDFacade;
 import model.MyUsers;
 import model.MyUsersFacade;
 
@@ -22,14 +23,17 @@ import model.MyUsersFacade;
  *
  * @author bohch
  */
-@WebServlet(name = "updateAcademicLeader", urlPatterns = {"/updateAcademicLeader"})
-public class updateAcademicLeader extends HttpServlet {
+@WebServlet(name = "addAdmin", urlPatterns = {"/addAdmin"})
+public class addAdmin extends HttpServlet {
+
+    @EJB
+    private MyUserIDFacade myUserIDFacade;
+
+    @EJB
+    private MyAdminFacade myAdminFacade;
 
     @EJB
     private MyUsersFacade myUsersFacade;
-
-    @EJB
-    private MyAcademicLeaderFacade myAcademicLeaderFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -44,8 +48,9 @@ public class updateAcademicLeader extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
             try {
-                // Retrieve form parameters from request
+                // Get parameters from JSP form
                 String userID = request.getParameter("userID");
                 String fullName = request.getParameter("fullName");
                 String password = request.getParameter("password");
@@ -54,100 +59,86 @@ public class updateAcademicLeader extends HttpServlet {
                 String icNumber = request.getParameter("icNumber");
                 String email = request.getParameter("email");
                 String address = request.getParameter("address");
-                String leaderRole = request.getParameter("leaderRole");
-                String startDate = request.getParameter("startDate");
-                String endDate = request.getParameter("endDate");
 
-                // Validate required fields are not null or empty
-                if (userID == null || userID.trim().isEmpty() ||
-                    fullName == null || fullName.trim().isEmpty() ||
-                    password == null || password.trim().isEmpty() ||
-                    gender == null || gender.trim().isEmpty() ||
-                    phone == null || phone.trim().isEmpty() ||
-                    icNumber == null || icNumber.trim().isEmpty() ||
-                    email == null || email.trim().isEmpty() ||
-                    address == null || address.trim().isEmpty() ||
-                    leaderRole == null || leaderRole.trim().isEmpty() ||
-                    startDate == null || startDate.trim().isEmpty()) {
-                    throw new IllegalArgumentException("All required fields must be filled!");
+                // Validate that all required fields are not null or empty
+                if (userID == null || userID.trim().isEmpty()
+                        || fullName == null || fullName.trim().isEmpty()
+                        || password == null || password.trim().isEmpty()
+                        || gender == null || gender.trim().isEmpty()
+                        || phone == null || phone.trim().isEmpty()
+                        || icNumber == null || icNumber.trim().isEmpty()
+                        || email == null || email.trim().isEmpty()
+                        || address == null || address.trim().isEmpty()) {
+                    throw new Exception("All fields are required!");
                 }
 
                 // Validate full name (minimum 3 characters, only letters and spaces)
                 if (fullName.trim().length() < 3 || !fullName.trim().matches("^[a-zA-Z\\s]+$")) {
-                    throw new IllegalArgumentException("Full name must be at least 3 characters and contain only letters!");
+                    throw new Exception("Full name must be at least 3 characters and contain only letters!");
                 }
 
-                // Validate password strength (min 8 chars, must contain uppercase, lowercase, and digit)
+                // Validate password (minimum 8 characters, must contain uppercase, lowercase, and digit)
                 if (password.length() < 8
                         || !password.matches(".*[a-z].*")
                         || !password.matches(".*[A-Z].*")
                         || !password.matches(".*\\d.*")) {
-                    throw new IllegalArgumentException("Password must be at least 8 characters with uppercase, lowercase, and number!");
+                    throw new Exception("Password must be at least 8 characters with uppercase, lowercase, and number!");
+                }
+
+                // Validate gender (must be Male or Female)
+                if (!gender.equals("Male") && !gender.equals("Female")) {
+                    throw new Exception("Invalid gender selection!");
                 }
 
                 // Validate phone number (must be exactly 10 digits)
                 if (!phone.matches("^[0-9]{10}$")) {
-                    throw new IllegalArgumentException("Phone number must be exactly 10 digits!");
+                    throw new Exception("Phone number must be exactly 10 digits!");
                 }
 
-                // Validate IC number format (12 digits, Malaysian format)
+                // Validate IC number format (12 digits, with or without hyphens)
                 String icDigits = icNumber.replace("-", "");
                 if (!icDigits.matches("^\\d{12}$")) {
-                    throw new IllegalArgumentException("IC number must be 12 digits!");
+                    throw new Exception("IC number must be 12 digits!");
                 }
 
                 // Validate IC date portion (YYMMDD)
                 int month = Integer.parseInt(icDigits.substring(2, 4));
                 int day = Integer.parseInt(icDigits.substring(4, 6));
                 if (month < 1 || month > 12 || day < 1 || day > 31) {
-                    throw new IllegalArgumentException("Invalid date in IC number!");
+                    throw new Exception("Invalid date in IC number!");
                 }
 
-                // Validate email format (must be APU email)
+                // Validate email format
                 if (!email.trim().matches("^[a-zA-Z0-9._-]+@apu\\.edu\\.my$")) {
-                    throw new IllegalArgumentException("Email must end with @apu.edu.my!");
+                    throw new Exception("Email must end with @apu.edu.my!");
                 }
 
                 // Validate address (minimum 10 characters)
                 if (address.trim().length() < 10) {
-                    throw new IllegalArgumentException("Address must be at least 10 characters!");
+                    throw new Exception("Address must be at least 10 characters!");
                 }
 
-                // Validate end date is after start date (if end date is provided)
-                if (endDate != null && !endDate.trim().isEmpty()) {
-                    if (endDate.compareTo(startDate) <= 0) {
-                        throw new IllegalArgumentException("End date must be after start date!");
-                    }
-                }
-
-                // Check if email already exists for a different user
+                // Check if email already exists in the database
                 MyUsers existingUser = myUsersFacade.findByEmail(email);
-                if (existingUser != null && !existingUser.getUserID().equals(userID)) {
-                    throw new IllegalArgumentException("Email already exists for another user!");
+                if (existingUser != null) {
+                    throw new Exception("Email already exists!");
                 }
 
-                // Find and update user record with validated data
-                MyUsers user = myUsersFacade.find(userID);
-                user.setFullName(fullName);
-                user.setPassword(password);
-                user.setGender(gender);
-                user.setPhone(phone);
-                user.setIcNumber(icNumber);
-                user.setEmail(email);
-                user.setAddress(address);
-                myUsersFacade.edit(user);
+                // Create and persist new user record in MyUsers table
+                MyUsers user = new MyUsers(userID, fullName, password, gender, phone, icNumber, email, address);
+                myUsersFacade.create(user);
 
-                // Find and update academic leader record
-                MyAcademicLeader academicLeader = myAcademicLeaderFacade.find(userID);
-                academicLeader.setLeaderRole(leaderRole);
-                academicLeader.setStartDate(startDate);
-                academicLeader.setEndDate(endDate);
-                myAcademicLeaderFacade.edit(academicLeader);
+                // Create and persist new admin record in MyAdmin table
+                MyAdmin admin = new MyAdmin(userID, "Admin");
+                myAdminFacade.create(admin);
 
-                // Display success message and redirect to view page
+                // Increase the Admin ID
+                myUserIDFacade.updateCurrentUserId(userID, "Admin");
+
+                // Display success message and redirect to view admin page
                 out.println("<script type='text/javascript'>");
-                out.println("alert('Academic Leader Updated Successfully!');");
-                out.println("window.location.href = 'viewAcademicLeaders.jsp';");
+                out.println("alert('Admin Added Successfully!');");
+                out.println("window.location.href = 'viewAdmin.jsp';");
                 out.println("</script>");
             } catch (Exception e) {
                 // Handle any unexpected errors and return to form
@@ -156,7 +147,6 @@ public class updateAcademicLeader extends HttpServlet {
                 out.println("window.history.back();");
                 out.println("</script>");
             }
-
         }
     }
 

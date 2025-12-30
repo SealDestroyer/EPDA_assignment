@@ -32,4 +32,27 @@ public class MyUserIDFacade extends AbstractFacade<MyUserID> {
         return em.createNamedQuery("MyUserID.count", Long.class).getSingleResult();
     }
     
+    public java.util.List<MyUserID> findByAD() {
+        return em.createNamedQuery("MyUserID.findByAD", MyUserID.class).getResultList();
+    }
+    
+    public java.util.List<MyUserID> findByAL() {
+        return em.createNamedQuery("MyUserID.findByAL", MyUserID.class).getResultList();
+    }
+    
+    public java.util.List<MyUserID> findByL() {
+        return em.createNamedQuery("MyUserID.findByL", MyUserID.class).getResultList();
+    }
+    
+    public java.util.List<MyUserID> findByS() {
+        return em.createNamedQuery("MyUserID.findByS", MyUserID.class).getResultList();
+    }
+    
+    public void updateCurrentUserId(String currentUserId, String userType) {
+        em.createNamedQuery("MyUserID.updateCurrentUserId")
+                .setParameter("currentUserId", currentUserId)
+                .setParameter("userType", userType)
+                .executeUpdate();
+    }
+    
 }

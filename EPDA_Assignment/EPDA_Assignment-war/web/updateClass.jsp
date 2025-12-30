@@ -9,6 +9,9 @@
 <%@page import="model.MyStudentClassFacade"%>
 <%@page import="javax.naming.InitialContext"%>
 <%@page import="javax.naming.NamingException"%>
+<%@page import="java.util.List"%>
+<%@page import="model.MyUsers"%>
+<%@page import="model.MyUsersFacade"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,19 +22,22 @@
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/footer.css">
-    <link rel="stylesheet" href="css/updateClass.css">
+    <link rel="stylesheet" href="css/classProfile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <%
         // Get the ID parameter
-        String classId = request.getParameter("id");
+        String classId = request.getParameter("classId");
         MyStudentClass myClass = null;
+        
+        InitialContext ic = new InitialContext();
+        MyUsersFacade userFacade = (MyUsersFacade) ic.lookup("java:global/EPDA_Assignment/EPDA_Assignment-ejb/MyUsersFacade");
+        List<MyUsers> academicLeader = userFacade.findAllAcademicLeaders();
         
         if (classId != null) {
             try {
                 // Lookup the EJB facade
-                InitialContext ic = new InitialContext();
                 MyStudentClassFacade myClassFacade = (MyStudentClassFacade) ic.lookup("java:global/EPDA_Assignment/EPDA_Assignment-ejb/MyStudentClassFacade");
                 
                 // Fetch class data from database
@@ -54,10 +60,7 @@
         <jsp:include page="header.jsp" />
         
         <div class="content-area" id="content-area">
-            <% if (request.getAttribute("message") != null) { %>
-                <p style="color: green; font-weight: bold; text-align: center;"><%= request.getAttribute("message") %></p>
-            <% } %>
-            <form action="updateClass" method="post">
+            <form action="updateClass" method="post" onsubmit="return validateForm()">
                 <table class="profile-table">
                     <tr>
                         <td colspan="2">
@@ -70,19 +73,43 @@
                     </tr>
                     <tr>
                         <td><label for="className">Class Name:</label></td>
-                        <td><input type="text" id="className" name="className" value="<%= myClass != null ? myClass.getClassName() : "" %>" required></td>
+                        <td><input type="text" id="className" name="className" value="<%= myClass != null ? myClass.getClassName() : "" %>" onblur="validateClassName()" required></td>
+                    </tr>
+                    <tr class="error-row" id="className-error" style="display: none;">
+                        <td></td>
+                        <td><span class="error-message" id="className-error-message"></span></td>
                     </tr>
                     <tr>
                         <td><label for="semester">Semester:</label></td>
-                        <td><input type="text" id="semester" name="semester" value="<%= myClass != null ? myClass.getSemester() : "" %>" required></td>
+                        <td><input type="text" id="semester" name="semester" value="<%= myClass != null ? myClass.getSemester() : "" %>" onblur="validateSemester()" required></td>
+                    </tr>
+                    <tr class="error-row" id="semester-error" style="display: none;">
+                        <td></td>
+                        <td><span class="error-message" id="semester-error-message"></span></td>
                     </tr>
                     <tr>
                         <td><label for="academicYear">Academic Year:</label></td>
-                        <td><input type="text" id="academicYear" name="academicYear" value="<%= myClass != null ? myClass.getAcademicYear() : "" %>" required></td>
+                        <td><input type="text" id="academicYear" name="academicYear" value="<%= myClass != null ? myClass.getAcademicYear() : "" %>" onblur="validateAcademicYear()" required></td>
+                    </tr>
+                    <tr class="error-row" id="academicYear-error" style="display: none;">
+                        <td></td>
+                        <td><span class="error-message" id="academicYear-error-message"></span></td>
                     </tr>
                     <tr>
                         <td><label for="assignedAcademicLeaderID">Assigned Academic Leader ID:</label></td>
-                        <td><input type="text" id="assignedAcademicLeaderID" name="assignedAcademicLeaderID" value="<%= myClass != null ? myClass.getAssignedAcademicLeaderID() : "" %>" required></td>
+                        <td>
+                            <select id="assignedAcademicLeaderID" name="assignedAcademicLeaderID" onblur="validateAcademicLeader()" required>
+                                <option value="">Select Academic Leader</option>
+                                <% for (MyUsers leader : academicLeader) { %>
+                                    <option value="<%= leader.getUserID() %>" <%= myClass != null && myClass.getAssignedAcademicLeaderID().equals(leader.getUserID()) ? "selected" : "" %>><%= leader.getUserID() %> - <%= leader.getFullName() %></option>
+                                <% } %>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr class="error-row" id="assignedAcademicLeaderID-error" style="display: none;">
+    <script src="js/classProfile.js"></script>
+                        <td></td>
+                        <td><span class="error-message" id="assignedAcademicLeaderID-error-message"></span></td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center; padding-top: 20px;">

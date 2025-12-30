@@ -1,6 +1,6 @@
 <%-- 
-    Document   : viewClassStudent
-    Created on : Dec 26, 2025, 10:55:53 PM
+    Document   : viewAdmin
+    Created on : Dec 28, 2025, 6:42:52 PM
     Author     : bohch
 --%>
 
@@ -10,11 +10,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Class Students - Admin Dashboard</title>
+    <title>View Admins - Admin Dashboard</title>
     <link rel="stylesheet" href="css/adminDashboard.css">
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/viewAdmin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -28,8 +29,8 @@
         
         <div class="content-area" id="content-area">
             <div class="welcome-message">
-                <h2>View Class Students</h2>
-                <jsp:include page="/viewClassStudent" />
+                <h2>View Admins</h2>
+                <jsp:include page="/viewAdmin" />
             </div>
         </div>
         
@@ -41,5 +42,6 @@
     <script src="js/sidebar.js"></script>
     <script src="js/header.js"></script>
     <script src="js/footer.js"></script>
+    <script src="js/viewAdmin.js"></script>
 </body>
 </html>

@@ -39,29 +39,77 @@ public class updateClass extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            // Get parameters from JSP form
             try {
+                // Retrieve form parameters from the request
                 String classId = request.getParameter("classId");
                 String className = request.getParameter("className");
                 String semester = request.getParameter("semester");
                 String academicYear = request.getParameter("academicYear");
                 String assignedAcademicLeaderID = request.getParameter("assignedAcademicLeaderID");
 
-                //Find and Update Class Record
+                // Validate that class ID is present
+                if (classId == null || classId.trim().isEmpty()) {
+                    throw new IllegalArgumentException("Class ID is required");
+                }
+
+                // Validate that all required fields are present and not empty
+                if (className == null || className.trim().isEmpty()) {
+                    throw new IllegalArgumentException("Class name is required");
+                }
+                if (semester == null || semester.trim().isEmpty()) {
+                    throw new IllegalArgumentException("Semester is required");
+                }
+                if (academicYear == null || academicYear.trim().isEmpty()) {
+                    throw new IllegalArgumentException("Academic year is required");
+                }
+                if (assignedAcademicLeaderID == null || assignedAcademicLeaderID.trim().isEmpty()) {
+                    throw new IllegalArgumentException("Assigned Academic Leader ID is required");
+                }
+
+                // Validate class name length
+                if (className.trim().length() < 2 || className.trim().length() > 50) {
+                    throw new IllegalArgumentException("Class name must be between 2 and 50 characters");
+                }
+
+                // Validate semester format (must be 1, 2, or 3)
+                if (!semester.trim().matches("^[1-3]$")) {
+                    throw new IllegalArgumentException("Semester must be 1, 2, or 3");
+                }
+
+                // Validate academic year format (must be YYYY/YYYY)
+                if (!academicYear.trim().matches("^20\\d{2}/20\\d{2}$")) {
+                    throw new IllegalArgumentException("Academic year must be in format YYYY/YYYY (e.g., 2024/2025)");
+                }
+
+                // Validate that the second year is exactly one year after the first
+                String[] years = academicYear.trim().split("/");
+                int firstYear = Integer.parseInt(years[0]);
+                int secondYear = Integer.parseInt(years[1]);
+                if (secondYear != firstYear + 1) {
+                    throw new IllegalArgumentException("Second year must be exactly one year after the first year");
+                }
+
+                // Find and update class record with validated data
                 MyStudentClass myClass = myStudentClassFacade.find(Integer.parseInt(classId));
-                myClass.setClassName(className);
-                myClass.setSemester(semester);
-                myClass.setAcademicYear(academicYear);
-                myClass.setAssignedAcademicLeaderID(assignedAcademicLeaderID);
+                myClass.setClassName(className.trim());
+                myClass.setSemester(semester.trim());
+                myClass.setAcademicYear(academicYear.trim());
+                myClass.setAssignedAcademicLeaderID(assignedAcademicLeaderID.trim());
+                
+                // Persist the updated class to the database
                 myStudentClassFacade.edit(myClass);
 
-                request.setAttribute("message", "Update Successfully!");
-                request.getRequestDispatcher("viewClass.jsp").forward(request, response);
-                out.println("<br><br><br>Update Success!");
+                // Display success message and redirect to viewClass.jsp after successful update
+                out.println("<script type='text/javascript'>");
+                out.println("alert('Class Updated Successfully!');");
+                out.println("window.location.href = 'viewClass.jsp';");
+                out.println("</script>");
             } catch (Exception e) {
-                request.getRequestDispatcher("viewClass.jsp").forward(request, response);
-                out.println("<br><br><br>Invalid Input!");
+                // Display error message and return to the form for user correction
+                out.println("<script type='text/javascript'>");
+                out.println("alert('Error: " + e.getMessage().replace("'", "\\'") + "');");
+                out.println("window.history.back();");
+                out.println("</script>");
             }
         }
     }

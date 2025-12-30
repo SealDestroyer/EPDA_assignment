@@ -53,16 +53,28 @@ public class viewClassStudent extends HttpServlet {
             
             Integer classID = Integer.parseInt(classIdParam);
             
+            // Get search query parameter
+            String searchQuery = request.getParameter("search");
+            if (searchQuery == null) {
+                searchQuery = "";
+            }
+            searchQuery = searchQuery.trim().toLowerCase();
+            
             //Retrieve List of Student Enrollment Records for the specific class
             List<MyStudentClassEnrollment> studentClassEnrollmentList = myStudentClassEnrollmentFacade.findClassStudent(classID);
             
-            // Add Back button
-            out.println("<div style='margin-bottom: 20px;'>");
-            out.println("<button type='button' onclick=\"location.href='viewClass'\" style='padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; margin-right: 10px;'>Back to Classes</button>");
-            out.println("<button type='button' onclick=\"location.href='addClassStudent.jsp?classID=" + classID + "'\" style='padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;'>Add New Student</button>");
+            // Add search bar
+            out.println("<div class='search-container'>");
+            out.println("<form method='GET' action='viewClassStudent' class='search-form'>");
+            out.println("<input type='hidden' name='classId' value='" + classID + "' />");
+            out.println("<input type='text' name='search' id='searchInput' placeholder='Search by student ID...' ");
+            out.println("value='" + (request.getParameter("search") != null ? request.getParameter("search") : "") + "' ");
+            out.println("class='search-input' />");
+            out.println("<button type='submit' class='btn-search'>Search</button>");
+            out.println("<button type='button' onclick='window.location.href=\"viewClassStudent?classId=" + classID + "\"' class='btn-clear'>Clear</button>");
+            out.println("</form>");
+            out.println("<button type='button' onclick=\"location.href='addClassStudent.jsp?classID=" + classID + "'\" class='btn-add'>Add New Student</button>");
             out.println("</div>");
-            
-            out.println("<h2>Student Enrollment Records for Class ID: " + classID + "</h2>");
             
             // Display enrollment records in table form
             out.println("<table border='1' cellpadding='10' cellspacing='0' style='border-collapse: collapse; width: 100%;'>");
@@ -83,13 +95,23 @@ public class viewClassStudent extends HttpServlet {
                 out.println("</tr>");
             } else {
                 for (MyStudentClassEnrollment enrollment : studentClassEnrollmentList) {
+                    // Apply search filter
+                    if (!searchQuery.isEmpty()) {
+                        String studentID = String.valueOf(enrollment.getStudentID()).toLowerCase();
+                        
+                        // Skip this record if it doesn't match the search query
+                        if (!studentID.contains(searchQuery)) {
+                            continue;
+                        }
+                    }
+                    
                     out.println("<tr>");
                     out.println("<td>" + enrollment.getEnrollmentID() + "</td>");
                     out.println("<td>" + enrollment.getClassID() + "</td>");
                     out.println("<td>" + enrollment.getEnrollmentDate() + "</td>");
                     out.println("<td>" + enrollment.getStudentID() + "</td>");
                     out.println("<td>");
-                    out.println("<button type='button' onclick=\"if(confirm('Are you sure you want to remove this student from the class?')) { location.href='removeClassStudent?enrollmentID=" + enrollment.getEnrollmentID() + "&classID=" + enrollment.getClassID() + "'; }\" style='padding: 5px 15px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;'>Remove</button>");
+                    out.println("<button type='button' class='btn-delete' onclick=\"if(confirm('Are you sure you want to remove this student from the class?')) { location.href='removeClassStudent?enrollmentID=" + enrollment.getEnrollmentID() + "&classID=" + enrollment.getClassID() + "'; }\">Remove</button>");
                     out.println("</td>");
                     out.println("</tr>");
                 }

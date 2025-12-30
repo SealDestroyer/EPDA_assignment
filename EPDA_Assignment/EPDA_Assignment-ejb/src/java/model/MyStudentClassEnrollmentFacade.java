@@ -59,5 +59,11 @@ public class MyStudentClassEnrollmentFacade extends AbstractFacade<MyStudentClas
         q.setParameter("enrollmentID", enrollmentID);
         return q.executeUpdate();
     }
+    
+    public List<MyUsers> findStudentsNotInClass(Integer classID) {
+        Query q = em.createNamedQuery("MyStudentClassEnrollment.findStudentsNotInClass");
+        q.setParameter("classID", classID);
+        return q.getResultList();
+    }
 
 }
