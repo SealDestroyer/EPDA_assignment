@@ -5,6 +5,7 @@
  */
 package model;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -112,4 +113,34 @@ public class MyUsersFacade extends AbstractFacade<MyUsers> {
         List<MyUsers> results = q.getResultList();
         return results.isEmpty() ? null : results.get(0);
     }
+    
+    public Long findAllLecturersWithDateRange(Timestamp startDate, Timestamp endDate) {
+        Query q = em.createNamedQuery("MyUsers.findAllLecturersWithDateRange");
+        q.setParameter("startDate", startDate);
+        q.setParameter("endDate", endDate);
+        return (Long) q.getSingleResult();
+    }
+    
+    public Long findAllStudentsWithDateRange(Timestamp startDate, Timestamp endDate) {
+        Query q = em.createNamedQuery("MyUsers.findAllStudentsWithDateRange");
+        q.setParameter("startDate", startDate);
+        q.setParameter("endDate", endDate);
+        return (Long) q.getSingleResult();
+    }
+    
+    public Long findAllAcademicsLeaderWithDateRange(Timestamp startDate, Timestamp endDate) {
+        Query q = em.createNamedQuery("MyUsers.findAllAcademicsLeaderWithDateRange");
+        q.setParameter("startDate", startDate);
+        q.setParameter("endDate", endDate);
+        return (Long) q.getSingleResult();
+    }
+    
+    public Long findAllAdminsWithDateRange(Timestamp startDate, Timestamp endDate) {
+        Query q = em.createNamedQuery("MyUsers.findAllAdminsWithDateRange");
+        q.setParameter("startDate", startDate);
+        q.setParameter("endDate", endDate);
+        return (Long) q.getSingleResult();
+    }
+    
+    
 }

@@ -1,6 +1,7 @@
 package model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
@@ -12,6 +13,11 @@ import javax.persistence.NamedQuery;
             name = "MyUsers.findLecturers",
             query = "SELECT u FROM MyUsers u WHERE u.userID LIKE 'L%' ORDER BY u.userID"
     )
+,
+    @NamedQuery(
+            name = "MyUsers.findAllLecturersWithDateRange",
+            query = "SELECT COUNT(u) FROM MyUsers u WHERE u.userID LIKE 'L%' AND u.registrationDateTime BETWEEN :startDate AND :endDate"
+    )
     ,
         @NamedQuery(
             name = "MyUsers.findByUserIds",
@@ -21,11 +27,15 @@ import javax.persistence.NamedQuery;
         @NamedQuery(
             name = "MyUsers.findAllUsers",
             query = "SELECT u FROM MyUsers u"
-    )
-    ,
+    ),
     @NamedQuery(
             name = "MyUsers.findAllStudents",
             query = "SELECT u FROM MyUsers u WHERE u.userID LIKE 'S%' ORDER BY u.userID"
+    )
+        ,
+        @NamedQuery(
+            name = "MyUsers.findAllStudentsWithDateRange",
+            query = "SELECT COUNT(u) FROM MyUsers u WHERE u.userID LIKE 'S%' AND u.registrationDateTime BETWEEN :startDate AND :endDate"
     )
         ,
         @NamedQuery(
@@ -33,6 +43,10 @@ import javax.persistence.NamedQuery;
             query = "SELECT u FROM MyUsers u WHERE u.userID LIKE 'AL%' ORDER BY u.userID"
     )
         ,
+        @NamedQuery(
+            name = "MyUsers.findAllAcademicsLeaderWithDateRange",
+            query = "SELECT COUNT(u) FROM MyUsers u WHERE u.userID LIKE 'AL%' AND u.registrationDateTime BETWEEN :startDate AND :endDate"
+    ),
         @NamedQuery(
             name = "MyUsers.deleteByUserId",
             query = "DELETE FROM MyUsers u WHERE u.userID = :userID"
@@ -62,7 +76,11 @@ import javax.persistence.NamedQuery;
             name = "MyUsers.findByEmail",
             query = "SELECT u FROM MyUsers u WHERE u.email = :email"
     )
-    
+        ,
+        @NamedQuery(
+            name = "MyUsers.findAllAdminsWithDateRange",
+            query = "SELECT COUNT(u) FROM MyUsers u WHERE u.userID LIKE 'AD%' AND u.registrationDateTime BETWEEN :startDate AND :endDate"
+    )
 })
 
 public class MyUsers implements Serializable {
@@ -79,6 +97,7 @@ public class MyUsers implements Serializable {
     private String email;
     private String address;
     private Integer secretKey;
+    private Timestamp registrationDateTime;
 
     public MyUsers() {
     }
@@ -94,6 +113,7 @@ public class MyUsers implements Serializable {
         this.email = email;
         this.address = address;
         this.secretKey = (int) (Math.random() * 900000) + 100000;
+        this.registrationDateTime = new Timestamp(System.currentTimeMillis());
     }
 
     public String getUserID() {
@@ -166,6 +186,14 @@ public class MyUsers implements Serializable {
 
     public void setSecretKey(Integer secretKey) {
         this.secretKey = secretKey;
+    }
+
+    public Timestamp getRegistrationDateTime() {
+        return registrationDateTime;
+    }
+
+    public void setRegistrationDateTime(Timestamp registrationDateTime) {
+        this.registrationDateTime = registrationDateTime;
     }
 
     @Override

@@ -92,7 +92,8 @@ table tbody tr:hover {
 }
 
 /* Button Styles */
-.btn-edit {
+.btn-edit,
+.btn-generate {
     background-color: #2196F3;
     color: white;
     border: none;
@@ -107,11 +108,13 @@ table tbody tr:hover {
     min-width: 100px;
 }
 
-.btn-edit:hover {
+.btn-edit:hover,
+.btn-generate:hover {
     background-color: #1976D2;
 }
 
-.btn-edit:active {
+.btn-edit:active,
+.btn-generate:active {
     background-color: #1565C0;
     transform: translateY(1px);
 }
