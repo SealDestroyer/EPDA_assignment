@@ -1,15 +1,16 @@
 <%-- 
-    Document   : gradingSchemeReport
+    Document   : academicLeaderWorkloadReport
     Created on : Dec 30, 2025, 8:56:04 PM
     Author     : bohch
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.util.List"%>
 <!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Grading Scheme Report</title>
+    <title>Academic Leader Workload Report</title>
     <link rel="stylesheet" href="css/adminDashboard.css">
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/header.css">
@@ -17,20 +18,32 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
-        google.charts.load('current', {'packages':['corechart', 'bar']});
-        google.charts.setOnLoadCallback(drawChart);
+        google.charts.load('current', {packages: ['corechart', 'bar']});
+        google.charts.setOnLoadCallback(drawBasic);
 
-        function drawChart() {
-            var data = google.visualization.arrayToDataTable([
-                ['Grade', 'Min Percentage', { role: 'annotation' }, 'Max Percentage', { role: 'annotation' }],
+        function drawBasic() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Academic Leader');
+            data.addColumn('number', 'Number of Lecturers');
+
+            data.addRows([
                 <%= request.getAttribute("chartData") %>
             ]);
 
             var options = {
-                title: 'Grading Scheme - Percentage Ranges'
+                chartArea: {width: '50%'},
+                hAxis: {
+                    title: 'Academic Leader'
+                },
+                vAxis: {
+                    title: 'Number of Lecturers',
+                    minValue: 0
+                }
             };
 
-            var chart = new google.visualization.BarChart(document.getElementById('barchart'));
+            var chart = new google.visualization.ColumnChart(
+                document.getElementById('chart_div'));
+
             chart.draw(data, options);
         }
     </script>
@@ -46,9 +59,9 @@
 
         <div class="content-area" id="content-area">
             <div class="welcome-message">
-                <h2>Grading Scheme Report</h2>
+                <h2>Academic Leader Workload Report</h2>
                 <p><strong>Generated on:</strong> <%= request.getAttribute("generatedDateTime") %></p>
-                <div id="barchart" style="width: 100%; height: 500px;"></div>
+                <div id="chart_div" style="width: 100%; height: 500px;"></div>
             </div>
         </div>
 

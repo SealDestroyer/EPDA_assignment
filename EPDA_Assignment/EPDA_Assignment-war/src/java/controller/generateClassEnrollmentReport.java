@@ -43,87 +43,53 @@ public class generateClassEnrollmentReport extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            // Get current date and time
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            String generatedDateTime = dateFormat.format(new Date());
-            
-            // Get parameters from JSP form
-            String reportId = request.getParameter("reportId");
-            String reportName = request.getParameter("reportName");
-            String startDate = request.getParameter("startDate");
-            String endDate = request.getParameter("endDate");
+        // Get current date and time
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        String generatedDateTime = dateFormat.format(new Date());
+        
+        // Get parameters from JSP form
+        String reportId = request.getParameter("reportId");
+        String reportName = request.getParameter("reportName");
+        String startDate = request.getParameter("startDate");
+        String endDate = request.getParameter("endDate");
 
-            // Convert string dates to Timestamp
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDateTime startDateTime = LocalDate.parse(startDate, formatter).atStartOfDay();
-            LocalDateTime endDateTime = LocalDate.parse(endDate, formatter).atTime(23, 59, 59);
-            
-            Timestamp startTimestamp = Timestamp.valueOf(startDateTime);
-            Timestamp endTimestamp = Timestamp.valueOf(endDateTime);
+        // Convert string dates to Timestamp
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime startDateTime = LocalDate.parse(startDate, formatter).atStartOfDay();
+        LocalDateTime endDateTime = LocalDate.parse(endDate, formatter).atTime(23, 59, 59);
+        
+        Timestamp startTimestamp = Timestamp.valueOf(startDateTime);
+        Timestamp endTimestamp = Timestamp.valueOf(endDateTime);
 
-            // Find users from database
-            List<Object[]> enrollmentData = myStudentClassEnrollmentFacade.countByClassIDAndDateRange(startTimestamp, endTimestamp);
+        // Find users from database
+        List<Object[]> enrollmentData = myStudentClassEnrollmentFacade.countByClassIDAndDateRange(startTimestamp, endTimestamp);
 
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Class Enrollment Report</title>");
-            out.println("    <script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>");
-            out.println("    <script type=\"text/javascript\">");
-            out.println("      google.charts.load('current', {'packages':['corechart', 'bar']});");
-            out.println("      google.charts.setOnLoadCallback(drawBasic);");
-            out.println("");
-            out.println("      function drawBasic() {");
-            out.println("");
-            boolean hasData = enrollmentData != null && !enrollmentData.isEmpty();
-
-            out.println("        var data = new google.visualization.DataTable();");
-            out.println("        data.addColumn('string', 'Class ID');");
-            out.println("        data.addColumn('number', 'Enrollment Count');");
-            out.println("        data.addRows([");
-
-            // Iterate through enrollmentData to populate chart
-            if (hasData) {
-                for (Object[] row : enrollmentData) {
-                    String classId = row[0].toString();
-                    Number count = (Number) row[1];
-                    out.println("          ['" + classId + "', " + count.longValue() + "],");
+        boolean hasData = enrollmentData != null && !enrollmentData.isEmpty();
+        
+        // Build chart data as JavaScript array
+        StringBuilder chartData = new StringBuilder();
+        if (hasData) {
+            for (int i = 0; i < enrollmentData.size(); i++) {
+                Object[] row = enrollmentData.get(i);
+                String classId = row[0].toString();
+                Number count = (Number) row[1];
+                chartData.append("['").append(classId).append("', ").append(count.longValue()).append("]");
+                if (i < enrollmentData.size() - 1) {
+                    chartData.append(",\n                ");
                 }
             }
-
-            out.println("        ]);");
-            out.println("        var hasData = " + hasData + ";");
-            out.println("        if (!hasData) {");
-            out.println("          document.getElementById('chart_div').innerHTML = 'No enrollment data found for the selected range.';");
-            out.println("          return;");
-            out.println("        }");
-            out.println("");
-            out.println("        var options = {");
-            out.println("          chartArea: {width: '50%'},");
-            out.println("          hAxis: {");
-            out.println("            title: 'Enrollment Count',");
-            out.println("            minValue: 0");
-            out.println("          },");
-            out.println("          vAxis: {");
-            out.println("            title: 'Class ID'");
-            out.println("          }");
-            out.println("        };");
-            out.println("");
-            out.println("        var chart = new google.visualization.BarChart(document.getElementById('chart_div'));");
-            out.println("");
-            out.println("        chart.draw(data, options);");
-            out.println("      }");
-            out.println("    </script>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h2>" + reportName + " (" + startDate + " to " + endDate + ")</h2>");
-            out.println("<p><strong>Generated on:</strong> " + generatedDateTime + "</p>");
-            out.println("<div id=\"chart_div\" style=\"width: 900px; height: 500px;\"></div>");
-            out.println("</body>");
-            out.println("</html>");
         }
+        
+        // Set attributes for JSP
+        request.setAttribute("generatedDateTime", generatedDateTime);
+        request.setAttribute("reportName", reportName);
+        request.setAttribute("startDate", startDate);
+        request.setAttribute("endDate", endDate);
+        request.setAttribute("hasData", hasData);
+        request.setAttribute("chartData", chartData.toString());
+        
+        // Forward to JSP
+        request.getRequestDispatcher("classEnrollmentReport.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

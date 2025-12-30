@@ -40,64 +40,42 @@ public class generateGradingSchemeReport extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+        // Get current date and time
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        String generatedDateTime = dateFormat.format(new Date());
         
-        try (PrintWriter out = response.getWriter()) {
-            // Get current date and time
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            String generatedDateTime = dateFormat.format(new Date());
-            
-            // Fetch all grading data from database
-            List<MyGrading> gradingList = myGradingFacade.findAll();
+        // Fetch all grading data from database
+        List<MyGrading> gradingList = myGradingFacade.findAll();
 
-            out.println("<html>");
-            out.println("  <head>");
-            out.println("    <script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>");
-            out.println("    <script type=\"text/javascript\">");
-            out.println("      google.charts.load('current', {'packages':['corechart', 'bar']});");
-            out.println("      google.charts.setOnLoadCallback(drawChart);");
-            out.println("");
-            out.println("      function drawChart() {");
-            out.println("");
-            out.println("        var data = google.visualization.arrayToDataTable([");
-            out.println("          ['Grade', 'Min Percentage', { role: 'annotation' }, 'Max Percentage', { role: 'annotation' }],");
-            
-            // Add data points
-            if (gradingList != null && !gradingList.isEmpty()) {
-                for (int i = 0; i < gradingList.size(); i++) {
-                    MyGrading grade = gradingList.get(i);
-                    out.print("          ['Grade " + grade.getGradeLetter() + "', " 
-                        + grade.getMinPercentage() + ", '" 
-                        + grade.getMinPercentage() + "%', " 
-                        + grade.getMaxPercentage() + ", '" 
-                        + grade.getMaxPercentage() + "%']");
-                    if (i < gradingList.size() - 1) {
-                        out.println(",");
-                    } else {
-                        out.println();
-                    }
+        // Build chart data as JavaScript array
+        StringBuilder chartData = new StringBuilder();
+        boolean hasData = false;
+        
+        if (gradingList != null && !gradingList.isEmpty()) {
+            hasData = true;
+            for (int i = 0; i < gradingList.size(); i++) {
+                MyGrading grade = gradingList.get(i);
+                chartData.append("['Grade ").append(grade.getGradeLetter()).append("', ")
+                    .append(grade.getMinPercentage()).append(", '")
+                    .append(grade.getMinPercentage()).append("%', ")
+                    .append(grade.getMaxPercentage()).append(", '")
+                    .append(grade.getMaxPercentage()).append("%']");
+                if (i < gradingList.size() - 1) {
+                    chartData.append(",\n                ");
                 }
             }
-            
-            out.println("        ]);");
-            out.println("");
-            out.println("        var options = {");
-            out.println("          title: 'Grading Scheme - Percentage Ranges'");
-            out.println("        };");
-            out.println("");
-            out.println("        var chart = new google.visualization.BarChart(document.getElementById('barchart'));");
-            out.println("");
-            out.println("        chart.draw(data, options);");
-            out.println("      }");
-            out.println("    </script>");
-            out.println("  </head>");
-            out.println("  <body>");
-            out.println("    <h2>Grading Scheme Report</h2>");
-            out.println("    <p><strong>Generated on:</strong> " + generatedDateTime + "</p>");
-            out.println("    <div id=\"barchart\" style=\"width: 900px; height: 500px;\"></div>");
-            out.println("  </body>");
-            out.println("</html>");
+        } else {
+            // Provide placeholder data when no grading schemes exist
+            chartData.append("['No Data', 0, '0%', 0, '0%']");
         }
+        
+        // Set attributes for JSP
+        request.setAttribute("generatedDateTime", generatedDateTime);
+        request.setAttribute("chartData", chartData.toString());
+        request.setAttribute("hasData", hasData);
+        
+        // Forward to JSP
+        request.getRequestDispatcher("gradingSchemeReport.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

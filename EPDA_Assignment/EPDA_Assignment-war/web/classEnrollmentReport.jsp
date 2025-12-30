@@ -1,5 +1,5 @@
 <%-- 
-    Document   : gradingSchemeReport
+    Document   : classEnrollmentReport
     Created on : Dec 30, 2025, 8:56:04 PM
     Author     : bohch
 --%>
@@ -9,7 +9,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Grading Scheme Report</title>
+    <title>Class Enrollment Report</title>
     <link rel="stylesheet" href="css/adminDashboard.css">
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/header.css">
@@ -18,19 +18,35 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
         google.charts.load('current', {'packages':['corechart', 'bar']});
-        google.charts.setOnLoadCallback(drawChart);
+        google.charts.setOnLoadCallback(drawBasic);
 
-        function drawChart() {
-            var data = google.visualization.arrayToDataTable([
-                ['Grade', 'Min Percentage', { role: 'annotation' }, 'Max Percentage', { role: 'annotation' }],
+        function drawBasic() {
+            var hasData = <%= request.getAttribute("hasData") %>;
+            
+            if (!hasData) {
+                document.getElementById('chart_div').innerHTML = 'No enrollment data found for the selected range.';
+                return;
+            }
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Class ID');
+            data.addColumn('number', 'Enrollment Count');
+            data.addRows([
                 <%= request.getAttribute("chartData") %>
             ]);
 
             var options = {
-                title: 'Grading Scheme - Percentage Ranges'
+                chartArea: {width: '50%'},
+                hAxis: {
+                    title: 'Enrollment Count',
+                    minValue: 0
+                },
+                vAxis: {
+                    title: 'Class ID'
+                }
             };
 
-            var chart = new google.visualization.BarChart(document.getElementById('barchart'));
+            var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
             chart.draw(data, options);
         }
     </script>
@@ -46,9 +62,9 @@
 
         <div class="content-area" id="content-area">
             <div class="welcome-message">
-                <h2>Grading Scheme Report</h2>
+                <h2><%= request.getAttribute("reportName") %> (<%= request.getAttribute("startDate") %> to <%= request.getAttribute("endDate") %>)</h2>
                 <p><strong>Generated on:</strong> <%= request.getAttribute("generatedDateTime") %></p>
-                <div id="barchart" style="width: 100%; height: 500px;"></div>
+                <div id="chart_div" style="width: 100%; height: 500px;"></div>
             </div>
         </div>
 

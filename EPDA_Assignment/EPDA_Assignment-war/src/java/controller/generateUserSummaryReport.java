@@ -42,85 +42,53 @@ public class generateUserSummaryReport extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+        // Get current date and time
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        String generatedDateTime = dateFormat.format(new Date());
         
-        try (PrintWriter out = response.getWriter()) {
-            // Get current date and time
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            String generatedDateTime = dateFormat.format(new Date());
-            
-            // Get parameters from JSP form
-            String reportId = request.getParameter("reportId");
-            String reportName = request.getParameter("reportName");
-            String startDate = request.getParameter("startDate");
-            String endDate = request.getParameter("endDate");
+        // Get parameters from JSP form
+        String reportId = request.getParameter("reportId");
+        String reportName = request.getParameter("reportName");
+        String startDate = request.getParameter("startDate");
+        String endDate = request.getParameter("endDate");
 
-            // Convert string dates to Timestamp
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDateTime startDateTime = LocalDate.parse(startDate, formatter).atStartOfDay();
-            LocalDateTime endDateTime = LocalDate.parse(endDate, formatter).atTime(23, 59, 59);
-            
-            Timestamp startTimestamp = Timestamp.valueOf(startDateTime);
-            Timestamp endTimestamp = Timestamp.valueOf(endDateTime);
+        // Convert string dates to Timestamp
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime startDateTime = LocalDate.parse(startDate, formatter).atStartOfDay();
+        LocalDateTime endDateTime = LocalDate.parse(endDate, formatter).atTime(23, 59, 59);
+        
+        Timestamp startTimestamp = Timestamp.valueOf(startDateTime);
+        Timestamp endTimestamp = Timestamp.valueOf(endDateTime);
 
-            // Find users from database
-            long lecturersCount = myUsersFacade.findAllLecturersWithDateRange(startTimestamp, endTimestamp);
-            long studentsCount = myUsersFacade.findAllStudentsWithDateRange(startTimestamp, endTimestamp);
-            long academicsLeaderCount = myUsersFacade.findAllAcademicsLeaderWithDateRange(startTimestamp, endTimestamp);
-            long adminsCount = myUsersFacade.findAllAdminsWithDateRange(startTimestamp, endTimestamp);
+        // Find users from database
+        long lecturersCount = myUsersFacade.findAllLecturersWithDateRange(startTimestamp, endTimestamp);
+        long studentsCount = myUsersFacade.findAllStudentsWithDateRange(startTimestamp, endTimestamp);
+        long academicsLeaderCount = myUsersFacade.findAllAcademicsLeaderWithDateRange(startTimestamp, endTimestamp);
+        long adminsCount = myUsersFacade.findAllAdminsWithDateRange(startTimestamp, endTimestamp);
 
-            // Check if no data found
-            long totalCount = lecturersCount + studentsCount + academicsLeaderCount + adminsCount;
-            
-            if (totalCount == 0) {
-                // Display no data message
-                out.println("<html>");
-                out.println("  <head>");
-                out.println("    <title>" + reportName + "</title>");
-                out.println("  </head>");
-                out.println("  <body>");
-                out.println("    <h2>" + reportName + " (" + startDate + " to " + endDate + ")</h2>");
-                out.println("    <p><strong>Generated on:</strong> " + generatedDateTime + "</p>");
-                out.println("    <p>No user data found for the selected range.</p>");
-                out.println("  </body>");
-                out.println("</html>");
-                return;
-            }
-
-            out.println("<html>");
-            out.println("  <head>");
-            out.println("    <script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>");
-            out.println("    <script type=\"text/javascript\">");
-            out.println("      google.charts.load('current', {'packages':['corechart']});");
-            out.println("      google.charts.setOnLoadCallback(drawChart);");
-            out.println("");
-            out.println("      function drawChart() {");
-            out.println("");
-            out.println("        var data = google.visualization.arrayToDataTable([");
-            out.println("          ['User Role', 'Count'],");
-            out.println("          ['Lecturers',     " + lecturersCount + "],");
-            out.println("          ['Students',      " + studentsCount + "],");
-            out.println("          ['Academic Leaders',  " + academicsLeaderCount + "],");
-            out.println("          ['Admins',    " + adminsCount + "]");
-            out.println("        ]);");
-            out.println("");
-            out.println("        var options = {");
-            out.println("          title: '" + reportName + " (" + startDate + " to " + endDate + ")'");
-            out.println("        };");
-            out.println("");
-            out.println("        var chart = new google.visualization.PieChart(document.getElementById('piechart'));");
-            out.println("");
-            out.println("        chart.draw(data, options);");
-            out.println("      }");
-            out.println("    </script>");
-            out.println("  </head>");
-            out.println("  <body>");
-            out.println("    <h2>" + reportName + " (" + startDate + " to " + endDate + ")</h2>");
-            out.println("    <p><strong>Generated on:</strong> " + generatedDateTime + "</p>");
-            out.println("    <div id=\"piechart\" style=\"width: 900px; height: 500px;\"></div>");
-            out.println("  </body>");
-            out.println("</html>");
+        // Check if no data found
+        long totalCount = lecturersCount + studentsCount + academicsLeaderCount + adminsCount;
+        boolean hasData = totalCount > 0;
+        
+        // Build chart data as JavaScript array
+        StringBuilder chartData = new StringBuilder();
+        if (hasData) {
+            chartData.append("['Lecturers', ").append(lecturersCount).append("],\n                ");
+            chartData.append("['Students', ").append(studentsCount).append("],\n                ");
+            chartData.append("['Academic Leaders', ").append(academicsLeaderCount).append("],\n                ");
+            chartData.append("['Admins', ").append(adminsCount).append("]");
         }
+        
+        // Set attributes for JSP
+        request.setAttribute("generatedDateTime", generatedDateTime);
+        request.setAttribute("reportName", reportName);
+        request.setAttribute("startDate", startDate);
+        request.setAttribute("endDate", endDate);
+        request.setAttribute("hasData", hasData);
+        request.setAttribute("chartData", chartData.toString());
+        
+        // Forward to JSP
+        request.getRequestDispatcher("userSummaryReport.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

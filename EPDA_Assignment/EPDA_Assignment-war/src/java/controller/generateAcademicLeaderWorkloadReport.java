@@ -44,83 +44,43 @@ public class generateAcademicLeaderWorkloadReport extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            // Get current date and time
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            String generatedDateTime = dateFormat.format(new Date());
+        // Get current date and time
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        String generatedDateTime = dateFormat.format(new Date());
+        
+        // Get workload data from database
+        List<Object[]> workloadData = myLecturerFacade.countByAcademicLeaderID();
+        
+        // Build chart data as JavaScript array
+        StringBuilder chartData = new StringBuilder();
+        for (int i = 0; i < workloadData.size(); i++) {
+            Object[] row = workloadData.get(i);
+            String academicLeaderID = (String) row[0];
+            Long count = (Long) row[1];
             
-            // Get workload data from database
-            List<Object[]> workloadData = myLecturerFacade.countByAcademicLeaderID();
-            
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Academic Leader Workload Report</title>");
-            out.println("<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>");
-            out.println("<script type=\"text/javascript\">");
-            out.println("google.charts.load('current', {packages: ['corechart', 'bar']});");
-            out.println("google.charts.setOnLoadCallback(drawBasic);");
-            out.println("");
-            out.println("function drawBasic() {");
-            out.println("  var data = new google.visualization.DataTable();");
-            out.println("  data.addColumn('string', 'Academic Leader');");
-            out.println("  data.addColumn('number', 'Number of Lecturers');");
-            out.println("");
-            out.println("  data.addRows([");
-            
-            // Generate data rows from database
-            for (int i = 0; i < workloadData.size(); i++) {
-                Object[] row = workloadData.get(i);
-                String academicLeaderID = (String) row[0];
-                Long count = (Long) row[1];
-                
-                // Get academic leader name
-                String leaderName = "Unknown";
-                if (academicLeaderID != null) {
-                    MyUsers leader = myUsersFacade.find(academicLeaderID);
-                    if (leader != null) {
-                        leaderName = leader.getFullName() + " (" + academicLeaderID + ")";
-                    }
-                } else {
-                    leaderName = "Unassigned";
+            // Get academic leader name
+            String leaderName = "Unknown";
+            if (academicLeaderID != null) {
+                MyUsers leader = myUsersFacade.find(academicLeaderID);
+                if (leader != null) {
+                    leaderName = leader.getFullName() + " (" + academicLeaderID + ")";
                 }
-                
-                out.print("    ['" + leaderName + "', " + count + "]");
-                if (i < workloadData.size() - 1) {
-                    out.println(",");
-                } else {
-                    out.println("");
-                }
+            } else {
+                leaderName = "Unassigned";
             }
             
-            out.println("  ]);");
-            out.println("");
-            out.println("  var options = {");
-            out.println("    chartArea: {width: '50%'},");
-            out.println("    hAxis: {");
-            out.println("      title: 'Academic Leader'");
-            out.println("    },");
-            out.println("    vAxis: {");
-            out.println("      title: 'Number of Lecturers',");
-            out.println("      minValue: 0");
-            out.println("    }");
-            out.println("  };");
-            out.println("");
-            out.println("  var chart = new google.visualization.ColumnChart(");
-            out.println("    document.getElementById('chart_div'));");
-            out.println("");
-            out.println("  chart.draw(data, options);");
-            out.println("}");
-            out.println("</script>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h2>Academic Leader Workload Report</h2>");
-            out.println("<p><strong>Generated on:</strong> " + generatedDateTime + "</p>");
-            out.println("<div id=\"chart_div\" style=\"width: 900px; height: 500px;\"></div>");
-            out.println("</body>");
-            out.println("</html>");
+            chartData.append("['").append(leaderName).append("', ").append(count).append("]");
+            if (i < workloadData.size() - 1) {
+                chartData.append(",\n                ");
+            }
         }
+        
+        // Set attributes for JSP
+        request.setAttribute("generatedDateTime", generatedDateTime);
+        request.setAttribute("chartData", chartData.toString());
+        
+        // Forward to JSP
+        request.getRequestDispatcher("academicLeaderWorkloadReport.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

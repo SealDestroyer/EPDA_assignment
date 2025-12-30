@@ -40,62 +40,42 @@ public class generateClassModuleReport extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-           // Get current date and time
-           SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-           String generatedDateTime = dateFormat.format(new Date());
-           
-           List<MyStudentClass> studentClassList=myStudentClassFacade.findAll();
-           
-           out.println("<!DOCTYPE html>");
-           out.println("<html>");
-           out.println("<head>");
-           out.println("<title>Class Module Report</title>");
-           out.println("<script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script>");
-           out.println("<script type='text/javascript'>");
-           out.println("google.charts.load('current', {packages: ['corechart', 'bar']});");
-           out.println("google.charts.setOnLoadCallback(drawBasic);");
-           out.println("");
-           out.println("function drawBasic() {");
-           out.println("  var data = google.visualization.arrayToDataTable([");
-           out.println("    ['Class', 'Module Count'],");
-           
-           // Go through every class and count how many modules each class has
-           for(MyStudentClass studentClass : studentClassList) {
-               int moduleCount = 0;
-               if(studentClass.getModules() != null) {
-                   moduleCount = studentClass.getModules().size();
-               }
-               out.println("    ['" + studentClass.getClassName() + "', " + moduleCount + "],");
-           }
-           
-           out.println("  ]);");
-           out.println("");
-           out.println("  var options = {");
-           out.println("    title: 'Module Count by Class',");
-           out.println("    chartArea: {width: '50%'},");
-           out.println("    hAxis: {");
-           out.println("      title: 'Number of Modules',");
-           out.println("      minValue: 0");
-           out.println("    },");
-           out.println("    vAxis: {");
-           out.println("      title: 'Class'");
-           out.println("    }");
-           out.println("  };");
-           out.println("");
-           out.println("  var chart = new google.visualization.BarChart(document.getElementById('chart_div'));");
-           out.println("  chart.draw(data, options);");
-           out.println("}");
-           out.println("</script>");
-           out.println("</head>");
-           out.println("<body>");
-           out.println("<h1>Class Module Report</h1>");
-           out.println("<p><strong>Generated on:</strong> " + generatedDateTime + "</p>");
-           out.println("<div id='chart_div' style='width: 900px; height: 500px;'></div>");
-           out.println("</body>");
-           out.println("</html>");
+        // Get current date and time
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        String generatedDateTime = dateFormat.format(new Date());
+        
+        List<MyStudentClass> studentClassList = myStudentClassFacade.findAll();
+        
+        // Check if data is available
+        if (studentClassList == null || studentClassList.isEmpty()) {
+            request.setAttribute("generatedDateTime", generatedDateTime);
+            request.setAttribute("noDataAvailable", true);
+            request.setAttribute("errorMessage", "No class data available to generate report.");
+            request.getRequestDispatcher("classModuleReport.jsp").forward(request, response);
+            return;
         }
+        
+        // Build chart data as JavaScript array
+        StringBuilder chartData = new StringBuilder();
+        for (int i = 0; i < studentClassList.size(); i++) {
+            MyStudentClass studentClass = studentClassList.get(i);
+            int moduleCount = 0;
+            if (studentClass.getModules() != null) {
+                moduleCount = studentClass.getModules().size();
+            }
+            chartData.append("['").append(studentClass.getClassName()).append("', ").append(moduleCount).append("]");
+            if (i < studentClassList.size() - 1) {
+                chartData.append(",\n                ");
+            }
+        }
+        
+        // Set attributes for JSP
+        request.setAttribute("generatedDateTime", generatedDateTime);
+        request.setAttribute("chartData", chartData.toString());
+        request.setAttribute("noDataAvailable", false);
+        
+        // Forward to JSP
+        request.getRequestDispatcher("classModuleReport.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
