@@ -50,7 +50,7 @@ public class deleteAcademicLeader extends HttpServlet {
             /* TODO output your page here. You may use following sample code. */
             
             // Get the id parameter from the request
-            String id = request.getParameter("id");
+            String id = request.getParameter("userId");
             
             // Update lecturers who have this academic leader to null
             myLecturerFacade.updateAcademicLeaderIDToNull(id);
@@ -62,7 +62,7 @@ public class deleteAcademicLeader extends HttpServlet {
             myUsersFacade.deleteByUserId(id);
             
             // Redirect back to the view page
-            response.sendRedirect("viewAcademicLeaders");
+            response.sendRedirect("viewAcademicLeaders.jsp");
         }
     }
 
