@@ -55,4 +55,22 @@ public class MyStudentClassFacade extends AbstractFacade<MyStudentClass> {
                 .getResultList();
     }
 
+    public void unassignAcademicLeader(String alID) {
+        em.createNamedQuery("MyStudentClass.unassignAcademicLeader")
+                .setParameter("alID", alID)
+                .executeUpdate();
+    }
+
+    public List<Integer> findModuleIdsByClassId(Integer classID) {
+        return em.createNamedQuery("MyStudentClass.findModuleIdsByClassId", Integer.class)
+                .setParameter("classID", classID)
+                .getResultList();
+    }
+
+    public void deleteModuleAssociations(Integer classID) {
+        em.createNamedQuery("MyStudentClass.deleteModuleAssociations")
+                .setParameter(1, classID)
+                .executeUpdate();
+    }
+
 }

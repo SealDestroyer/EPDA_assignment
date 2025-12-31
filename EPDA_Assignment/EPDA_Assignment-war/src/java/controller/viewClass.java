@@ -55,7 +55,7 @@ public class viewClass extends HttpServlet {
             // Add search bar and Add New Class button
             out.println("<div class='search-container'>");
             out.println("<form method='GET' action='viewClass.jsp' class='search-form'>");
-            out.println("<input type='text' name='search' id='searchInput' placeholder='Search by class name...' ");
+            out.println("<input type='text' name='search' id='searchInput' placeholder='Search by class name or Academic Leader ID...' ");
             out.println("value='" + (request.getParameter("search") != null ? request.getParameter("search") : "") + "' ");
             out.println("class='search-input' />");
             out.println("<button type='submit' class='btn-search'>Search</button>");
@@ -82,9 +82,11 @@ public class viewClass extends HttpServlet {
                 // Apply search filter
                 if (!searchQuery.isEmpty()) {
                     String className = studentClass.getClassName().toLowerCase();
+                    String academicLeaderID = studentClass.getAssignedAcademicLeaderID() != null ? 
+                                              studentClass.getAssignedAcademicLeaderID().toLowerCase() : "";
                     
-                    // Skip this record if it doesn't match the search query
-                    if (!className.contains(searchQuery)) {
+                    // Skip this record if it doesn't match the search query (check both class name and academic leader ID)
+                    if (!className.contains(searchQuery) && !academicLeaderID.contains(searchQuery)) {
                         continue;
                     }
                 }

@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import model.MyAcademicLeaderFacade;
 import model.MyLecturerFacade;
 import model.MyModuleFacade;
+import model.MyStudentClassFacade;
 import model.MyUsersFacade;
 
 /**
@@ -26,6 +27,12 @@ import model.MyUsersFacade;
 public class deleteAcademicLeader extends HttpServlet {
 
     @EJB
+    private MyModuleFacade myModuleFacade;
+
+    @EJB
+    private MyStudentClassFacade myStudentClassFacade;
+
+    @EJB
     private MyLecturerFacade myLecturerFacade;
 
     @EJB
@@ -34,6 +41,7 @@ public class deleteAcademicLeader extends HttpServlet {
     @EJB
     private MyUsersFacade myUsersFacade;
 
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -55,12 +63,18 @@ public class deleteAcademicLeader extends HttpServlet {
             // Update lecturers who have this academic leader to null
             myLecturerFacade.updateAcademicLeaderIDToNull(id);
             
+            // Unassign academic leader from classes
+            myStudentClassFacade.unassignAcademicLeader(id);
+
+            // Unassign academic leader from modules
+            myModuleFacade.clearCreatedBy(id);
+            
             // Delete from MyAcademicLeader table
             myAcademicLeaderFacade.deleteByUserID(id);
             
             // Delete from MyUsers table
             myUsersFacade.deleteByUserId(id);
-            
+
             // Redirect back to the view page
             response.sendRedirect("viewAcademicLeaders.jsp");
         }

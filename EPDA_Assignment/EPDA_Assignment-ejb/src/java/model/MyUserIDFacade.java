@@ -5,6 +5,7 @@
  */
 package model;
 
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -32,19 +33,19 @@ public class MyUserIDFacade extends AbstractFacade<MyUserID> {
         return em.createNamedQuery("MyUserID.count", Long.class).getSingleResult();
     }
     
-    public java.util.List<MyUserID> findByAD() {
+    public List<MyUserID> findByAD() {
         return em.createNamedQuery("MyUserID.findByAD", MyUserID.class).getResultList();
     }
     
-    public java.util.List<MyUserID> findByAL() {
+    public List<MyUserID> findByAL() {
         return em.createNamedQuery("MyUserID.findByAL", MyUserID.class).getResultList();
     }
     
-    public java.util.List<MyUserID> findByL() {
+    public List<MyUserID> findByL() {
         return em.createNamedQuery("MyUserID.findByL", MyUserID.class).getResultList();
     }
     
-    public java.util.List<MyUserID> findByS() {
+    public List<MyUserID> findByS() {
         return em.createNamedQuery("MyUserID.findByS", MyUserID.class).getResultList();
     }
     

@@ -40,13 +40,13 @@ public class deleteGrade extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             // Receive the parameter from viewGrade.java
-            String idParam = request.getParameter("id");
+            String idParam = request.getParameter("gradingId");
             Integer gradingID = Integer.parseInt(idParam);
             
             // Call the deleteByGradingId method from facade
             myGradingFacade.deleteByGradingId(gradingID);
             
-            response.sendRedirect("viewGrade");
+            response.sendRedirect("viewGrade.jsp");
         }
     }
 

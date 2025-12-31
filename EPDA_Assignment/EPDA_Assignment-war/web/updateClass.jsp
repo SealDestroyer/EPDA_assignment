@@ -101,7 +101,7 @@
                             <select id="assignedAcademicLeaderID" name="assignedAcademicLeaderID" onblur="validateAcademicLeader()" required>
                                 <option value="">Select Academic Leader</option>
                                 <% for (MyUsers leader : academicLeader) { %>
-                                    <option value="<%= leader.getUserID() %>" <%= myClass != null && myClass.getAssignedAcademicLeaderID().equals(leader.getUserID()) ? "selected" : "" %>><%= leader.getUserID() %> - <%= leader.getFullName() %></option>
+                                    <option value="<%= leader.getUserID() %>"><%= leader.getUserID() %> - <%= leader.getFullName() %></option>
                                 <% } %>
                             </select>
                         </td>

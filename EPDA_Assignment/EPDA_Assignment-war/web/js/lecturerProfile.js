@@ -13,6 +13,7 @@ function validateForm() {
     isValid = validateAddress() && isValid;
     isValid = validateEmploymentType() && isValid;
     isValid = validateAcademicRank() && isValid;
+    isValid = validateAcademicLeaderID() && isValid;
     
     return isValid;
 }
@@ -219,6 +220,21 @@ function validateAcademicRank() {
     }
     
     hideError(errorRow, academicRank);
+    return true;
+}
+
+// Validate Academic Leader ID
+function validateAcademicLeaderID() {
+    const academicLeaderID = document.getElementById('academicLeaderID');
+    const errorRow = document.getElementById('academicLeaderID-error');
+    const errorMessage = document.getElementById('academicLeaderID-error-message');
+    
+    if (!academicLeaderID.value) {
+        showError(errorRow, errorMessage, 'Please select an academic leader ID', academicLeaderID);
+        return false;
+    }
+    
+    hideError(errorRow, academicLeaderID);
     return true;
 }
 

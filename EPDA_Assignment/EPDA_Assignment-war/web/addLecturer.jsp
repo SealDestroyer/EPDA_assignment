@@ -153,13 +153,17 @@
                     <tr>
                         <td><label for="academicLeaderID">Academic Leader ID:</label></td>
                         <td>
-                            <select id="academicLeaderID" name="academicLeaderID">
+                            <select id="academicLeaderID" name="academicLeaderID" onblur="validateAcademicLeaderID()" required>
                                 <option value="">Select Academic Leader</option>
                                 <% for (MyUsers leader : academicLeader) { %>
                                     <option value="<%= leader.getUserID() %>"><%= leader.getUserID() %> - <%= leader.getFullName() %></option>
                                 <% } %>
                             </select>
                         </td>
+                    </tr>
+                    <tr class="error-row" id="academicLeaderID-error" style="display: none;">
+                        <td></td>
+                        <td><span class="error-message" id="academicLeaderID-error-message"></span></td>
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align: center; padding-top: 20px;">

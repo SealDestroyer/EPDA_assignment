@@ -49,7 +49,7 @@ public class deleteLecturer extends HttpServlet {
             /* TODO output your page here. You may use following sample code. */
             
             // Receive the parameter from viewLecturers.java
-            String userID = request.getParameter("id");
+            String userID = request.getParameter("userId");
             
             // 1. Unassign lecturer from all modules
             myModuleFacade.unassignLecturer(userID);
@@ -61,7 +61,7 @@ public class deleteLecturer extends HttpServlet {
             myUsersFacade.deleteByUserId(userID);
             
             // Redirect back to the view lecturers page
-            response.sendRedirect("viewLecturers");
+            response.sendRedirect("viewLecturers.jsp");
         }
     }
 

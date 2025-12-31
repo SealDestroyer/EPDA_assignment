@@ -135,6 +135,15 @@ public class MyModuleFacade extends AbstractFacade<MyModule> {
         return q.executeUpdate();
     }
 
+    public int clearCreatedBy(String createdBy) {
+        if (createdBy == null || createdBy.trim().isEmpty()) {
+            return 0;
+        }
+        Query q = em.createNamedQuery("MyModule.clearCreatedBy");
+        q.setParameter("createdBy", createdBy.trim());
+        return q.executeUpdate();
+    }
+
     public List<Object[]> searchModulesByLecturerWithClass(String keyword, String lecturerId) {
 
         String kw = "%" + (keyword == null ? "" : keyword.toLowerCase().trim()) + "%";

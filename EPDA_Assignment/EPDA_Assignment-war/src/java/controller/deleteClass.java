@@ -49,17 +49,20 @@ public class deleteClass extends HttpServlet {
             /* TODO output your page here. You may use following sample code. */
             
             // Get classID parameter from viewClass.java
-            String classIDStr = request.getParameter("id");
+            String classIDStr = request.getParameter("classId");
             Integer classID = Integer.parseInt(classIDStr);
             
             // First delete all student enrollments for this class
             myStudentClassEnrollmentFacade.deleteByClassID(classID);
             
+            //Delete all related module associations
+            myStudentClassFacade.deleteModuleAssociations(classID);
+
             // Then delete the class itself
             myStudentClassFacade.deleteByClassId(classID);
             
             // Redirect back to viewClass page
-            response.sendRedirect("viewClass");
+            response.sendRedirect("viewClass.jsp");
         }
     }
 

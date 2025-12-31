@@ -124,6 +124,10 @@
                             <td><span class="error-message" id="address-error-message"></span></td>
                         </tr>
                         <tr>
+                            <td><label for="secretKey">Secret Key:</label></td>
+                            <td><input type="text" id="secretKey" name="secretKey" value="<%= user != null ? user.getSecretKey() : ""%>" readonly></td>
+                        </tr>
+                        <tr>
                             <td colspan="2" style="text-align: center; padding-top: 20px;">
                                 <button type="submit" class="btn-update">Update Admin</button>
                             </td>

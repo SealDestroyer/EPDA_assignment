@@ -74,6 +74,12 @@ import javax.persistence.NamedQuery;
     )
     ,
 @NamedQuery(
+            name = "MyModule.clearCreatedBy",
+            query = "UPDATE MyModule m SET m.createdBy = NULL "
+            + "WHERE m.createdBy = :createdBy"
+    )
+    ,
+@NamedQuery(
             name = "MyModule.searchByLecturerWithClass",
             query = "SELECT m, c "
             + "FROM MyModule m "
@@ -129,6 +135,7 @@ import javax.persistence.NamedQuery;
             name = "MyModule.findByModuleID",
             query = "SELECT m FROM MyModule m WHERE m.moduleID = :moduleID"
     )
+    
 
 })
 public class MyModule implements Serializable {

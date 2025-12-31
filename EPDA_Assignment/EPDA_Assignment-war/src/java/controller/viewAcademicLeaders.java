@@ -87,7 +87,6 @@ public class viewAcademicLeaders extends HttpServlet {
             out.println("<th>Leader Role</th>");
             out.println("<th>Start Date</th>");
             out.println("<th>End Date</th>");
-            out.println("<th>Password</th>");
             out.println("<th>Action</th>");
             out.println("</tr>");
             out.println("</thead>");
@@ -124,7 +123,6 @@ public class viewAcademicLeaders extends HttpServlet {
                 out.println("<td>" + (academicLeaderData != null ? academicLeaderData.getLeaderRole() : "") + "</td>");
                 out.println("<td>" + (academicLeaderData != null ? academicLeaderData.getStartDate() : "") + "</td>");
                 out.println("<td>" + (academicLeaderData != null ? academicLeaderData.getEndDate() : "") + "</td>");
-                out.println("<td>" + user.getPassword() + "</td>");
                 out.println("<td class='actions-cell'>");
                 out.println("<button type='button' onclick='window.location.href=\"updateAcademicLeader.jsp?userId=" + user.getUserID() + "\"' class='btn-edit'>Edit</button>");
                 out.println("<button type='button' onclick='if(confirm(\"Are you sure you want to delete this academic leader?\")) window.location.href=\"deleteAcademicLeader?userId=" + user.getUserID() + "\"' class='btn-delete'>Delete</button>");

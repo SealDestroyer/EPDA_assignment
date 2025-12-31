@@ -65,13 +65,13 @@ public class viewClassStudent extends HttpServlet {
             
             // Add search bar
             out.println("<div class='search-container'>");
-            out.println("<form method='GET' action='viewClassStudent' class='search-form'>");
+            out.println("<form method='GET' action='viewClassStudent.jsp' class='search-form'>");
             out.println("<input type='hidden' name='classId' value='" + classID + "' />");
             out.println("<input type='text' name='search' id='searchInput' placeholder='Search by student ID...' ");
             out.println("value='" + (request.getParameter("search") != null ? request.getParameter("search") : "") + "' ");
             out.println("class='search-input' />");
             out.println("<button type='submit' class='btn-search'>Search</button>");
-            out.println("<button type='button' onclick='window.location.href=\"viewClassStudent?classId=" + classID + "\"' class='btn-clear'>Clear</button>");
+            out.println("<button type='button' onclick='window.location.href=\"viewClassStudent.jsp?classId=" + classID + "\"' class='btn-clear'>Clear</button>");
             out.println("</form>");
             out.println("<button type='button' onclick=\"location.href='addClassStudent.jsp?classID=" + classID + "'\" class='btn-add'>Add New Student</button>");
             out.println("</div>");

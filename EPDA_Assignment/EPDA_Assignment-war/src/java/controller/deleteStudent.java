@@ -53,7 +53,7 @@ public class deleteStudent extends HttpServlet {
             /* TODO output your page here. You may use following sample code. */
 
             // Get the student ID from the request parameter
-            String userID = request.getParameter("id");
+            String userID = request.getParameter("userId");
             
             if (userID != null && !userID.isEmpty()) {
                 try {
@@ -71,14 +71,14 @@ public class deleteStudent extends HttpServlet {
                     myUsersFacade.deleteByUserId(userID);
                     
                     // Redirect back to viewStudent page
-                    response.sendRedirect("viewStudent");
+                    response.sendRedirect("viewStudent.jsp");
                 } catch (Exception e) {
                     out.println("<h3>Error deleting student: " + e.getMessage() + "</h3>");
-                    out.println("<a href='viewStudent'>Back to Student List</a>");
+                    out.println("<a href='viewStudent.jsp'>Back to Student List</a>");
                 }
             } else {
                 out.println("<h3>Invalid student ID</h3>");
-                out.println("<a href='viewStudent'>Back to Student List</a>");
+                out.println("<a href='viewStudent.jsp'>Back to Student List</a>");
             }
 
         }

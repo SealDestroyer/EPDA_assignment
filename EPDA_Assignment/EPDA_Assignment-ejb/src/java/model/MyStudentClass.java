@@ -13,8 +13,13 @@ import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.NamedNativeQuery;
 
 @Entity
+@NamedNativeQuery(
+    name = "MyStudentClass.deleteModuleAssociations",
+    query = "DELETE FROM MYSTUDENTCLASS_MYMODULE WHERE CLASS_ID = ?1"
+)
 @NamedQueries({
     @NamedQuery(
             name = "MyStudentClass.findAll",
@@ -52,6 +57,21 @@ import javax.persistence.Table;
             + "WHERE m.assignedLecturerID = :lecturerId "
             + "AND (LOWER(m.moduleName) LIKE :kw OR LOWER(m.moduleCode) LIKE :kw) "
             + "ORDER BY m.moduleID, c.classID"
+    )
+    ,
+    @NamedQuery(
+            name = "MyStudentClass.unassignAcademicLeader",
+            query = "UPDATE MyStudentClass c "
+            + "SET c.assignedAcademicLeaderID = NULL "
+            + "WHERE c.assignedAcademicLeaderID = :alID"
+    )
+    ,
+    @NamedQuery(
+            name = "MyStudentClass.findModuleIdsByClassId",
+            query = "SELECT m.moduleID FROM MyStudentClass c "
+            + "JOIN c.modules m "
+            + "WHERE c.classID = :classID "
+            + "ORDER BY m.moduleID"
     )
 })
 

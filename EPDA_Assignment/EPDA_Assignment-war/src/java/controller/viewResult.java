@@ -93,7 +93,6 @@ public class viewResult extends HttpServlet {
             out.println("<p class='eyebrow'>Assessments</p>");
             out.println("<h2>My Result List</h2>");
             out.println("</div>");
-            out.println("<span class='badge'>" + assessments.size() + " records</span>");
             out.println("</div>");
 
             out.println("<div class='table-container'>");

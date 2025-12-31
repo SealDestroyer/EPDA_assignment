@@ -6,21 +6,13 @@
 
 <%@page import="model.MyUserID"%>
 <%@page import="model.MyUserIDFacade"%>
+<%@page import="model.MyUsers"%>
+<%@page import="model.MyUsersFacade"%>
+<%@page import="model.MyAdmin"%>
+<%@page import="model.MyAdminFacade"%>
 <%@page import="javax.persistence.EntityManagerFactory"%>
 <%@page import="javax.persistence.Persistence"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
-<%--
-<%
-    // Load demo data via servlet
-    // This will initialize the demo admin users in the database
-    try {
-        request.getRequestDispatcher("/loadDemoData").include(request, response);
-    } catch (Exception e) {
-        // Silently catch any errors during demo data loading
-    }
-%>
---%>
 
 <!DOCTYPE html>
 <html>

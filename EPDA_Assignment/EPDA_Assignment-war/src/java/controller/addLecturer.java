@@ -74,7 +74,8 @@ public class addLecturer extends HttpServlet {
                     email == null || email.trim().isEmpty() ||
                     address == null || address.trim().isEmpty() ||
                     employmentType == null || employmentType.trim().isEmpty() ||
-                    academicRank == null || academicRank.trim().isEmpty()) {
+                    academicRank == null || academicRank.trim().isEmpty()||
+                    academicLeaderID == null || academicLeaderID.trim().isEmpty()) {
                     throw new IllegalArgumentException("All fields are required!");
                 }
                 

@@ -13,6 +13,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import model.MyModule;
+import model.MyModuleFacade;
 import model.MyStudentClass;
 import model.MyStudentClassFacade;
 
@@ -24,7 +26,12 @@ import model.MyStudentClassFacade;
 public class updateClass extends HttpServlet {
 
     @EJB
+    private MyModuleFacade myModuleFacade;
+
+    @EJB
     private MyStudentClassFacade myStudentClassFacade;
+    
+    
     
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -99,6 +106,16 @@ public class updateClass extends HttpServlet {
                 // Persist the updated class to the database
                 myStudentClassFacade.edit(myClass);
 
+                // Update class's modules' createdBy field
+                myStudentClassFacade.findModuleIdsByClassId(Integer.parseInt(classId))
+                        .forEach(moduleId -> {
+                            MyModule module = myModuleFacade.find(moduleId);
+                            if (module != null) {
+                                module.setCreatedBy(assignedAcademicLeaderID.trim());
+                                myModuleFacade.edit(module);
+                            }
+                        });
+                
                 // Display success message and redirect to viewClass.jsp after successful update
                 out.println("<script type='text/javascript'>");
                 out.println("alert('Class Updated Successfully!');");

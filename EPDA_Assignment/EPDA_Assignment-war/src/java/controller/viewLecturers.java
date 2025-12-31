@@ -86,7 +86,6 @@ public class viewLecturers extends HttpServlet {
             out.println("<th>Employment Type</th>");
             out.println("<th>Academic Rank</th>");
             out.println("<th>Academic Leader ID</th>");
-            out.println("<th>Password</th>");
             out.println("<th>Action</th>");
             out.println("</tr>");
             out.println("</thead>");
@@ -123,7 +122,6 @@ public class viewLecturers extends HttpServlet {
                 out.println("<td>" + (lecturerData != null ? lecturerData.getEmploymentType() : "") + "</td>");
                 out.println("<td>" + (lecturerData != null ? lecturerData.getAcademicRank() : "") + "</td>");
                 out.println("<td>" + (lecturerData != null ? lecturerData.getAcademicLeaderID() : "") + "</td>");
-                out.println("<td>" + user.getPassword() + "</td>");
                 out.println("<td>");
                 out.println("<button type='button' onclick='window.location.href=\"updateLecturer.jsp?userId=" + user.getUserID() + "\"' class='btn-edit'>Edit</button>");
                 out.println("<button type='button' onclick='if(confirm(\"Are you sure you want to delete this lecturer?\")) window.location.href=\"deleteLecturer?userId=" + user.getUserID() + "\"' class='btn-delete'>Delete</button>");
