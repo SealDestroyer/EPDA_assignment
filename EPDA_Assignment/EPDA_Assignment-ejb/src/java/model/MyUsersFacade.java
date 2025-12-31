@@ -142,5 +142,12 @@ public class MyUsersFacade extends AbstractFacade<MyUsers> {
         return (Long) q.getSingleResult();
     }
     
+    public MyUsers findByUserId(String userID) {
+        Query q = em.createNamedQuery("MyUsers.findByUserId");
+        q.setParameter("userID", userID);
+        List<MyUsers> results = q.getResultList();
+        return results.isEmpty() ? null : results.get(0);
+    }
+    
     
 }

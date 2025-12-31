@@ -124,6 +124,11 @@ import javax.persistence.NamedQuery;
             + "WHERE m.moduleID = :mid "
             + "AND m.assignedLecturerID = :lid"
     )
+    ,
+@NamedQuery(
+            name = "MyModule.findByModuleID",
+            query = "SELECT m FROM MyModule m WHERE m.moduleID = :moduleID"
+    )
 
 })
 public class MyModule implements Serializable {

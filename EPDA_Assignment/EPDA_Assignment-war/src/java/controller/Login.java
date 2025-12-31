@@ -86,7 +86,7 @@ public class Login extends HttpServlet {
                         response.sendRedirect("viewAdmin.jsp");
                     }
                 } else if (userID.toUpperCase().startsWith("S")) {
-                    response.sendRedirect("StudentAssessmentList.jsp");
+                    response.sendRedirect("studentPage.jsp");
                 } else if (userID.toUpperCase().startsWith("L")) {
                     response.sendRedirect("Ldashboard.jsp");
                 }

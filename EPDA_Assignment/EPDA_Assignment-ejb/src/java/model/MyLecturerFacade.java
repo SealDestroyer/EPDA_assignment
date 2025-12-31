@@ -46,4 +46,11 @@ public class MyLecturerFacade extends AbstractFacade<MyLecturer> {
                 .getResultList();
     }
     
+    public MyLecturer findByUserID(String userID) {
+        List<MyLecturer> results = em.createNamedQuery("MyLecturer.findByUserID")
+                .setParameter("userID", userID)
+                .getResultList();
+        return results.isEmpty() ? null : results.get(0);
+    }
+    
 }

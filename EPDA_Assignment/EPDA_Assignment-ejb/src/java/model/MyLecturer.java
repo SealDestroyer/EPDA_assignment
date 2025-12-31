@@ -21,6 +21,11 @@ import javax.persistence.NamedQuery;
     @NamedQuery(
         name = "MyLecturer.countByAcademicLeaderID",
         query = "SELECT l.academicLeaderID, COUNT(l) FROM MyLecturer l GROUP BY l.academicLeaderID"
+    ),
+    
+    @NamedQuery(
+        name = "MyLecturer.findByUserID",
+        query = "SELECT l FROM MyLecturer l WHERE l.userID = :userID"
     )
 
 })

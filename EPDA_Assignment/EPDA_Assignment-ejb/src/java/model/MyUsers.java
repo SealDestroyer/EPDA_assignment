@@ -81,6 +81,11 @@ import javax.persistence.NamedQuery;
             name = "MyUsers.findAllAdminsWithDateRange",
             query = "SELECT COUNT(u) FROM MyUsers u WHERE u.userID LIKE 'AD%' AND u.registrationDateTime BETWEEN :startDate AND :endDate"
     )
+        ,
+        @NamedQuery(
+            name = "MyUsers.findByUserId",
+            query = "SELECT u FROM MyUsers u WHERE u.userID = :userID"
+    )
 })
 
 public class MyUsers implements Serializable {

@@ -10,8 +10,8 @@ import javax.persistence.NamedQuery;
 
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "MyStudentAssessment.deleteByStudentID", query = "DELETE FROM MyStudentAssessment m WHERE m.studentID = :studentID")
-
+    @NamedQuery(name = "MyStudentAssessment.deleteByStudentID", query = "DELETE FROM MyStudentAssessment m WHERE m.studentID = :studentID"),
+    @NamedQuery(name = "MyStudentAssessment.findByStudentID", query = "SELECT m FROM MyStudentAssessment m WHERE m.studentID = :studentID")
 })
 
 public class MyStudentAssessment implements Serializable {

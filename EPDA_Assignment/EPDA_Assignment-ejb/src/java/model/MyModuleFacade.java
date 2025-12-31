@@ -203,4 +203,17 @@ public class MyModuleFacade extends AbstractFacade<MyModule> {
                 .setParameter("lecturerId", lecturerId.trim())
                 .getResultList();
     }
+
+    public MyModule findByModuleID(Integer moduleID) {
+        if (moduleID == null) {
+            return null;
+        }
+
+        List<MyModule> results = em.createNamedQuery("MyModule.findByModuleID", MyModule.class)
+                .setParameter("moduleID", moduleID)
+                .setMaxResults(1)
+                .getResultList();
+
+        return results.isEmpty() ? null : results.get(0);
+    }
 }

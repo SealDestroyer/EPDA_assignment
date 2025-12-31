@@ -28,6 +28,11 @@ import javax.persistence.NamedQuery;
             + "WHERE a.moduleID = :moduleID "
             + "AND LOWER(a.assessmentName) = :name"
     )
+    ,
+    @NamedQuery(
+            name = "MyAssessmentType.findByAssessmentID",
+            query = "SELECT a FROM MyAssessmentType a WHERE a.assessmentID = :assessmentID"
+    )
 })
 public class MyAssessmentType implements Serializable {
 
