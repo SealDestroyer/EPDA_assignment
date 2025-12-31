@@ -94,7 +94,7 @@ public class ALProfile extends HttpServlet {
 
                 // read inputs
                 String fullName = trim(request.getParameter("fullName"));
-                String password = trim(request.getParameter("password")); 
+                String password = trim(request.getParameter("password"));
                 String gender = trim(request.getParameter("gender"));
                 String phone = trim(request.getParameter("phone"));
                 String icNumber = trim(request.getParameter("icNumber"));
@@ -125,18 +125,19 @@ public class ALProfile extends HttpServlet {
                     errors.put("phone", "Phone number must be exactly 10 digits.");
                 }
 
-                if (icNumber.isEmpty()) {
-                    errors.put("icNumber", "IC Number cannot be empty.");
-                } else if (!icNumber.matches("\\d+")) {
-                    errors.put("icNumber", "IC Number must contain numbers only.");
-                } else if (icNumber.length() != 12) {
-                    errors.put("icNumber", "IC Number must be exactly 12 digits.");
+                String icClean = icNumber == null ? "" : icNumber.trim().replace("-", "");
+
+                if (icNumber == null || icNumber.trim().isEmpty()) {
+                    errors.put("icNumber", "IC number is required.");
+                } else if (!icClean.matches("\\d{12}")) {
+                    errors.put("icNumber", "IC number must be 12 digits (format: YYMMDD-PB-###G).");
                 }
 
+                // Email validation: must be APU email (@apu.edu.my)
                 if (email.isEmpty()) {
-                    errors.put("email", "Email cannot be empty.");
-                } else if (!email.contains("@") || !email.contains(".")) {
-                    errors.put("email", "Email format is invalid.");
+                    errors.put("email", "Email is required.");
+                } else if (!email.matches("^[a-zA-Z0-9._-]+@apu\\.edu\\.my$")) {
+                    errors.put("email", "Please enter a valid APU email address (@apu.edu.my).");
                 }
 
                 if (address.isEmpty()) {
@@ -146,16 +147,16 @@ public class ALProfile extends HttpServlet {
                 }
 
                 // password optional: only validate if user typed something
-                if (!password.isEmpty() && password.length() < 4) {
-                    errors.put("password", "Password must be at least 4 characters.");
+                if (!password.isEmpty() && password.length() < 6) {
+                    errors.put("password", "Password must be at least 6 characters.");
                 }
 
                 if (secretKey.isEmpty()) {
                     errors.put("secretKey", "Secret Key cannot be empty.");
                 } else if (!secretKey.matches("\\d+")) {
                     errors.put("secretKey", "Secret Key must contain numbers only.");
-                } else if (secretKey.length() < 4) {
-                    errors.put("secretKey", "Secret Key must be at least 4 digits.");
+                } else if (secretKey.length() < 6) {
+                    errors.put("secretKey", "Secret Key must be at least 6 digits.");
                 }
 
                 // if got errors, return back to ALeditProfile.jsp
@@ -180,12 +181,17 @@ public class ALProfile extends HttpServlet {
                     request.getRequestDispatcher("ALeditProfile.jsp").forward(request, response);
                     return;
                 }
+                // Format IC to YYMMDD-PP-#### before saving
+                String icFormatted
+                        = icClean.substring(0, 6) + "-"
+                        + icClean.substring(6, 8) + "-"
+                        + icClean.substring(8, 12);
 
                 // PASS then update entity
                 u.setFullName(fullName);
                 u.setGender(gender);
                 u.setPhone(phone);
-                u.setIcNumber(icNumber);
+                u.setIcNumber(icFormatted);
                 u.setEmail(email);
                 u.setAddress(address);
                 u.setSecretKey(Integer.valueOf(secretKey));
