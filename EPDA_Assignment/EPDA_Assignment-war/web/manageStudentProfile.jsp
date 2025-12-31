@@ -17,7 +17,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Student</title>
-    <link rel="stylesheet" href="css/adminDashboard.css">
     <link rel="stylesheet" href="css/manageStudentProfile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -121,7 +120,7 @@
                     </tr>
                     <tr>
                         <td><label for="intakeYear">Intake Year:</label></td>
-                        <td><input type="text" id="intakeYear" name="intakeYear" value="<%= student != null && student.getIntakeYear() != null ? student.getIntakeYear() : "" %>" required></td>
+                        <td><input type="text" id="intakeYear" name="intakeYear" value="<%= student != null && student.getIntakeYear() != null ? student.getIntakeYear() : "" %>" onblur="validateIntakeYear()" required></td>
                     </tr>
                     <tr>
                         <td><label for="currentLevel">Current Level:</label></td>
@@ -165,7 +164,6 @@
         </div>
     </div>
     
-    <script src="js/adminDashboard.js"></script>
-    <script src="js/manageStudentProfile.js"></script>
+    <script src="js/studentProfile.js"></script>
 </body>
 </html>

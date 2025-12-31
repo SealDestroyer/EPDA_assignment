@@ -132,7 +132,11 @@
                     </tr>
                     <tr>
                         <td><label for="intakeYear">Intake Year:</label></td>
-                        <td><input type="text" id="intakeYear" name="intakeYear" value="<%= student != null && student.getIntakeYear() != null ? student.getIntakeYear() : "" %>" required></td>
+                        <td><input type="text" id="intakeYear" name="intakeYear" value="<%= student != null && student.getIntakeYear() != null ? student.getIntakeYear() : "" %>" onblur="validateIntakeYear()" required></td>
+                    </tr>
+                    <tr class="error-row" id="intakeYear-error" style="display: none;">
+                        <td></td>
+                        <td><span class="error-message" id="intakeYear-error-message"></span></td>
                     </tr>
                     <tr>
                         <td><label for="currentLevel">Current Level:</label></td>

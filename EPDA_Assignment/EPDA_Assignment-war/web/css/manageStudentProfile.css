@@ -1,17 +1,12 @@
-/* Register Student Form Styles */
-
-/* Background styling */
+/* Background styling aligned to results theme */
 body {
-    background-image: url('../img/ALdashbord.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    background: url('../img/ALdashbord.jpg') center/cover no-repeat fixed;
+    color: #2d1a0f;
     min-height: 100vh;
     margin: 0;
     padding: 0;
-    background-color: transparent;
-    display: block;
 }
 
 .main-content {
@@ -19,8 +14,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
-    margin-left: 0;
+    padding: 32px 18px 42px;
     background: transparent;
 }
 
@@ -28,24 +22,23 @@ body {
     width: 100%;
     display: flex;
     justify-content: center;
-    background: transparent;
 }
 
 .content-area form {
     width: 100%;
-    max-width: 750px;
+    max-width: 820px;
 }
 
 .form-title {
     text-align: center;
-    color: #FF6347;
-    font-size: 20px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    margin-bottom: 10px;
-    padding: 20px 0 15px 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #5a3e2b;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+    padding: 24px 0 18px 0;
     position: relative;
+    text-transform: uppercase;
 }
 
 .form-title::after {
@@ -54,52 +47,53 @@ body {
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 35%;
+    width: 38%;
     height: 3px;
-    background-color: #FF6347;
+    background: #5a3e2b;
+    border-radius: 999px;
 }
 
 .profile-table {
     width: 100%;
-    max-width: 750px;
+    max-width: 820px;
     margin: 0 auto;
     border-collapse: collapse;
-    border-radius: 20px;
+    border-radius: 14px;
     overflow: hidden;
-    background: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #ffffff;
+    box-shadow: 0 22px 45px rgba(0, 0, 0, 0.12);
+    border: 1px solid #efe2d6;
 }
 
 .profile-table tr {
-    margin-bottom: 15px;
+    margin-bottom: 16px;
     border: none;
 }
 
 .profile-table td {
-    padding: 10px 5px;
+    padding: 14px 10px;
     vertical-align: middle;
     border: none;
-    font-size: 16px;
-    font-family: inherit;
+    font-size: 15px;
+    color: #4b3b30;
 }
 
 .profile-table td:first-child {
-    width: 50%;
-    text-align: center;
-    padding-right: 20px;
-    font-weight: 500;
-    color: #333;
+    width: 45%;
+    text-align: right;
+    padding-right: 22px;
+    font-weight: 700;
+    color: #3f2b1d;
 }
 
 .profile-table td:last-child {
-    width: 50%;
-    text-align: center;
+    width: 55%;
+    text-align: left;
 }
 
-/* Add padding to the button row */
 .profile-table tr:last-child td {
-    padding: 30px 20px;
+    padding: 28px 22px 34px;
+    text-align: center;
 }
 
 .profile-table input[type="text"],
@@ -108,22 +102,25 @@ body {
 .profile-table input[type="tel"],
 .profile-table select,
 .profile-table textarea {
-    width: 80%;
-    padding: 10px 12px;
-    border: none;
-    background-color: #E5E5E5;
-    border-radius: 4px;
+    width: 92%;
+    padding: 12px 14px;
+    border: 1px solid #e5d8cd;
+    background-color: #f7f2eb;
+    border-radius: 10px;
     font-size: 15px;
-    color: #333;
+    color: #2d1a0f;
     box-sizing: border-box;
     font-family: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .profile-table input:focus,
 .profile-table select:focus,
 .profile-table textarea:focus {
     outline: none;
-    background-color: #D5D5D5;
+    border-color: #5a3e2b;
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(90, 62, 43, 0.16);
 }
 
 .profile-table select {
@@ -131,107 +128,113 @@ body {
     appearance: none;
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
     background-repeat: no-repeat;
-    background-position: right 10px center;
+    background-position: right 14px center;
     background-size: 16px;
-    padding-right: 35px;
+    padding-right: 42px;
 }
 
 .profile-table textarea {
     resize: vertical;
-    min-height: 60px;
+    min-height: 70px;
+}
+
+.btn-update,
+.btn-cancel {
+    border: none;
+    padding: 12px 36px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 160px;
     font-family: inherit;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
 }
 
 .btn-update {
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    padding: 10px 35px;
-    border-radius: 6px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    min-width: 140px;
-    font-family: inherit;
+    background: #5a3e2b;
+    color: #fff;
+    border: 1px solid #e5d8cd;
 }
 
 .btn-update:hover {
-    background-color: #0056b3;
-}
-
-.btn-update:active {
-    transform: scale(0.98);
+    background: #3f2b1d;
+    transform: translateY(-1px);
 }
 
 .btn-cancel {
-    background-color: #6c757d;
-    color: white;
-    border: none;
-    padding: 10px 35px;
-    border-radius: 6px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    min-width: 140px;
-    font-family: inherit;
+    background: #f0f0f0;
+    color: #4b3b30;
+    border: 1px solid #d9c6b5;
 }
 
 .btn-cancel:hover {
-    background-color: #5a6268;
+    background: #e7ded5;
+    transform: translateY(-1px);
 }
 
+.btn-update:active,
 .btn-cancel:active {
-    transform: scale(0.98);
+    transform: translateY(0);
 }
 
 .error-message {
-    color: red;
+    color: #b03a2e;
     font-size: 14px;
-    font-weight: bold;
+    font-weight: 700;
 }
 
 .input-error {
-    border: 2px solid red !important;
-    background-color: #ffe6e6;
+    border: 2px solid #b03a2e !important;
+    background-color: #ffe6e0;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    .profile-table td {
+        font-size: 14px;
+        padding: 10px 8px;
+    }
+
     .profile-table td:first-child {
-        width: 40%;
-        padding-right: 10px;
-        font-size: 13px;
+        width: 100%;
+        text-align: left;
+        padding-right: 0;
+    }
+
+    .profile-table td:last-child {
+        width: 100%;
+    }
+
+    .profile-table tr {
+        display: block;
+        padding: 0 14px;
+    }
+
+    .profile-table td {
+        display: block;
+    }
+
+    .profile-table tr:last-child td {
+        padding: 22px 0 30px;
     }
 
     .profile-table input,
     .profile-table select,
     .profile-table textarea {
-        font-size: 13px;
-        padding: 8px 10px;
+        width: 100%;
     }
 }
 
 @media (max-width: 480px) {
     .form-title {
-        font-size: 18px;
+        font-size: 20px;
     }
 
-    .profile-table td {
-        display: block;
+    .btn-update,
+    .btn-cancel {
         width: 100%;
-        text-align: left !important;
-        padding: 5px 0;
-    }
-
-    .profile-table td:first-child {
-        padding-right: 0;
-        padding-bottom: 5px;
-    }
-
-    .profile-table tr {
-        margin-bottom: 20px;
-        display: block;
+        margin-top: 8px;
     }
 }

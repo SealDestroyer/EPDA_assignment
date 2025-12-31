@@ -2,6 +2,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
+    font-size: 18px;
     background-image: url('../img/ALdashbordjpg.jpg');
     background-size: cover;
     background-position: center;
@@ -24,7 +25,7 @@ table {
     border-collapse: collapse;
     border: none;
     width: 100%;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 table tr td {

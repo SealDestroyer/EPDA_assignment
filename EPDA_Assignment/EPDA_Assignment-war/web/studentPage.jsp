@@ -18,7 +18,7 @@
         %>
         <!-- Navigation Bar -->
         <nav class="navbar">
-            <h1 class="panel-title">Student Panel</h1>
+            <h1 class="panel-title">Student Dashboard</h1>
             <div class="nav-links">
                 <a href="manageStudentProfile.jsp?userId=<%= userID %>" class="nav-link">Profile</a>
                 <a href="Logout" class="nav-link">Logout</a>
@@ -27,7 +27,7 @@
 
         <!-- Main Content -->
         <div class="main-content">
-            <button class="result-button">Result</button>
+            <button class="result-button" onclick="window.location.href='viewResult.jsp'">Result</button>
         </div>
     </body>
 </html>
