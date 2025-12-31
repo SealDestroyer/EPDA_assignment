@@ -16,12 +16,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Student - Admin Dashboard</title>
-    <link rel="stylesheet" href="css/adminDashboard.css">
-    <link rel="stylesheet" href="css/sidebar.css">
-    <link rel="stylesheet" href="css/header.css">
-    <link rel="stylesheet" href="css/footer.css">
-    <link rel="stylesheet" href="css/studentProfile.css">
+    <title>Update Student</title>
+    <link rel="stylesheet" href="css/manageStudentProfile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -47,16 +43,8 @@
         }
     %>
     
-    <!-- Include Sidebar -->
-    <jsp:include page="sidebar.jsp" />
-    
-    <!-- Main Content -->
     <div class="main-content">
-        <!-- Include Header -->
-        <jsp:include page="header.jsp" />
-        
         <div class="content-area" id="content-area">
-           
             <form action="updateStudent" method="post" onsubmit="return validateForm()">
                 <table class="profile-table">
                     <tr>
@@ -134,10 +122,6 @@
                         <td><label for="intakeYear">Intake Year:</label></td>
                         <td><input type="text" id="intakeYear" name="intakeYear" value="<%= student != null && student.getIntakeYear() != null ? student.getIntakeYear() : "" %>" onblur="validateIntakeYear()" required></td>
                     </tr>
-                    <tr class="error-row" id="intakeYear-error" style="display: none;">
-                        <td></td>
-                        <td><span class="error-message" id="intakeYear-error-message"></span></td>
-                    </tr>
                     <tr>
                         <td><label for="currentLevel">Current Level:</label></td>
                         <td>
@@ -164,22 +148,22 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2" style="text-align: center; padding-top: 20px;">
+                        <td><label for="secretKey">Secret Key:</label></td>
+                        <td><input type="text" id="secretKey" name="secretKey" value="<%= user != null ? user.getSecretKey() : "" %>" readonly></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; padding-top: 20px;">
                             <button type="submit" class="btn-update">Update</button>
+                        </td>
+                        <td style="text-align: center; padding-top: 20px;">
+                            <button type="button" class="btn-cancel" onclick="window.location.href='studentPage.jsp'">Cancel</button>
                         </td>
                     </tr>
                 </table>
             </form>
         </div>
-        
-        <!-- Include Footer -->
-        <jsp:include page="footer.jsp" />
     </div>
     
-    <script src="js/adminDashboard.js"></script>
-    <script src="js/sidebar.js"></script>
-    <script src="js/header.js"></script>
-    <script src="js/footer.js"></script>
     <script src="js/studentProfile.js"></script>
 </body>
 </html>

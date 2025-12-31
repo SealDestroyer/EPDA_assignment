@@ -20,6 +20,14 @@ public class MyAssessmentTypeFacade extends AbstractFacade<MyAssessmentType> {
         super(MyAssessmentType.class);
     }
 
+    // ===== FIND BY ASSESSMENT ID =====
+    public MyAssessmentType findByAssessmentID(Integer assessmentID) {
+        List<MyAssessmentType> results = em.createNamedQuery("MyAssessmentType.findByAssessmentID", MyAssessmentType.class)
+                .setParameter("assessmentID", assessmentID)
+                .getResultList();
+        return results.isEmpty() ? null : results.get(0);
+    }
+
     // ===== LIST BY MODULE =====
     public List<MyAssessmentType> findByModule(Integer moduleID) {
         return em.createNamedQuery("MyAssessmentType.findByModule", MyAssessmentType.class)

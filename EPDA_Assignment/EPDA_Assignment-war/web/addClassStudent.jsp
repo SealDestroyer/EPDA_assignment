@@ -64,14 +64,6 @@
                         <td><span class="error-message" id="studentID-error-message"></span></td>
                     </tr>
                     <tr>
-                        <td><label for="enrollmentDate">Enrollment Date:</label></td>
-                        <td><input type="date" id="enrollmentDate" name="enrollmentDate" value="<%= new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()) %>" onblur="validateEnrollmentDate()" required></td>
-                    </tr>
-                    <tr class="error-row" id="enrollmentDate-error" style="display: none;">
-                        <td></td>
-                        <td><span class="error-message" id="enrollmentDate-error-message"></span></td>
-                    </tr>
-                    <tr>
                         <td colspan="2" style="text-align: center; padding-top: 20px;">
                             <button type="submit" class="btn-update">Add Student</button>
                         </td>

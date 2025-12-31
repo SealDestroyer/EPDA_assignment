@@ -6,7 +6,8 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
     background-color: #f5f5f5;
     display: flex;
     min-height: 100vh;
@@ -92,7 +93,8 @@ table tbody tr:hover {
 }
 
 /* Button Styles */
-.btn-edit {
+.btn-edit,
+.btn-generate {
     background-color: #2196F3;
     color: white;
     border: none;
@@ -107,11 +109,13 @@ table tbody tr:hover {
     min-width: 100px;
 }
 
-.btn-edit:hover {
+.btn-edit:hover,
+.btn-generate:hover {
     background-color: #1976D2;
 }
 
-.btn-edit:active {
+.btn-edit:active,
+.btn-generate:active {
     background-color: #1565C0;
     transform: translateY(1px);
 }

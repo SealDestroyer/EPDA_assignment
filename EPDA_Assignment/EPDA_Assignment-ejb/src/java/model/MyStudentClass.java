@@ -17,6 +17,12 @@ import javax.persistence.Table;
 @Entity
 @NamedQueries({
     @NamedQuery(
+            name = "MyStudentClass.findAll",
+            query = "SELECT c FROM MyStudentClass c ORDER BY c.classID"
+    )
+    ,
+    
+    @NamedQuery(
             name = "MyStudentClass.deleteByClassId",
             query = "DELETE FROM MyStudentClass c WHERE c.classID = :classID"
     )

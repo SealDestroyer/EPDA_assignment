@@ -52,4 +52,10 @@ public class MyStudentAssessmentFacade extends AbstractFacade<MyStudentAssessmen
                 .executeUpdate();
     }
 
+    public List<MyStudentAssessment> findByStudentID(String studentID) {
+        return em.createNamedQuery("MyStudentAssessment.findByStudentID", MyStudentAssessment.class)
+                .setParameter("studentID", studentID)
+                .getResultList();
+    }
+
 }

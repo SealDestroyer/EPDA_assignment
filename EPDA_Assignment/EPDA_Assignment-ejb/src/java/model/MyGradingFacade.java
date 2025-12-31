@@ -8,6 +8,7 @@ package model;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 /**
  *
@@ -26,6 +27,11 @@ public class MyGradingFacade extends AbstractFacade<MyGrading> {
 
     public MyGradingFacade() {
         super(MyGrading.class);
+    }
+
+    public List<MyGrading> findAll() {
+        return em.createNamedQuery("MyGrading.findAll", MyGrading.class)
+                .getResultList();
     }
 
     public MyGrading findByPercentage(int percentage) {

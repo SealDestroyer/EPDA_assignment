@@ -11,6 +11,10 @@ import javax.persistence.NamedQuery;
 @Entity
 @NamedQueries({
     @NamedQuery(
+            name = "MyGrading.findAll",
+            query = "SELECT g FROM MyGrading g"
+    ),
+    @NamedQuery(
             name = "MyGrading.findByPercentage",
             query = "SELECT g FROM MyGrading g "
             + "WHERE :percentage BETWEEN g.minPercentage AND g.maxPercentage"
@@ -19,7 +23,6 @@ import javax.persistence.NamedQuery;
             name = "MyGrading.deleteByGradingId",
             query = "DELETE FROM MyGrading g WHERE g.gradingID = :gradingID"
     )
-
 })
 public class MyGrading implements Serializable {
 
