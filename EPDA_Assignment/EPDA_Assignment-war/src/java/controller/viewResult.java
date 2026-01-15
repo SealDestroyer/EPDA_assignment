@@ -15,8 +15,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import model.MyAssessmentType;
 import model.MyAssessmentTypeFacade;
 import model.MyGradingFacade;
+import model.MyModule;
 import model.MyModuleFacade;
 import model.MyStudentAssessment;
 import model.MyStudentAssessmentFacade;
@@ -112,13 +114,26 @@ public class viewResult extends HttpServlet {
             out.println("<tbody>");
 
             for (MyStudentAssessment assessment : assessments) {
-                String assessmentName = "-";
-                String moduleName = "-";
+                MyAssessmentType assessmentType = null;
                 if (assessment.getAssessmentID() != null) {
-                    assessmentName = myAssessmentTypeFacade.findByAssessmentID(assessment.getAssessmentID()).getAssessmentName();
-                    Integer moduleID = myAssessmentTypeFacade.findByAssessmentID(assessment.getAssessmentID()).getModuleID();
-                    if (moduleID != null) {
-                        moduleName = myModuleFacade.findByModuleID(moduleID).getModuleName();
+                    assessmentType = myAssessmentTypeFacade.findByAssessmentID(assessment.getAssessmentID());
+                }
+
+                // Skip orphaned student assessments that point to a deleted assessment type
+                if (assessmentType == null) {
+                    continue;
+                }
+
+                String assessmentName = assessmentType.getAssessmentName() != null
+                        ? assessmentType.getAssessmentName()
+                        : "-";
+
+                String moduleName = "-";
+                Integer moduleID = assessmentType.getModuleID();
+                if (moduleID != null) {
+                    MyModule module = myModuleFacade.findByModuleID(moduleID);
+                    if (module != null && module.getModuleName() != null) {
+                        moduleName = module.getModuleName();
                     }
                 }
 
