@@ -5,29 +5,24 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta charset="UTF-8">
         <title>Student Dashboard</title>
-        <link rel="stylesheet" type="text/css" href="css/studentPage.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/studentPage.css">
     </head>
-    <body>
-        <%
-            String userID = (String) session.getAttribute("userID");
-        %>
-        <!-- Navigation Bar -->
-        <nav class="navbar">
-            <h1 class="panel-title">Student Dashboard</h1>
-            <div class="nav-links">
-                <a href="manageStudentProfile.jsp?userId=<%= userID %>" class="nav-link">Profile</a>
-                <a href="Logout" class="nav-link">Logout</a>
-            </div>
-        </nav>
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <button class="result-button" onclick="window.location.href='viewResult.jsp'">Result</button>
+    <body>
+
+        <jsp:include page="studentNavbar.jsp" />
+
+        <div class="center-content">
+            <div class="btn-container">
+                <a class="btn" href="viewResult.jsp">View Results</a>
+            </div>
         </div>
     </body>
 </html>
