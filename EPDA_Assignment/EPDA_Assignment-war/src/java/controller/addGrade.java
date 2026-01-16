@@ -83,8 +83,13 @@ public class addGrade extends HttpServlet {
                     throw new IllegalArgumentException("Maximum percentage must be greater than minimum percentage!");
                 }
 
+                // Check for existing grade letter to prevent duplicates
+                if (myGradingFacade.findByGradeLetter(gradeLetter.trim()) != null) {
+                    throw new IllegalArgumentException("Grade letter already exists!");
+                }
+
                 // Create new grade record with validated data
-                model.MyGrading grade = new model.MyGrading(gradeLetter.trim(), minPercentage, maxPercentage);
+                model.MyGrading grade = new model.MyGrading(gradeLetter.trim().toUpperCase(), minPercentage, maxPercentage);
 
                 // Persist the grade record to the database
                 myGradingFacade.create(grade);

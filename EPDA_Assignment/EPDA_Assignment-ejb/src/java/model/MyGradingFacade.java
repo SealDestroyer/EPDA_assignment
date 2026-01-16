@@ -52,4 +52,14 @@ public class MyGradingFacade extends AbstractFacade<MyGrading> {
                 .setParameter("gradingID", gradingID)
                 .executeUpdate();
     }
+
+    public MyGrading findByGradeLetter(String gradeLetter) {
+        try {
+            return em.createNamedQuery("MyGrading.findByGradeLetter", MyGrading.class)
+                    .setParameter("gradeLetter", gradeLetter)
+                    .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

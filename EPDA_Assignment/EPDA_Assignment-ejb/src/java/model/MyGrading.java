@@ -22,6 +22,10 @@ import javax.persistence.NamedQuery;
     @NamedQuery(
             name = "MyGrading.deleteByGradingId",
             query = "DELETE FROM MyGrading g WHERE g.gradingID = :gradingID"
+    ),
+    @NamedQuery(
+            name = "MyGrading.findByGradeLetter",
+            query = "SELECT g FROM MyGrading g WHERE g.gradeLetter = :gradeLetter"
     )
 })
 public class MyGrading implements Serializable {

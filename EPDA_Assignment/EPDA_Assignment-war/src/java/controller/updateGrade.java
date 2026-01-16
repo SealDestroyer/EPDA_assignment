@@ -87,7 +87,7 @@ public class updateGrade extends HttpServlet {
                 if (maxPercentage <= minPercentage) {
                     throw new IllegalArgumentException("Maximum percentage must be greater than minimum percentage!");
                 }
-
+                
                 // Find and update grade record with validated data
                 MyGrading grade = myGradingFacade.find(Integer.parseInt(gradeId));
                 grade.setGradeLetter(gradeLetter.trim());

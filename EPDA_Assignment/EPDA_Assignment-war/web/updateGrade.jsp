@@ -69,7 +69,7 @@
                     </tr>
                     <tr>
                         <td><label for="gradeLetter">Grade Letter:</label></td>
-                        <td><input type="text" id="gradeLetter" name="gradeLetter" value="<%= grade != null ? grade.getGradeLetter() : "" %>" onblur="validateGradeLetter()" required></td>
+                        <td><input type="text" id="gradeLetter" name="gradeLetter" value="<%= grade != null ? grade.getGradeLetter() : "" %>" onblur="validateGradeLetter()" readonly required></td>
                     </tr>
                     <tr class="error-row" id="gradeLetter-error" style="display: none;">
                         <td></td>
