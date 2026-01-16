@@ -96,7 +96,7 @@
                     </tr>
                     <tr>
                         <td><label for="icNumber">IC Number:</label></td>
-                        <td><input type="text" id="icNumber" name="icNumber" value="<%= user != null ? user.getIcNumber() : "" %>" placeholder="e.g., 123456-12-3456" onblur="validateICNumber()" required></td>
+                        <td><input type="text" id="icNumber" name="icNumber" value="<%= user != null ? user.getIcNumber() : "" %>" placeholder="e.g., 123456-12-3456" readonly required></td>
                     </tr>
                     <tr class="error-row" id="icNumber-error" style="display: none;">
                         <td></td>
@@ -120,12 +120,12 @@
                     </tr>
                     <tr>
                         <td><label for="intakeYear">Intake Year:</label></td>
-                        <td><input type="text" id="intakeYear" name="intakeYear" value="<%= student != null && student.getIntakeYear() != null ? student.getIntakeYear() : "" %>" onblur="validateIntakeYear()" required></td>
+                        <td><input type="text" id="intakeYear" name="intakeYear" value="<%= student != null && student.getIntakeYear() != null ? student.getIntakeYear() : "" %>" readonly required></td>
                     </tr>
                     <tr>
                         <td><label for="currentLevel">Current Level:</label></td>
                         <td>
-                            <select id="currentLevel" name="currentLevel" onblur="validateCurrentLevel()" required>
+                            <select id="currentLevel" name="currentLevel" onblur="validateCurrentLevel()" disabled required>
                                 <option value="">Select Level</option>
                                 <option value="Year 1" <%= (student != null && "Year 1".equals(student.getCurrentLevel())) ? "selected" : "" %>>Year 1</option>
                                 <option value="Year 2" <%= (student != null && "Year 2".equals(student.getCurrentLevel())) ? "selected" : "" %>>Year 2</option>
@@ -141,7 +141,7 @@
                     <tr>
                         <td><label for="status">Status:</label></td>
                         <td>
-                            <select id="status" name="status" required>
+                            <select id="status" name="status" disabled required>
                                 <option value="Active" <%= (student != null && "Active".equals(student.getStatus())) ? "selected" : "" %>>Active</option>
                                 <option value="Inactive" <%= (student != null && "Inactive".equals(student.getStatus())) ? "selected" : "" %>>Inactive</option>
                             </select>

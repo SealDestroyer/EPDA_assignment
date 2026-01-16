@@ -61,7 +61,7 @@
         <jsp:include page="header.jsp" />
         
         <div class="content-area" id="content-area">
-            <form action="updateLecturer" method="post">
+            <form action="updateLecturer" method="post" onsubmit="return validateForm()">
                 <table class="profile-table">
                     <tr>
                         <td colspan="2">
@@ -74,42 +74,70 @@
                     </tr>
                     <tr>
                         <td><label for="fullName">Full Name:</label></td>
-                        <td><input type="text" id="fullName" name="fullName" value="<%= user != null ? user.getFullName() : "" %>" required></td>
+                        <td><input type="text" id="fullName" name="fullName" value="<%= user != null ? user.getFullName() : "" %>" onblur="validateFullName()" required></td>
+                    </tr>
+                    <tr class="error-row" id="fullName-error" style="display: none;">
+                        <td></td>
+                        <td><span class="error-message" id="fullName-error-message"></span></td>
                     </tr>
                     <tr>
                         <td><label for="password">Password:</label></td>
-                        <td><input type="password" id="password" name="password" value="<%= user != null ? user.getPassword() : "" %>" required></td>
+                        <td><input type="password" id="password" name="password" value="<%= user != null ? user.getPassword() : "" %>" onblur="validatePassword()" required></td>
+                    </tr>
+                    <tr class="error-row" id="password-error" style="display: none;">
+                        <td></td>
+                        <td><span class="error-message" id="password-error-message"></span></td>
                     </tr>
                     <tr>
                         <td><label for="gender">Gender:</label></td>
                         <td>
-                            <select id="gender" name="gender" required>
+                            <select id="gender" name="gender" onblur="validateGender()" required>
                                 <option value="">Select Gender</option>
                                 <option value="Male" <%= (user != null && "Male".equals(user.getGender())) ? "selected" : "" %>>Male</option>
                                 <option value="Female" <%= (user != null && "Female".equals(user.getGender())) ? "selected" : "" %>>Female</option>
                             </select>
                         </td>
                     </tr>
+                    <tr class="error-row" id="gender-error" style="display: none;">
+                        <td></td>
+                        <td><span class="error-message" id="gender-error-message"></span></td>
+                    </tr>
                     <tr>
                         <td><label for="phone">Phone:</label></td>
-                        <td><input type="tel" id="phone" name="phone" value="<%= user != null ? user.getPhone() : "" %>" required></td>
+                        <td><input type="tel" id="phone" name="phone" value="<%= user != null ? user.getPhone() : "" %>" onblur="validatePhone()" required></td>
+                    </tr>
+                    <tr class="error-row" id="phone-error" style="display: none;">
+                        <td></td>
+                        <td><span class="error-message" id="phone-error-message"></span></td>
                     </tr>
                     <tr>
                         <td><label for="icNumber">IC Number:</label></td>
-                        <td><input type="text" id="icNumber" name="icNumber" value="<%= user != null ? user.getIcNumber() : "" %>" required></td>
+                        <td><input type="text" id="icNumber" name="icNumber" value="<%= user != null ? user.getIcNumber() : "" %>" onblur="validateICNumber()" required></td>
+                    </tr>
+                    <tr class="error-row" id="icNumber-error" style="display: none;">
+                        <td></td>
+                        <td><span class="error-message" id="icNumber-error-message"></span></td>
                     </tr>
                     <tr>
                         <td><label for="email">Email:</label></td>
-                        <td><input type="email" id="email" name="email" value="<%= user != null ? user.getEmail() : "" %>" required></td>
+                        <td><input type="email" id="email" name="email" value="<%= user != null ? user.getEmail() : "" %>" onblur="validateEmail()" required></td>
+                    </tr>
+                    <tr class="error-row" id="email-error" style="display: none;">
+                        <td></td>
+                        <td><span class="error-message" id="email-error-message"></span></td>
                     </tr>
                     <tr>
                         <td><label for="address">Address:</label></td>
-                        <td><textarea id="address" name="address" rows="3" required><%= user != null ? user.getAddress() : "" %></textarea></td>
+                        <td><textarea id="address" name="address" rows="3" onblur="validateAddress()" required><%= user != null ? user.getAddress() : "" %></textarea></td>
+                    </tr>
+                    <tr class="error-row" id="address-error" style="display: none;">
+                        <td></td>
+                        <td><span class="error-message" id="address-error-message"></span></td>
                     </tr>
                     <tr>
                         <td><label for="employmentType">Employment Type:</label></td>
                         <td>
-                            <select id="employmentType" name="employmentType" required>
+                            <select id="employmentType" name="employmentType" onblur="validateEmploymentType()" required>
                                 <option value="">Select Employment Type</option>
                                 <option value="Full-Time" <%= (lecturer != null && "Full-Time".equals(lecturer.getEmploymentType())) ? "selected" : "" %>>Full-Time</option>
                                 <option value="Part-Time" <%= (lecturer != null && "Part-Time".equals(lecturer.getEmploymentType())) ? "selected" : "" %>>Part-Time</option>
@@ -117,10 +145,14 @@
                             </select>
                         </td>
                     </tr>
+                    <tr class="error-row" id="employmentType-error" style="display: none;">
+                        <td></td>
+                        <td><span class="error-message" id="employmentType-error-message"></span></td>
+                    </tr>
                     <tr>
                         <td><label for="academicRank">Academic Rank:</label></td>
                         <td>
-                            <select id="academicRank" name="academicRank" required>
+                            <select id="academicRank" name="academicRank" onblur="validateAcademicRank()" required>
                                 <option value="">Select Academic Rank</option>
                                 <option value="Professor" <%= (lecturer != null && "Professor".equals(lecturer.getAcademicRank())) ? "selected" : "" %>>Professor</option>
                                 <option value="Associate Professor" <%= (lecturer != null && "Associate Professor".equals(lecturer.getAcademicRank())) ? "selected" : "" %>>Associate Professor</option>
@@ -129,6 +161,10 @@
                                 <option value="Senior Lecturer" <%= (lecturer != null && "Senior Lecturer".equals(lecturer.getAcademicRank())) ? "selected" : "" %>>Senior Lecturer</option>
                             </select>
                         </td>
+                    </tr>
+                    <tr class="error-row" id="academicRank-error" style="display: none;">
+                        <td></td>
+                        <td><span class="error-message" id="academicRank-error-message"></span></td>
                     </tr>
                     <tr>
                         <td><label for="academicLeaderID">Academic Leader ID:</label></td>

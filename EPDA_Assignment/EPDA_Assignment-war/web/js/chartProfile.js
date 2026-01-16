@@ -22,6 +22,7 @@ function validateStartDate() {
     }
     
     const start = new Date(startDate.value);
+    start.setHours(0, 0, 0, 0);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
@@ -56,6 +57,7 @@ function validateEndDate() {
     }
     
     const end = new Date(endDate.value);
+    end.setHours(0, 0, 0, 0);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     

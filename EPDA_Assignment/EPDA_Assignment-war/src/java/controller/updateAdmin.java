@@ -13,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import model.MyUsers;
 import model.MyUsersFacade;
 
@@ -124,10 +125,14 @@ public class updateAdmin extends HttpServlet {
                 user.setAddress(address);
                 myUsersFacade.edit(user);
 
+                // Update session attribute if the updated user is the logged-in user
+                HttpSession session = request.getSession();
+                session.setAttribute("user", user);
+
                 // Display success message and redirect to view admin page
                 out.println("<script type='text/javascript'>");
                 out.println("alert('Admin Updated Successfully!');");
-                out.println("window.location.href = 'viewAdmin.jsp';");
+                out.println("window.location.href = 'manageAdminProfile.jsp';");
                 out.println("</script>");
             } catch (Exception e) {
                 // Handle validation and unexpected errors
